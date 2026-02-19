@@ -40,6 +40,13 @@ const RELATED_ARTICLES = [
     }
 ]
 
+export function generateStaticParams() {
+    return [
+        { slug: "theology-of-community" },
+        ...RELATED_ARTICLES.map((a) => ({ slug: a.slug })),
+    ]
+}
+
 export default function SingleArticlePage({ params }: { params: { slug: string } }) {
     return (
         <main className="min-h-screen bg-background">
