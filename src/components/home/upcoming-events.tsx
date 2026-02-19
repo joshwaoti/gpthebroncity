@@ -3,39 +3,9 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { EventCard } from "@/components/events/event-card"
+import { ALL_EVENTS } from "@/data/events"
 
-const UPCOMING_EVENTS = [
-    {
-        id: "1",
-        title: "Sunday Service: The Power of Faith",
-        date: new Date(2026, 1, 22),
-        location: "Main Sanctuary, Utawala",
-        category: "Service",
-        slug: "sunday-service-faith",
-        featured: false,
-        image: "/assets/img/events.jpg"
-    },
-    {
-        id: "3",
-        title: "Worship Night: Encounter",
-        date: new Date(2026, 2, 6),
-        location: "Main Sanctuary",
-        category: "Worship",
-        slug: "worship-night",
-        featured: false,
-        image: "/assets/img/events.jpg"
-    },
-    {
-        id: "4",
-        title: "Children's Church Fun Day",
-        date: new Date(2026, 2, 14),
-        location: "Children's Block",
-        category: "Kids",
-        slug: "kids-fun-day",
-        featured: false,
-        image: "/assets/img/events.jpg"
-    }
-]
+const UPCOMING_EVENTS = ALL_EVENTS.slice(0, 3)
 
 export function UpcomingEvents() {
     return (

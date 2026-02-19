@@ -6,12 +6,12 @@ export const homeData = {
             line2: "Christ Expressed",
         },
         subtitle: "Raising Kingdom Ambassadors",
-        description: "Building the Next Gen Church. Partner with us as we expand our territory and build a legacy for future generations in Hebron City.",
+        description: "\"Christ in you, the hope of glory\" — Colossians 1:27",
         cta: {
-            primary: "Watch Live Stream",
-            secondary: "Discover the Vision",
+            primary: "Plan Your Visit",
+            secondary: "Watch Sermons",
         },
-        bgImage: "/assets/img/hero-revamp.jpg",
+        bgImage: "/assets/img/bg-4-2026.jpg",
     },
     serviceTimes: {
         nextService: "2026-02-25T08:30:00", // Placeholder date

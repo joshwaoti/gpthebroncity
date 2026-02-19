@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef, useEffect } from "react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { GlassCard } from "@/components/ui/glass-card"
 import { homeData } from "@/data"
@@ -82,22 +83,26 @@ export function Hero() {
                     </span>
                 </h1>
 
-                <p className="hero-element text-base md:text-xl text-gray-300 max-w-2xl mx-auto mb-8 md:mb-12 font-light leading-relaxed px-4">
+                <p className="hero-element text-base md:text-xl text-gray-300 max-w-2xl mx-auto mb-10 md:mb-12 font-light leading-relaxed px-4 italic">
                     {homeData.hero.description}
                 </p>
 
                 <div className="hero-element flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 w-full px-4">
-                    <Button variant="default" size="xl" className="group text-lg w-full sm:w-auto">
-                        {homeData.hero.cta.primary}
-                        <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                    <Button variant="secondary" size="xl" className="text-lg w-full sm:w-auto">
-                        {homeData.hero.cta.secondary}
-                    </Button>
+                    <Link href="/visit">
+                        <Button variant="default" size="xl" className="group text-lg w-full sm:w-auto">
+                            {homeData.hero.cta.primary}
+                            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                    </Link>
+                    <Link href="/media">
+                        <Button variant="secondary" size="xl" className="text-lg w-full sm:w-auto">
+                            {homeData.hero.cta.secondary}
+                        </Button>
+                    </Link>
                 </div>
 
                 {/* Mobile Next Service Card */}
-                <div className="hero-element mt-8 md:hidden w-full max-w-sm mx-auto">
+                <div className="hero-element mt-10 md:hidden w-full max-w-sm mx-auto">
                     <GlassCard variant="default" className="p-4 flex items-center justify-between bg-black/40 backdrop-blur-md border-white/10">
                         <div className="text-left">
                             <span className="text-[10px] font-bold text-[#B2CB20] uppercase tracking-widest block mb-1">Next Service</span>
@@ -106,6 +111,10 @@ export function Hero() {
                                 <span className="text-xs text-gray-400">Days</span>
                                 <span className="text-xl font-bold font-display text-white ml-2">{timeLeft.hours}</span>
                                 <span className="text-xs text-gray-400">Hrs</span>
+                                <span className="text-xl font-bold font-display text-white ml-2">{timeLeft.minutes}</span>
+                                <span className="text-xs text-gray-400">Min</span>
+                                <span className="text-lg font-bold font-display text-[#B2CB20] ml-2">{timeLeft.seconds}</span>
+                                <span className="text-xs text-gray-400">Sec</span>
                             </div>
                         </div>
                         <Button variant="ghost" size="icon" className="text-white hover:text-[#B2CB20]">

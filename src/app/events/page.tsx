@@ -9,62 +9,10 @@ import { CalendarView } from "@/components/events/calendar-view"
 import { Button } from "@/components/ui/button"
 import Navbar from "@/components/layout/navbar"
 import Footer from "@/components/layout/footer"
+import { ALL_EVENTS, EVENT_CATEGORIES } from "@/data/events"
 
-// Dummy Data
-const EVENTS = [
-    {
-        id: "1",
-        title: "Sunday Service: The Power of Faith",
-        date: new Date(2026, 1, 22),
-        location: "Main Sanctuary, Utawala",
-        category: "Service",
-        slug: "sunday-service-faith",
-        featured: true,
-        image: "/assets/img/events.jpg"
-    },
-    {
-        id: "2",
-        title: "Men's Breakfast Fellowship",
-        date: new Date(2026, 1, 28),
-        location: "Hebron City Hall",
-        category: "Fellowship",
-        slug: "mens-breakfast",
-        featured: false,
-        image: "/assets/img/events.jpg"
-    },
-    {
-        id: "3",
-        title: "Worship Night: Encounter",
-        date: new Date(2026, 2, 6),
-        location: "Main Sanctuary",
-        category: "Worship",
-        slug: "worship-night",
-        featured: false,
-        image: "/assets/img/events.jpg"
-    },
-    {
-        id: "4",
-        title: "Children's Church Fun Day",
-        date: new Date(2026, 2, 14),
-        location: "Children's Block",
-        category: "Kids",
-        slug: "kids-fun-day",
-        featured: false,
-        image: "/assets/img/events.jpg"
-    },
-    {
-        id: "5",
-        title: "Leadership Summit 2026",
-        date: new Date(2026, 2, 20),
-        location: "Conference Center",
-        category: "Leadership",
-        slug: "leadership-summit",
-        featured: false,
-        image: "/assets/img/events.jpg"
-    }
-]
-
-const CATEGORIES = ["Service", "Fellowship", "Worship", "Kids", "Leadership"]
+const EVENTS = ALL_EVENTS
+const CATEGORIES = EVENT_CATEGORIES
 
 export default function EventsPage() {
     const [view, setView] = useState<'list' | 'calendar'>('list')

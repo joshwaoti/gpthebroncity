@@ -183,8 +183,20 @@ export default function Navbar() {
             {/* Mobile Menu Overlay */}
             <div
                 ref={menuRef}
-                className="fixed inset-0 z-40 bg-white dark:bg-[#0a0f05] translate-x-full flex flex-col pt-32 px-6"
+                className="fixed inset-0 z-[60] bg-white dark:bg-[#0a0f05] translate-x-full flex flex-col pt-6 px-6 overflow-y-auto"
             >
+                {/* Top bar: Theme Toggle + Close Button */}
+                <div className="flex items-center justify-end gap-3 mb-10">
+                    <ThemeToggle className="text-gray-800 dark:text-white" />
+                    <button
+                        onClick={() => setIsOpen(false)}
+                        className="p-2 rounded-full text-gray-800 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+                        aria-label="Close menu"
+                    >
+                        <X className="w-6 h-6" />
+                    </button>
+                </div>
+
                 <div className="flex flex-col gap-6" ref={linksRef}>
                     <Link
                         href="/"

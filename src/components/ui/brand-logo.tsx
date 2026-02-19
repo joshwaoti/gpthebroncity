@@ -5,13 +5,12 @@ interface BrandLogoProps {
     variant?: "default" | "white"
 }
 
-export function BrandLogo({ className, variant = "default" }: BrandLogoProps) {
-    // Always show the dark logo (logo.png) for visibility on all backgrounds.
-    // The white logo is invisible on light/white backgrounds, so we disable it.
+export function BrandLogo({ className }: BrandLogoProps) {
+    // Always use logo-2.png as requested — this logo works on all backgrounds.
     return (
         <div className={className}>
             <Image
-                src="/assets/img/logo/logo.png"
+                src="/assets/img/logo/logo-2.png"
                 alt="GPT Hebron City Logo"
                 width={180}
                 height={50}
