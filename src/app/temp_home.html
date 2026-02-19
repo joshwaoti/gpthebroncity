@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GPT Hebron City Home</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#257500", // Bamboo
+                        "secondary": "#6EA704", // Christi
+                        "background-light": "#f6f8f5",
+                        "background-dark": "#15230f", // Very dark green/black mix
+                        "surface-dark": "#1e3016", // Slightly lighter for cards
+                        "surface-hover": "#263a1d",
+                    },
+                    fontFamily: {
+                        "display": ["Playfair Display", "serif"],
+                        "body": ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.375rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                    backgroundImage: {
+                        'hero-gradient': 'linear-gradient(to bottom, rgba(21, 35, 15, 0.3), rgba(21, 35, 15, 1))',
+                        'card-gradient': 'linear-gradient(180deg, rgba(37, 117, 0, 0) 0%, rgba(37, 117, 0, 0.1) 100%)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #15230f; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2e4b20; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #257500; 
+        }
+        
+        .glass-nav {
+            background: rgba(22, 36, 15, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .text-glow {
+            text-shadow: 0 0 20px rgba(110, 167, 4, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white antialiased overflow-x-hidden selection:bg-primary selection:text-white">
+<div class="relative min-h-screen flex flex-col">
+<!-- Navigation Dock (Floating) -->
+<nav class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-5xl">
+<div class="glass-nav rounded-full px-6 py-3 flex items-center justify-between shadow-2xl shadow-black/50">
+<!-- Logo -->
+<div class="flex items-center gap-3">
+<div class="size-8 text-primary">
+<svg class="h-full w-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+</svg>
+</div>
+<span class="hidden sm:block font-display font-bold text-lg tracking-tight text-white">GPT Hebron City</span>
+</div>
+<!-- Intent-Based Links -->
+<div class="hidden md:flex items-center gap-1 bg-surface-dark/50 p-1 rounded-full border border-white/5">
+<a class="px-5 py-2 rounded-full text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300" href="#">Watch</a>
+<a class="px-5 py-2 rounded-full text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300" href="#">Listen</a>
+<a class="px-5 py-2 rounded-full text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300" href="#">Read</a>
+<a class="px-5 py-2 rounded-full text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300" href="#">Visit</a>
+</div>
+<!-- Right Actions -->
+<div class="flex items-center gap-4">
+<button class="text-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">search</span>
+</button>
+<a class="flex items-center gap-2 bg-primary hover:bg-[#1e5e00] text-white px-5 py-2.5 rounded-full font-bold text-sm transition-all shadow-[0_0_15px_rgba(37,117,0,0.5)] hover:shadow-[0_0_25px_rgba(37,117,0,0.7)]" href="#">
+<span>Give</span>
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+</a>
+<!-- Mobile Menu Trigger -->
+<button class="md:hidden text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative h-[100svh] w-full flex flex-col justify-center items-center overflow-hidden">
+<!-- Background Image (Simulated 3D WebGL) -->
+<div class="absolute inset-0 z-0">
+<div class="w-full h-full bg-cover bg-center transform scale-105 animate-[pulse_10s_ease-in-out_infinite]" data-alt="Abstract architectural rendering of a modern church building with green lighting effects" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDdhgHMChxgSSUF2m8eOr8WW-qI8Rgz4MC_XEgNVvswV76lXUIWRnlQIIWXdMvtXAcmBbyOpjKGbfwr06kElp4jbBZEcl8Ya9ZnCLF3W1fDJZZbWFxmljNY4zHDDhw6qm2Ueviugm9Rw1NM25DgD-dKyYKtAGCGZAioqIJUbo7FCruywuBTyoSiyXXozjwlyyh6FViVYpSIFBEvDxZcresrLsYAXxDciNSu_C_y9kNluFxRHD-6RKBsBhWTR5fiuW08YVeT7n4TyLAX');">
+</div>
+<!-- Gradient Overlay -->
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/80 to-background-dark/30"></div>
+<!-- Grid Overlay for tech feel -->
+<div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+</div>
+<!-- Hero Content -->
+<div class="relative z-10 container mx-auto px-6 text-center mt-20">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-secondary/30 bg-secondary/10 backdrop-blur-sm mb-6">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+</span>
+<span class="text-xs font-medium text-secondary tracking-wider uppercase">2026 Vision</span>
+</div>
+<h1 class="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-white mb-6 tracking-tight leading-[1.1]">
+                    Christ Revealed,<br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-500 italic">Christ Expressed</span>
+</h1>
+<p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-10 font-light leading-relaxed">
+                    Building the Next Gen Church. Partner with us as we expand our territory and build a legacy for future generations in Hebron City.
+                </p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+<button class="group relative px-8 py-4 bg-white text-background-dark font-bold rounded-lg overflow-hidden transition-all hover:scale-105">
+<span class="relative z-10 flex items-center gap-2">
+                            Watch Live Stream
+                            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</span>
+</button>
+<button class="px-8 py-4 bg-transparent border border-white/20 text-white font-medium rounded-lg hover:bg-white/5 transition-all backdrop-blur-sm">
+                        Discover the Vision
+                    </button>
+</div>
+</div>
+<!-- Countdown Timer Floating -->
+<div class="absolute bottom-10 right-4 md:right-10 z-20">
+<div class="glass-nav p-5 rounded-2xl border border-white/10 flex flex-col gap-3 min-w-[280px]">
+<div class="flex items-center justify-between border-b border-white/10 pb-2 mb-1">
+<span class="text-xs font-medium text-gray-400 uppercase tracking-widest">Next Service</span>
+<span class="material-symbols-outlined text-secondary text-sm animate-pulse">live_tv</span>
+</div>
+<div class="flex justify-between text-center gap-2">
+<div>
+<span class="block text-2xl font-bold font-display text-white">02</span>
+<span class="text-[10px] text-gray-500 uppercase">Days</span>
+</div>
+<span class="text-xl text-gray-600">:</span>
+<div>
+<span class="block text-2xl font-bold font-display text-white">14</span>
+<span class="text-[10px] text-gray-500 uppercase">Hrs</span>
+</div>
+<span class="text-xl text-gray-600">:</span>
+<div>
+<span class="block text-2xl font-bold font-display text-white">45</span>
+<span class="text-[10px] text-gray-500 uppercase">Min</span>
+</div>
+<span class="text-xl text-gray-600">:</span>
+<div>
+<span class="block text-2xl font-bold font-display text-secondary">12</span>
+<span class="text-[10px] text-gray-500 uppercase">Sec</span>
+</div>
+</div>
+<button class="w-full mt-2 text-xs font-semibold text-primary hover:text-white transition-colors flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[14px]">notifications_active</span>
+                        Notify Me
+                    </button>
+</div>
+</div>
+<!-- Scroll Indicator -->
+<div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 animate-bounce opacity-50">
+<span class="material-symbols-outlined text-white text-3xl">keyboard_arrow_down</span>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow z-10 relative">
+<!-- Next Gen Church Projects Section -->
+<section class="py-24 px-6 md:px-12 lg:px-20 bg-background-dark">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+<div class="max-w-2xl">
+<h2 class="text-secondary font-medium tracking-widest uppercase text-sm mb-3">Our Projects</h2>
+<h3 class="text-4xl md:text-5xl font-display font-bold text-white leading-tight">
+                                Building the <br/>
+<span class="relative inline-block">
+<span class="relative z-10">Next Gen Church</span>
+<span class="absolute bottom-1 left-0 w-full h-3 bg-primary/40 -z-0"></span>
+</span>
+</h3>
+</div>
+<a class="group flex items-center gap-2 text-white font-medium border-b border-secondary pb-1 hover:text-secondary transition-colors" href="#">
+                            View All Projects
+                            <span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_right_alt</span>
+</a>
+</div>
+<!-- Horizontal Scroll / Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Card 1: Children's Church -->
+<div class="group relative bg-surface-dark rounded-2xl overflow-hidden border border-white/5 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10">
+<div class="aspect-[4/3] w-full bg-gray-800 relative overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="Children smiling and playing in a modern colorful classroom" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC4xn5BVEO6HktKB5ealC-LNALUPWEqZiolBo_4nkTVkWEKgisz_62QpDAj7fRkHpQbEy2DPEBEXfbQpKzpnFsgdxUKQwZ9Q6smcwzRf293vrB5SN-96V1jPbH5Jobf9yPfos5oZu3ZcR7L-8ADGlq_ouW1kxrdCkb6hPvqP-Iy8iJKah2cCJdfAFZIdahITIRkpvxYT6jG9N9ePc9k9O0VVTuWhUIEgzAJXGJLIKvtSxX1bsbnmv4Dx816lsHGzqaSI8c-KGyDtVEg');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dark via-surface-dark/20 to-transparent"></div>
+<div class="absolute top-4 right-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                                    Priority
+                                </div>
+</div>
+<div class="p-6 relative -mt-12">
+<div class="bg-surface-dark/80 backdrop-blur-md rounded-xl p-6 border border-white/5 shadow-xl">
+<h4 class="text-xl font-display font-bold text-white mb-2">Children's Church Block</h4>
+<p class="text-gray-400 text-sm mb-6 line-clamp-2">Creating a safe, engaging, and spiritually nourishing space for our children to grow in faith.</p>
+<!-- Progress -->
+<div class="mb-4">
+<div class="flex justify-between text-xs font-medium mb-2">
+<span class="text-white">Raised: $120,500</span>
+<span class="text-gray-400">Goal: $250,000</span>
+</div>
+<div class="w-full bg-gray-700 rounded-full h-1.5">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 48%"></div>
+</div>
+</div>
+<button class="w-full py-3 bg-white/5 hover:bg-primary hover:text-white text-white rounded-lg text-sm font-bold transition-colors border border-white/10 hover:border-transparent flex items-center justify-center gap-2">
+                                        Give to This Project
+                                    </button>
+</div>
+</div>
+</div>
+<!-- Card 2: Parking Expansion -->
+<div class="group relative bg-surface-dark rounded-2xl overflow-hidden border border-white/5 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10">
+<div class="aspect-[4/3] w-full bg-gray-800 relative overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="Modern building exterior with landscaped parking area and trees" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuACtEWPQ2jG_ewKYlYO_Ni3yqrQUmumHIcGrT7dRyMTYzEUsMZuJAX4rmMFcqNmx-yGTxxCFTILllx8NUAfR3BoVljHTf6y8W4DJPKnHKwL8rbMqF13Lonp3SZQfj97THK94prYhvV8hgI9GrzyVi2Xyhy8oIWqQo7FH1qEgaWYblDzIpHqw0e0kiV_zCTdhBmHYw1wXJGZCiAr6Jk7lRfJBLJ7JYsnPLogxG-lsxfSypP0djzrb16WLA0QT_Krn7zVC9jRQXyOuMus');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dark via-surface-dark/20 to-transparent"></div>
+</div>
+<div class="p-6 relative -mt-12">
+<div class="bg-surface-dark/80 backdrop-blur-md rounded-xl p-6 border border-white/5 shadow-xl">
+<h4 class="text-xl font-display font-bold text-white mb-2">Parking Expansion</h4>
+<p class="text-gray-400 text-sm mb-6 line-clamp-2">Expanding accessibility and convenience for our growing community with 200+ new slots.</p>
+<!-- Progress -->
+<div class="mb-4">
+<div class="flex justify-between text-xs font-medium mb-2">
+<span class="text-white">Raised: $45,000</span>
+<span class="text-gray-400">Goal: $80,000</span>
+</div>
+<div class="w-full bg-gray-700 rounded-full h-1.5">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 56%"></div>
+</div>
+</div>
+<button class="w-full py-3 bg-white/5 hover:bg-primary hover:text-white text-white rounded-lg text-sm font-bold transition-colors border border-white/10 hover:border-transparent flex items-center justify-center gap-2">
+                                        Give to This Project
+                                    </button>
+</div>
+</div>
+</div>
+<!-- Card 3: Community Hall -->
+<div class="group relative bg-surface-dark rounded-2xl overflow-hidden border border-white/5 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hidden lg:block">
+<div class="aspect-[4/3] w-full bg-gray-800 relative overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="Interior of a modern community hall with chairs and stage" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDvRBf7FBVV0u3TACZJmR_-aiu2WT2bv58gpRVYtRVKHxo94cu6pH8Ze3bv6qzu2yOnsbxIAWbw3b98lCK__Fbh40okJomOivBJzWXdMDp-yhguH5YakB6DnTNgD-iXxJzJDP_NO82LaG0sNPu4lvbb261l9suXz7y-O4CopZ5GWs-WxkS_ldHiPKGh_9hQxAzQy-AQJa5LtHTUiW9olViR6FILyQcM22OD16JBHOCyXvJD0Fw5tx9d0JLUwCDOh7Ulreyc1xjFBrBK');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dark via-surface-dark/20 to-transparent"></div>
+</div>
+<div class="p-6 relative -mt-12">
+<div class="bg-surface-dark/80 backdrop-blur-md rounded-xl p-6 border border-white/5 shadow-xl">
+<h4 class="text-xl font-display font-bold text-white mb-2">Community Hall</h4>
+<p class="text-gray-400 text-sm mb-6 line-clamp-2">A multipurpose venue for weddings, conferences, and youth events.</p>
+<!-- Progress -->
+<div class="mb-4">
+<div class="flex justify-between text-xs font-medium mb-2">
+<span class="text-white">Raised: $10,000</span>
+<span class="text-gray-400">Goal: $150,000</span>
+</div>
+<div class="w-full bg-gray-700 rounded-full h-1.5">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 7%"></div>
+</div>
+</div>
+<button class="w-full py-3 bg-white/5 hover:bg-primary hover:text-white text-white rounded-lg text-sm font-bold transition-colors border border-white/10 hover:border-transparent flex items-center justify-center gap-2">
+                                        Give to This Project
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Latest Sermon / Media Section -->
+<section class="py-24 px-6 md:px-12 bg-[#101b0b] relative overflow-hidden">
+<!-- Decorative Elements -->
+<div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none"></div>
+<div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+<div class="lg:w-1/2 relative group cursor-pointer">
+<div class="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/60 border border-white/10">
+<div class="aspect-video w-full bg-gray-900 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Preacher standing on stage with dramatic lighting" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDzvwbXChB7IlRnL5ogabJAL_AtH-EhAbeeyHcrulSJVqvTZ0qkzEkpvATn-mHr5899e6bSAZW6bVbHO7ljZZXbwFkdCeiKRn2iG1xZC6uLsHT32ZXKPwspM5eAhSA7czWtY6Cb-qoCiAE6lX_NOggxWw3imoSGKEdpZoIoT8X432paCujfqglNXDXKi_OT39GA-GXd_uTYSwdZZYQ0ZPSub9MkSiqBV4qjrhG0stUIrqE4rF_UiocJ7300O-qkOv_pSGzpco6Xzacs');"></div>
+<div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+<div class="h-20 w-20 rounded-full bg-white/10 backdrop-blur-sm border border-white/30 flex items-center justify-center transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-white text-4xl ml-1">play_arrow</span>
+</div>
+</div>
+</div>
+<!-- Subtle decoration -->
+<div class="absolute -bottom-4 -right-4 w-full h-full border-2 border-primary/20 rounded-2xl -z-10"></div>
+</div>
+<div class="lg:w-1/2">
+<div class="flex items-center gap-2 mb-4">
+<span class="px-3 py-1 bg-primary/20 text-primary text-xs font-bold rounded-full uppercase tracking-wider">Latest Series</span>
+</div>
+<h2 class="text-4xl md:text-5xl font-display font-bold text-white mb-6">Unshakeable Faith</h2>
+<p class="text-gray-400 text-lg mb-8 leading-relaxed">
+                            In a world of constant change, discover the foundation that never moves. Join us as we explore the book of Hebrews and uncover the power of a faith that endures.
+                        </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="px-6 py-3 bg-white text-background-dark font-bold rounded-lg hover:bg-gray-100 transition-colors">
+                                Watch Sermon
+                            </button>
+<button class="px-6 py-3 border border-white/20 text-white font-medium rounded-lg hover:border-white/50 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">headphones</span>
+                                Listen to Audio
+                            </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Visit Section / Map -->
+<section class="relative h-[600px] flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center grayscale opacity-40" data-alt="Map view background of Nairobi city" data-location="Nairobi" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDORL5HfAeFvLo99duzvWlDYjl1BOIgqUj7PaGKGo9m3GA-3XI4v6urcfx25ChWM8sNyJ-6Q-WBJeVWr1rv88OVbDrCDvcHeMSlXKbYVzGCf8P5cui0Pd0DfZWJu1yBRsobpDC2GhzQd0H2lndcMfW2m3RYaOQI7E6qiaYQZu9Bd4F0ZIuhmnFR9dFFRQEE5zySRSNICIBOX8aDzpSnJsuDWNViZHaSE57so_JdJLmToaNQTWMWVoTLY_Z8ex7EEIIVAbhEoPChTVyQ');">
+</div>
+<div class="absolute inset-0 bg-background-dark/80"></div>
+<div class="relative z-10 container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+<div class="text-white">
+<h2 class="text-4xl font-display font-bold mb-6">Plan Your Visit</h2>
+<div class="space-y-6">
+<div class="flex items-start gap-4">
+<div class="bg-primary/20 p-3 rounded-lg text-primary">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+<div>
+<h4 class="text-xl font-bold mb-1">Hebron City Campus</h4>
+<p class="text-gray-400">Eastern Bypass, Utawala<br/>Nairobi, Kenya</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="bg-primary/20 p-3 rounded-lg text-primary">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<div>
+<h4 class="text-xl font-bold mb-1">Service Times</h4>
+<p class="text-gray-400">Sundays: 8:30 AM &amp; 11:00 AM<br/>Wednesdays: 6:00 PM</p>
+</div>
+</div>
+</div>
+<div class="mt-8">
+<button class="px-6 py-3 bg-primary text-white font-bold rounded-lg hover:bg-[#1e5e00] transition-colors">
+                                Get Directions
+                            </button>
+</div>
+</div>
+<div class="hidden md:block h-[400px] w-full bg-gray-800 rounded-2xl overflow-hidden border border-white/10 relative shadow-2xl">
+<!-- Simulated Map UI -->
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Map showing location pin in Utawala" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDt_nRfsJ58dJUgV16vCVaK3uMWDc4Mtu5Bt5IBD-0rAUIvVx_tqoif55Z12C5i_WYspZHYfPW6wetX0vz1usiZmNNPhUoEZTK2-FQfyuBD1t3oxJ1hsCvumIZF-zJgbRVAhwNj11yR0OykCaWLtMBebYcrAnOGlGCeVfQl4zawsB5jnKvUi1Lie8e_zE07TLmEjAC8_VOetZf0evIEEbMxZ5WJG1tjQlDfBAoMV9JfAT_8dB2-FO9bzTN43Tr-jKGrixBq486FN1sd');"></div>
+<div class="absolute inset-0 bg-black/10"></div>
+<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+<span class="relative flex h-8 w-8">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-8 w-8 bg-primary border-4 border-white items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-white text-[16px]">home_pin</span>
+</span>
+</span>
+</div>
+<div class="absolute bottom-4 left-4 right-4 bg-white dark:bg-surface-dark p-4 rounded-lg shadow-lg flex items-center justify-between">
+<div>
+<p class="text-xs text-gray-500 uppercase font-bold">Location</p>
+<p class="text-sm font-bold text-white">Green Pastures Tabernacle</p>
+</div>
+<button class="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center text-gray-500 hover:text-white hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-sm">near_me</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#0b1408] border-t border-white/5 pt-16 pb-8">
+<div class="container mx-auto px-6">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+<div class="md:col-span-1">
+<div class="flex items-center gap-2 text-white mb-6">
+<svg class="h-8 w-8 text-primary" fill="none" viewbox="0 0 48 48">
+<path d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+</svg>
+<span class="font-display font-bold text-xl">GPT Hebron City</span>
+</div>
+<p class="text-gray-500 text-sm leading-relaxed mb-6">
+                            A community of believers dedicated to revealing Christ and expressing His love to the world.
+                        </p>
+<div class="flex gap-4">
+<a class="h-10 w-10 rounded-full bg-white/5 hover:bg-primary text-gray-400 hover:text-white flex items-center justify-center transition-colors" href="#">
+<svg class="h-5 w-5" fill="currentColor" viewbox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path></svg>
+</a>
+<a class="h-10 w-10 rounded-full bg-white/5 hover:bg-primary text-gray-400 hover:text-white flex items-center justify-center transition-colors" href="#">
+<svg class="h-5 w-5" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.85-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+</a>
+</div>
+</div>
+<div>
+<h4 class="text-white font-bold mb-4">Quick Links</h4>
+<ul class="space-y-3 text-sm text-gray-400">
+<li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Our Beliefs</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Leadership</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Ministries</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-4">Media</h4>
+<ul class="space-y-3 text-sm text-gray-400">
+<li><a class="hover:text-primary transition-colors" href="#">Watch Live</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Sermon Archive</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Podcasts</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Blog</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-4">Stay Connected</h4>
+<p class="text-gray-500 text-sm mb-4">Subscribe to our weekly newsletter.</p>
+<form class="flex flex-col gap-3">
+<input class="bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary" placeholder="Email Address" type="email"/>
+<button class="bg-primary hover:bg-[#1e5e00] text-white font-bold py-2.5 rounded-lg text-sm transition-colors">Subscribe</button>
+</form>
+</div>
+</div>
+<div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-600">
+<p>© 2024 Green Pastures Tabernacle Hebron City. All rights reserved.</p>
+<div class="flex gap-6 mt-4 md:mt-0">
+<a class="hover:text-gray-400" href="#">Privacy Policy</a>
+<a class="hover:text-gray-400" href="#">Terms of Service</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+</body></html>
