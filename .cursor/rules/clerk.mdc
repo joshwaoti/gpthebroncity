@@ -1,0 +1,23 @@
+---
+description: Rules for working with Clerk authentication
+globs: ["src/middleware.ts", "src/components/admin/admin-auth-guard.tsx", "src/app/layout.tsx"]
+---
+
+# Clerk Authentication Rules
+
+## Root Integration
+- Wrap `RootLayout` in `<ClerkProvider>`.
+- Use `dynamic` prop on `ClerkProvider` if needed for SSR stability.
+
+## Protection
+- Use `clerkMiddleware` to protect sensitive routes (e.g., `/admin/*`).
+- Always use `auth().protect()` in Server Actions.
+- In Client Components, use `AdminAuthGuard` to verify `publicMetadata.role`.
+
+## Role-Based Access (RBAC)
+- Prefer `publicMetadata` for roles over database-stored roles.
+- Default to `super_admin` only during initial setup or explicitly requested fallback.
+
+## Synchronization
+- Use the `ConvexUserSync` headless component pattern to keep Convex in sync with Clerk.
+- Sync data points: `clerkId`, `name`, `email`, `imageUrl`.

@@ -1,0 +1,25 @@
+---
+description: Rules for working with Convex backends
+globs: ["convex/**/*", "src/hooks/useConvex*"]
+---
+
+# Convex Development Rules
+
+## Schema & Tables
+- ALWAYS define explicit types in `convex/schema.ts`.
+- Use `clerkId: v.string()` as the lookup key for users, NOT `tokenIdentifier`.
+- Index critical lookup fields (e.g., `clerkId`, `slug`, `email`).
+- Return `[]` or `0` for empty collections; NEVER throw errors for "not found" in list queries.
+
+## Authentication (The Golden Pattern)
+- Use `ctx.auth.getUserIdentity()` to verify users in mutations.
+- Favor client-side sync via a dedicated `ConvexUserSync` component for immediate database population.
+- Create a `convex/authHelper.ts` with a `getClerkUserId(ctx)` helper.
+
+## Sync Logic
+- User creation logic MUST check for existence before inserting (Upsert pattern).
+- Mutations should be idempotent where possible.
+
+## Environment & Build
+- `convex/tsconfig.json` must NOT extend the root `tsconfig.json` to avoid circular inheritance errors.
+- Never commit `.js` files in the `convex` directory.

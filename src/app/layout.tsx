@@ -4,6 +4,9 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SmoothScroll } from "@/components/smooth-scroll";
+import { ConvexClientProvider } from "@/components/convex-provider";
+import { ClerkProvider } from "@clerk/nextjs";
+import { ConvexUserSync } from "@/components/ConvexUserSync";
 
 const montserrat = Montserrat({
     subsets: ["latin"],
@@ -44,16 +47,21 @@ export default function RootLayout({
                     oswald.variable
                 )}
             >
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="light"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    <SmoothScroll>
-                        {children}
-                    </SmoothScroll>
-                </ThemeProvider>
+                <ClerkProvider>
+                    <ConvexClientProvider>
+                        <ConvexUserSync />
+                        <ThemeProvider
+                            attribute="class"
+                            defaultTheme="light"
+                            enableSystem
+                            disableTransitionOnChange
+                        >
+                            <SmoothScroll>
+                                {children}
+                            </SmoothScroll>
+                        </ThemeProvider>
+                    </ConvexClientProvider>
+                </ClerkProvider>
             </body>
         </html>
     );
