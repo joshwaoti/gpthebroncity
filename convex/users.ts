@@ -12,8 +12,10 @@ export const getByClerkId = query({
     },
 });
 
-// Create or update user from Clerk — bare minimum
-export const createUserFromClerk = mutation({
+import { internalMutation } from "./_generated/server";
+
+// Sync user from Clerk Webhook
+export const upsertFromClerk = internalMutation({
     args: {
         clerkId: v.string(),
         name: v.optional(v.string()),
@@ -31,7 +33,6 @@ export const createUserFromClerk = mutation({
                 name: args.name,
                 email: args.email,
                 imageUrl: args.imageUrl,
-                lastLogin: Date.now(),
             });
             return existingUser._id;
         }
@@ -43,6 +44,20 @@ export const createUserFromClerk = mutation({
             imageUrl: args.imageUrl,
             lastLogin: Date.now(),
         });
+    },
+});
+
+export const deleteFromClerk = internalMutation({
+    args: { clerkId: v.string() },
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_clerkId", (q) => q.eq("clerkId", args.clerkId))
+            .unique();
+
+        if (user) {
+            await ctx.db.delete(user._id);
+        }
     },
 });
 

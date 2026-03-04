@@ -41,7 +41,6 @@ export default function NewProjectPage() {
                 value: form.value, // Used as current raised amount wrapper 
                 // goalAmount is not in base schema natively, requires migration if needed, but keeping UX placeholder 
                 date: form.date,
-                createdBy: user.id
             });
             router.push("/admin/projects");
         } catch (error) {

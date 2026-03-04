@@ -9,18 +9,27 @@ import { CalendarView } from "@/components/events/calendar-view"
 import { Button } from "@/components/ui/button"
 import Navbar from "@/components/layout/navbar"
 import Footer from "@/components/layout/footer"
-import { ALL_EVENTS, EVENT_CATEGORIES } from "@/data/events"
+import { usePaginatedQuery, useQuery } from "convex/react"
+import { api } from "@/../convex/_generated/api"
 
-const EVENTS = ALL_EVENTS
-const CATEGORIES = EVENT_CATEGORIES
+const CATEGORIES = ["All", "Service", "Fellowship", "Worship", "Kids", "Leadership", "Holiday", "Family", "Youth"]
 
 export default function EventsPage() {
     const [view, setView] = useState<'list' | 'calendar'>('list')
     const [activeCategory, setActiveCategory] = useState('All')
 
-    const filteredEvents = EVENTS.filter(event =>
-        activeCategory === 'All' || event.category === activeCategory
-    )
+    // Paginated query for list view
+    const { results: filteredEvents, status, loadMore } = usePaginatedQuery(
+        api.events.getPaginated,
+        { category: activeCategory === 'All' ? undefined : activeCategory },
+        { initialNumItems: 9 }
+    );
+
+    // Non-paginated query for calendar view — covers all months
+    const calendarEvents = useQuery(
+        api.events.getForCalendar,
+        { category: activeCategory === 'All' ? undefined : activeCategory }
+    );
 
     return (
         <main className="min-h-screen bg-background">
@@ -55,24 +64,54 @@ export default function EventsPage() {
 
                     {/* Event Content */}
                     {view === 'list' ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {filteredEvents.map((event) => (
-                                <EventCard
-                                    key={event.id}
-                                    {...event}
-                                />
-                            ))}
-                        </div>
+                        <>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {status === "LoadingFirstPage" ? (
+                                    Array(6).fill(null).map((_, i) => (
+                                        <div key={i} className="animate-pulse bg-card dark:bg-white/5 border border-border dark:border-white/10 rounded-2xl h-[400px]">
+                                            <div className="w-full aspect-[16/9] bg-muted dark:bg-white/10 rounded-t-2xl" />
+                                            <div className="p-6 space-y-4">
+                                                <div className="h-4 bg-muted dark:bg-white/10 rounded w-1/3" />
+                                                <div className="h-6 bg-muted dark:bg-white/10 rounded w-3/4" />
+                                                <div className="h-10 bg-muted dark:bg-white/10 rounded w-32 mt-4" />
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    filteredEvents.map((event) => (
+                                        <EventCard
+                                            key={event._id}
+                                            {...event}
+                                            date={event.date}
+                                            startTime={event.startTime}
+                                            endTime={event.endTime}
+                                        />
+                                    ))
+                                )}
+                            </div>
+
+                            {status === "CanLoadMore" && (
+                                <div className="flex justify-center mt-12">
+                                    <Button
+                                        onClick={() => loadMore(9)}
+                                        variant="outline"
+                                        className="gap-2 border-[#257300] text-[#257300] hover:bg-[#257300] hover:text-white"
+                                    >
+                                        Load More Events
+                                    </Button>
+                                </div>
+                            )}
+                        </>
                     ) : (
-                        <CalendarView events={filteredEvents} />
+                        <CalendarView events={calendarEvents ?? []} />
                     )}
 
-                    {/* Empty State */}
-                    {filteredEvents.length === 0 && (
+                    {/* Empty State — only for list view */}
+                    {view === 'list' && status !== "LoadingFirstPage" && filteredEvents.length === 0 && (
                         <div className="text-center py-20 bg-card rounded-2xl border border-dashed border-border">
                             <CalendarDays className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
                             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
-                                No events found
+                                No upcoming events found
                             </h3>
                             <p className="text-muted-foreground">
                                 Try adjusting your filters or check back later.

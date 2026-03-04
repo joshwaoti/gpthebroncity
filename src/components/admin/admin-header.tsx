@@ -7,9 +7,10 @@ import Link from "next/link";
 interface AdminHeaderProps {
     title: string;
     breadcrumbs?: { label: string; href?: string }[];
+    action?: React.ReactNode;
 }
 
-export function AdminHeader({ title, breadcrumbs }: AdminHeaderProps) {
+export function AdminHeader({ title, breadcrumbs, action }: AdminHeaderProps) {
     const { theme, setTheme } = useTheme();
 
     return (
@@ -34,6 +35,7 @@ export function AdminHeader({ title, breadcrumbs }: AdminHeaderProps) {
                 <h1 className="text-lg font-bold font-display text-foreground">{title}</h1>
             </div>
             <div className="flex items-center gap-2">
+                {action}
                 <button
                     onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                     className="w-9 h-9 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent transition-all"

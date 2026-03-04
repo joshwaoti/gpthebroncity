@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { ConvexClientProvider } from "@/components/convex-provider";
 import { ClerkProvider } from "@clerk/nextjs";
-import { ConvexUserSync } from "@/components/ConvexUserSync";
 
 const montserrat = Montserrat({
     subsets: ["latin"],
@@ -49,7 +48,6 @@ export default function RootLayout({
             >
                 <ClerkProvider>
                     <ConvexClientProvider>
-                        <ConvexUserSync />
                         <ThemeProvider
                             attribute="class"
                             defaultTheme="light"

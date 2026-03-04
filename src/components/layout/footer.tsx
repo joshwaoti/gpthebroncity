@@ -7,6 +7,7 @@ import Image from "next/image"
 
 const quickLinks = [
     { label: "Home", href: "/" },
+    { label: "About Us", href: "/about" },
     { label: "Our History", href: "/about/history" },
     { label: "Beliefs", href: "/about/beliefs" },
     { label: "Media", href: "/media" },
@@ -15,7 +16,8 @@ const quickLinks = [
 
 const connectLinks = [
     { label: "Events", href: "/events" },
-    { label: "Ministries", href: "/ministries" },
+    { label: "Service Teams", href: "/ministries" },
+    { label: "Peer Groups", href: "/peer-groups" },
     { label: "Visit Us", href: "/visit" },
     { label: "Give", href: "/give" },
     { label: "Connect", href: "/connect" },

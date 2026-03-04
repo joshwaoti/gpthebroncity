@@ -5,6 +5,7 @@ export const homeData = {
             line1: "Christ Revealed,",
             line2: "Christ Expressed",
         },
+        tagline: "Seeing Him Clearly. Embracing Him Deeply. Expressing Him Boldly.",
         subtitle: "Raising Kingdom Ambassadors",
         description: "\"Christ in you, the hope of glory\" — Colossians 1:27",
         cta: {
@@ -14,7 +15,6 @@ export const homeData = {
         bgImage: "/assets/img/bg-4-2026.jpg",
     },
     serviceTimes: {
-        nextService: "2026-02-25T08:30:00", // Placeholder date
         label: "Next Service",
     },
     projects: {
@@ -25,44 +25,32 @@ export const homeData = {
             {
                 id: 1,
                 title: "Children's Church Block",
-                description: "Creating a safe, engaging, and spiritually nourishing space for our children to grow in faith.",
+                description: "Creating a safe, engaging, and spiritually nourishing space for our children to grow in faith. This is our primary focus for 2026 as we invest in the future of Hebron City.",
                 image: "/assets/img/construct.jpg",
                 progress: {
                     current: 120500,
                     goal: 250000,
                 },
                 priority: true,
-            },
-            {
-                id: 2,
-                title: "Parking Expansion",
-                description: "Expanding accessibility and convenience for our growing community with 200+ new slots.",
-                image: "/assets/img/construct.jpg",
-                progress: {
-                    current: 45000,
-                    goal: 80000,
-                },
-            },
-            {
-                id: 3,
-                title: "Community Hall",
-                description: "A multipurpose venue for weddings, conferences, and youth events.",
-                image: "/assets/img/construct.jpg",
-                progress: {
-                    current: 10000,
-                    goal: 150000,
-                },
+                details: [
+                    "Capacity for 500+ children",
+                    "Modern learning environments",
+                    "Safety-first design philosophy",
+                    "State-of-the-art media facilities"
+                ]
             },
         ],
     },
     latestSermon: {
         badge: "Latest Series",
-        title: "Unshakeable Faith",
-        description: "In a world of constant change, discover the foundation that never moves. Join us as we explore the book of Hebrews and uncover the power of a faith that endures.",
+        title: "Christ Revealed, Christ Expressed",
+        tagline: "Seeing Him Clearly. Embracing Him Deeply. Expressing Him Boldly.",
+        description: "Join us as we dive deep into our 2026 theme, exploring what it means to truly know Christ and effectively express Him in our daily lives.",
         thumbnail: "/assets/img/christreveaaled.png",
+        videoUrl: "https://www.youtube.com/live/PezCso4RaR8?si=pWO7gI3Lqbxu2fgG",
         actions: {
             watch: "Watch Sermon",
-            listen: "Listen to Audio",
+            listen: "View all sermons",
         },
     },
     visit: {
@@ -82,42 +70,127 @@ export const homeData = {
 
 export const beliefsData = [
     {
+        id: "god",
+        title: "God the Father",
+        content: "We believe in the one eternal God who exists in the Trinity of God the Father, God the Son and the Holy Spirit, the creator and Lord of the world, who governs all things according to the purpose of his will, calling out of the world a people for Himself and sending them back to the world to be His servants and witnesses for the extension of His Kingdom, the building of Christ's church to the glory of His name.",
+        scriptures: ["Genesis 1:1", "Matthew 28:19", "Ephesians 1:11"]
+    },
+    {
+        id: "jesus",
+        title: "Jesus Christ, the Only Savior",
+        content: "We believe in the one Savior, Jesus Christ Himself being the only God-man who died for the sins of mankind and was raised from the dead; the only ransom for sinners and mediator between God and man; who desires that all people be saved according to the holy scriptures who offers forgiveness of sins and the gift of the eternal life to all who repent, believe and come to Him personally.",
+        scriptures: ["John 3:16", "1 Timothy 2:5", "Romans 6:23"]
+    },
+    {
+        id: "holy-spirit",
+        title: "The Holy Spirit",
+        content: "We believe in God the Holy Spirit who bears witness to Jesus Christ and speaking through Scriptures, illuminates the minds of God's people in every culture to perceive the truth and to disclose to the whole church of the wisdom of God; whose power works among men leading them to the conviction of sin, faith in Christ, new birth, and Christian growth.",
+        scriptures: ["John 14:16-17", "Acts 1:8", "Acts 2:38-39"]
+    },
+    {
         id: "scriptures",
-        title: "The Scriptures",
-        content: "The Bible is the inspired Word of God, the product of holy men of old who spoke and wrote as they were moved by the Holy Spirit. The New Covenant, as recorded in the New Testament, we accept as our infallible guide in matters pertaining to conduct and doctrine.",
+        title: "The Holy Scriptures",
+        content: "We believe in the divine inspiration, truthfulness and authority of the Old and New Testament Scriptures as the infallible word of God with power to accomplish His purpose of salvation.",
         scriptures: ["2 Timothy 3:16", "1 Thessalonians 2:13", "2 Peter 1:21"]
     },
     {
-        id: "godhead",
-        title: "The Godhead",
-        content: "Our God is one, but manifested in three persons – the Father, the Son, and the Holy Spirit, being co-equal.",
-        scriptures: ["Philippians 2:6", "Matthew 3:16-17"]
-    },
-    {
-        id: "man",
-        title: "Man, His Fall and Redemption",
-        content: "Man is a created being, made in the likeness and image of God, but through Adam's transgression and fall, sin came into the world... Jesus Christ, the Son of God, was manifested to undo the works of the devil and gave His life and shed His blood to redeem and restore man back to God.",
-        scriptures: ["Romans 5:14", "Romans 3:10", "Romans 3:23", "1 John 3:8"]
-    },
-    {
-        id: "salvation",
-        title: "Eternal Life and the New Birth",
-        content: "Man's first step toward salvation is godly sorrow that worketh repentance. The New Birth is necessary to all men, and when experienced produces eternal life.",
-        scriptures: ["2 Corinthians 7:10", "1 John 5:12", "John 3:3-5"]
+        id: "second-coming",
+        title: "The Second Coming of Christ",
+        content: "We believe in the second coming of Jesus Christ Personally and visibly in power and glory to consummate the eternal plan of God and to Judge both the living and the dead.",
+        scriptures: ["Acts 1:11", "Revelation 1:7", "1 Thessalonians 4:16-17"]
     },
     {
         id: "baptism",
         title: "Water Baptism",
-        content: "Baptism in water is by immersion, is a direct commandment of our Lord, and is for believers only. The ordinance is a symbol of the Christian's identification with Christ in His death, burial, and resurrection.",
+        content: "We believe in water baptism by immersion of believers as a public declaration of believer's identity with Christ in His death, burial and resurrection and as a public declaration of the initiation into the body of Christ (the Church).",
         scriptures: ["Matthew 28:19", "Romans 6:4", "Colossians 2:12", "Acts 8:36-39"]
     },
     {
-        id: "holy-spirit",
-        title: "Baptism in the Holy Ghost",
-        content: "The Baptism in the Holy Ghost and Fire is a gift from God as promised by the Lord Jesus Christ to all believers in this dispensation and is received subsequent to the New Birth.",
-        scriptures: ["Matthew 3:11", "John 14:16-17", "Acts 1:8", "Acts 2:38-39"]
+        id: "holy-spirit-baptism",
+        title: "Baptism of the Holy Spirit",
+        content: "We believe in the baptism of the Holy Spirit with the initial evidence of speaking in tongues.",
+        scriptures: ["Matthew 3:11", "Acts 2:4", "Acts 10:44-46"]
     }
 ]
+
+export const aboutData = {
+    vision: {
+        title: "Our Vision",
+        content: "We see a true growing spiritual church of Jesus Christ with an earthly relevance and heavenly focus."
+    },
+    mission: {
+        title: "Our Mission",
+        content: "We exist to create an enabling environment where saints pray, worship God, minister to each other and to the world and are empowered to thrive spiritually, intellectually, socially and economically."
+    },
+    slogan: "Raising Kingdom Ambassadors",
+    identity: {
+        title: "Our Identity",
+        intro: "GPT is:",
+        points: [
+            "A Biblically based church submitted to the supremacy of God the Father, the leading of the Blessed Holy Spirit and the Headship of our Lord and Savior Jesus Christ.",
+            "A church with a target audience among the urban populace.",
+            "A community of believers open to people of all tribes, races and social stratum.",
+            "A church with a relevant and practical approach to ministry targeting the whole person with the life changing word of God."
+        ]
+    },
+    coreValues: [
+        {
+            title: "Excellence",
+            scripture: "Philippians 1:10",
+            description: "We pursue excellence in all that we do for the glory of God."
+        },
+        {
+            title: "Community",
+            scripture: "Psalms 133:1",
+            description: "We believe in the power of authentic, life-giving community."
+        },
+        {
+            title: "Simplicity",
+            scripture: "2nd Corinthians 11:3",
+            description: "We embrace the simplicity of the Gospel and make it accessible to all."
+        },
+        {
+            title: "Teach-ability",
+            scripture: "Isaiah 66:2",
+            description: "We remain humble, teachable, and open to God's correction and growth."
+        },
+        {
+            title: "Servant-hood",
+            scripture: "Mark 10:45",
+            description: "We serve one another as Christ served us, putting others before ourselves."
+        }
+    ],
+    coreFunctions: [
+        {
+            title: "Prayer",
+            description: "We value Prayer, both corporate and personal as the primary key to releasing and accomplishing God's purposes for the church and in the earth."
+        },
+        {
+            title: "Praise and Worship",
+            description: "We value praise and worship both corporate and personal as a key component of our lifestyle and church service in expressing our allegiance, adoration and adulation to our heavenly Father."
+        },
+        {
+            title: "Sound Biblical Teaching",
+            description: "We value sound biblical teaching of the word of God as the way to transform lives and bring saints to spiritual maturity."
+        },
+        {
+            title: "Leadership Development",
+            description: "We value Leadership Development as a way of raising competent, Godly, servant leaders which is fundamental in transforming and influencing society for God and for better."
+        },
+        {
+            title: "Evangelism & Discipleship",
+            description: "We value Evangelism & Discipleship as the mandate through which we reach out, win the lost to Christ and disciple them to grow in their walk with Christ."
+        },
+        {
+            title: "Integrity",
+            description: "We value Personal Integrity and holiness as the way for every believer. We are committed to encouraging this virtue in all our members."
+        },
+        {
+            title: "Fellowship",
+            description: "We value fellowship with one another as both a means to growing in Christ and an end in building meaningful relationships with one another."
+        }
+    ]
+}
 
 export const mediaData = {
     hero: {
@@ -312,63 +385,109 @@ export const visitPage = {
 export const ministriesPage = {
     hero: {
         title: "Serve & Belong",
-        subtitle: "Find Your Place",
-        description: "We believe every believer is a minister. Discover where you can serve, grow, and build meaningful relationships within the GPT Hebron City family.",
+        subtitle: "Our Service Teams",
+        description: "These are groups actively involved in service at GPT Hebron City. Every member is called to serve — find where your gift fits in.",
         bgImage: "/assets/img/bg_full_1.jpg"
     },
     items: [
         {
-            id: "kids",
-            title: "Kingdom Kids",
-            description: "A fun, safe, and faith-filled environment for children to learn about Jesus.",
+            id: "protocol",
+            title: "Protocol Ministry",
+            description: "This ministry embodies servant-hood. They are a team of committed brethren given to kingdom service through hospitality. They help with bringing order in the services by efficiently and effectively facilitating those who come to church. They make every person, both members and visitors, feel welcomed and loved.",
             image: "/assets/img/citycenter.jpg",
-            schedule: "Sundays 8:30 AM & 11:00 AM",
-            leader: "Pst. Alice"
-        },
-        {
-            id: "teens",
-            title: "NextGen Teens",
-            description: "Empowering teenagers to live bold, authentic lives for Christ in their generation.",
-            image: "/assets/img/citycenter.jpg",
-            schedule: "Sundays 10:30 AM",
-            leader: "Bro. John"
-        },
-        {
-            id: "men",
-            title: "Men of Valor",
-            description: "Men sharpening men to be the leaders, fathers, and husbands God called them to be.",
-            image: "/assets/img/citycenter.jpg",
-            schedule: "Monthly Fellowships",
-            leader: "Elder James"
-        },
-        {
-            id: "women",
-            title: "Daughters of Zion",
-            description: "Women supporting each other in prayer, fellowship, and spiritual growth.",
-            image: "/assets/img/citycenter.jpg",
-            schedule: "Monthly Fellowships",
-            leader: "Rev. Sarah"
+            schedule: "Every Service",
+            leader: "Protocol Head"
         },
         {
             id: "worship",
-            title: "Worship Team",
-            description: "Leading the congregation in spirit and truth through music and song.",
+            title: "Hebron City Voices",
+            description: "This is a team with the role of leading the congregation in corporate praise and worship. Their main mandate is to provide an enabling environment for authentic and passionate worship through spiritual music.",
             image: "/assets/img/events.jpg",
-            schedule: "Practice: Saturdays 2:00 PM",
-            leader: "Music Director"
+            schedule: "Practice: Saturdays; Every Service",
+            leader: "Worship Leader"
         },
         {
-            id: "media",
-            title: "Media & Tech",
-            description: "Using technology to broadcast the Gospel to the world with excellence.",
+            id: "intercessory",
+            title: "Intercessory Ministry",
+            description: "This is a group mandated to see the church become a fervently and effectively praying church. They seek to recruit, empower and engage all church members to a life of prayer. Their program includes morning intercession sessions every Sunday, prayer seminars, trainings and equipping forums.",
             image: "/assets/img/citycenter.jpg",
-            schedule: "Service Rotations",
-            leader: "Media Head"
+            schedule: "Sundays (Morning Intercession) & Special Sessions",
+            leader: "Intercession Head"
         }
     ],
     cta: {
         title: "Ready to Serve?",
         description: "God has given you unique gifts to build His Kingdom. Let us help you find the perfect place to plug in.",
-        buttonText: "Join a Ministry"
+        buttonText: "Join a Service Team"
+    }
+}
+
+export const peerGroupsPage = {
+    hero: {
+        title: "Find Your Community",
+        subtitle: "Our Peer Groups",
+        description: "Life is better together. Our peer groups are designed to foster discipleship, friendship, and meaningful fellowship at a personal level within GPT Hebron City.",
+        bgImage: "/assets/img/bg_full_1.jpg"
+    },
+    items: [
+        {
+            id: "eagles",
+            title: "Eagles Fellowship",
+            subtitle: "Men's Fellowship",
+            description: "This is a group of men in GPT-HC. The acronym E.A.G.L.E.S defines the objective of the fellowship which is to raise men who are Excellent, Accountable, Godly, Leaders, Empowered, Serving in the Vineyard of the Lord.",
+            image: "/assets/img/citycenter.jpg",
+            schedule: "Regular Fellowships",
+            targetGroup: "Men"
+        },
+        {
+            id: "wings",
+            title: "Wings Fellowship",
+            subtitle: "Women's Fellowship",
+            description: "These are the ladies in GPT-HC. Their goal is to build strong God-fearing families and be actively involved in ministry. WINGS stands for Women In God's Service.",
+            image: "/assets/img/citycenter.jpg",
+            schedule: "Regular Fellowships",
+            targetGroup: "Women"
+        },
+        {
+            id: "overcomers",
+            title: "Over-comers Fellowship",
+            subtitle: "Young Adults (20+)",
+            description: "This is a group of single young people, 20 years old and above, in college, campus or working with a passion for God. Their vision and mission entails a pursuit for holistic growth, serving God with passion and strength of their youth and living an overcoming Christian lifestyle.",
+            image: "/assets/img/citycenter.jpg",
+            schedule: "Regular Meetings",
+            targetGroup: "Young Adults (20+)"
+        },
+        {
+            id: "teens",
+            title: "Teens Fellowship",
+            subtitle: "Ages 13-19",
+            description: "This group is comprised of teenagers from the age of 13 years to 19 years. Their programs usually include discussions on topical issues pertinent to this age group, sound biblical teaching, singing and dancing, drama and Q&A interactive sessions.",
+            image: "/assets/img/citycenter.jpg",
+            schedule: "Every Sunday",
+            targetGroup: "Teens (13-19)"
+        },
+        {
+            id: "childrens-church",
+            title: "Children's Church",
+            subtitle: "Ages 3-12",
+            description: "This is a church designed to ground our children in the word of God in a simple, exciting environment — raising children who fear and love God. They are divided into three groups: ages 3-5, 6-8, and pre-teens 9-12. Their programs include Bible stories, prayer, games with life skills lessons, biblical puzzles and more.",
+            image: "/assets/img/citycenter.jpg",
+            schedule: "Sundays 8:30 AM & 11:00 AM",
+            targetGroup: "Children (3-12)"
+        },
+        {
+            id: "marriage",
+            title: "Marriage Ministry",
+            subtitle: "Couples",
+            description: "We provide forums for couples to be enriched in their marriage through teaching, mentorship and counseling. The programs include interactive sessions where we discuss relevant topics on marriage and family — helping every couple enjoy marriage as God intended.",
+            image: "/assets/img/citycenter.jpg",
+            schedule: "Regular Sessions",
+            targetGroup: "Couples"
+        }
+    ],
+    cta: {
+        title: "Find Your People",
+        description: "Every member belongs to a peer group. Come and find yours — a community that will journey with you, pray with you, and help you grow.",
+        buttonText: "Join a Peer Group"
     }
 }

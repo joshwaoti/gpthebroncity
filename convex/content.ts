@@ -12,8 +12,11 @@ export const getSetting = query({
 });
 
 export const updateSetting = mutation({
-    args: { key: v.string(), value: v.any(), description: v.optional(v.string()), updatedBy: v.string() },
+    args: { key: v.string(), value: v.any(), description: v.optional(v.string()) },
     handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) throw new Error("Unauthenticated call to update setting");
+
         const existing = await ctx.db
             .query("siteSettings")
             .withIndex("by_key", (q) => q.eq("key", args.key))
@@ -23,14 +26,14 @@ export const updateSetting = mutation({
             await ctx.db.patch(existing._id, {
                 value: args.value,
                 description: args.description,
-                updatedBy: args.updatedBy,
+                updatedBy: identity.subject,
             });
         } else {
             await ctx.db.insert("siteSettings", {
                 key: args.key,
                 value: args.value,
                 description: args.description,
-                updatedBy: args.updatedBy,
+                updatedBy: identity.subject,
             });
         }
     },
@@ -47,13 +50,18 @@ export const getAllMinistries = query({
 export const upsertMinistry = mutation({
     args: { ministry: v.any() },
     handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) throw new Error("Unauthenticated");
         // Implement full logic later, dummy for now to resolve error
     },
 });
 
 export const deleteMinistry = mutation({
     args: { id: v.string() },
-    handler: async (ctx) => { },
+    handler: async (ctx) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) throw new Error("Unauthenticated");
+    },
 });
 
 export const getAllGivingMethods = query({
@@ -66,5 +74,8 @@ export const getAllGivingMethods = query({
 
 export const upsertGivingMethod = mutation({
     args: { method: v.any() },
-    handler: async (ctx, args) => { },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) throw new Error("Unauthenticated");
+    },
 });

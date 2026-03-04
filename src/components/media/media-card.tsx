@@ -9,10 +9,11 @@ interface MediaItem {
     title: string
     preacher: string
     series: string
-    date: string
+    date?: string
     thumbnail: string
     category: string
-    duration: string
+    duration?: string
+    videoUrl?: string
 }
 
 interface MediaCardProps {
@@ -20,8 +21,8 @@ interface MediaCardProps {
 }
 
 export function MediaCard({ item }: MediaCardProps) {
-    return (
-        <div className="group relative flex flex-col gap-4">
+    const CardContent = (
+        <div className="group relative flex flex-col gap-4 cursor-pointer">
             {/* Thumbnail */}
             <div className="relative aspect-video rounded-xl overflow-hidden bg-muted">
                 <Image
@@ -40,10 +41,12 @@ export function MediaCard({ item }: MediaCardProps) {
                 </div>
 
                 {/* Duration Badge */}
-                <div className="absolute bottom-3 right-3 px-2 py-1 bg-black/60 backdrop-blur-md rounded text-xs font-medium text-white flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    {item.duration}
-                </div>
+                {item.duration && (
+                    <div className="absolute bottom-3 right-3 px-2 py-1 bg-black/60 backdrop-blur-md rounded text-xs font-medium text-white flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {item.duration}
+                    </div>
+                )}
             </div>
 
             {/* Content */}
@@ -59,4 +62,14 @@ export function MediaCard({ item }: MediaCardProps) {
             </div>
         </div>
     )
+
+    if (item.videoUrl) {
+        return (
+            <a href={item.videoUrl} target="_blank" rel="noopener noreferrer" className="block">
+                {CardContent}
+            </a>
+        )
+    }
+
+    return CardContent
 }

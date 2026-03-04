@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
 import { Button } from "@/components/ui/button";
-import { Plus, Edit2, Trash2, Play, Search, FolderOpen } from "lucide-react";
+import { Plus, Edit2, Trash2, Play, Search, FolderOpen, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { AdminPagination } from "@/components/admin/pagination";
@@ -19,6 +19,25 @@ export default function SermonsPage() {
     const [seriesFilter, setSeriesFilter] = useState("all");
     const [deleteId, setDeleteId] = useState<any>(null);
     const [isDeleting, setIsDeleting] = useState(false);
+    const syncSermons = useAction(api.youtube.syncSermons);
+    const [isSyncing, setIsSyncing] = useState(false);
+
+    const handleSync = async () => {
+        setIsSyncing(true);
+        try {
+            const result = await syncSermons();
+            if (result.success) {
+                alert(`Successfully synced ${result.count} sermons!`);
+            } else {
+                alert(`Failed to sync: ${result.error}`);
+            }
+        } catch (e) {
+            alert("Error syncing sermons.");
+            console.error(e);
+        } finally {
+            setIsSyncing(false);
+        }
+    };
 
     const filtered = sermons?.filter((s: any) => {
         const matchSearch = s.title.toLowerCase().includes(search.toLowerCase()) || (s.pastor || "").toLowerCase().includes(search.toLowerCase());
@@ -66,6 +85,10 @@ export default function SermonsPage() {
                             <option value="all">All Series</option>
                             {series?.map((s: any) => <option key={s?._id} value={s?._id}>{s.title}</option>)}
                         </select>
+                        <Button onClick={handleSync} disabled={isSyncing} variant="outline" className="gap-2 whitespace-nowrap">
+                            <RefreshCw className={cn("w-4 h-4", isSyncing && "animate-spin")} />
+                            {isSyncing ? "Syncing..." : "Sync YouTube"}
+                        </Button>
                         <Link href="/admin/media/sermons/new">
                             <Button className="gap-2 whitespace-nowrap"><Plus className="w-4 h-4" /> New Sermon</Button>
                         </Link>

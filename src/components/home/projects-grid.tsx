@@ -1,76 +1,93 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { GlassCard } from "@/components/ui/glass-card"
 import { homeData } from "@/data"
 import { ArrowRight } from "lucide-react"
 
 export function ProjectsGrid() {
+    const project = homeData.projects.items[0]
+
     return (
-        <section className="py-24 px-6 md:px-12 bg-background relative z-10 transition-colors duration-300">
-            <div className="container mx-auto">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-                    <div className="max-w-2xl">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="w-8 h-[2px] bg-gold" />
-                            <h2 className="text-[#257300] dark:text-[#B2CB20] font-bold tracking-widest uppercase text-sm">{homeData.projects.subtitle}</h2>
-                        </div>
-                        <h3 className="text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-white leading-tight">
-                            {homeData.projects.title}
-                        </h3>
+        <section className="py-24 px-6 md:px-12 bg-white dark:bg-[#0a0f05] relative overflow-hidden transition-colors duration-300">
+            {/* Background Accents */}
+            <div className="absolute top-0 right-0 w-1/2 h-full bg-accent dark:bg-white/5 skew-x-12 translate-x-32 transition-colors duration-300" />
+
+            <div className="container mx-auto relative z-10">
+                <div className="max-w-4xl mx-auto text-center mb-16">
+                    <div className="inline-flex items-center gap-3 mb-6 bg-[#257300]/10 dark:bg-[#B2CB20]/10 px-4 py-2 rounded-full">
+                        <div className="w-2 h-2 rounded-full bg-[#257300] animate-pulse" />
+                        <span className="text-[#257300] dark:text-[#B2CB20] font-bold tracking-[0.2em] uppercase text-xs">Featured Project</span>
                     </div>
-                    <Button variant="link" className="text-gray-600 dark:text-gray-300 hover:text-[#257300] dark:hover:text-[#B2CB20] group">
-                        {homeData.projects.linkText} <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </Button>
+                    <h2 className="text-4xl md:text-6xl font-display font-bold text-gray-900 dark:text-white leading-tight mb-6">
+                        Building the <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#257300] to-gold">Next Gen</span> Church
+                    </h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {homeData.projects.items.map((project) => (
+                <div className="grid lg:grid-cols-2 gap-12 items-center bg-card dark:bg-white/5 rounded-[2.5rem] overflow-hidden border border-border dark:border-white/10 shadow-2xl shadow-black/5">
+                    {/* Visual Side */}
+                    <div className="relative aspect-square lg:aspect-auto lg:h-[600px] group overflow-hidden">
                         <div
-                            key={project.id}
-                            className="group relative bg-card dark:bg-white/5 rounded-2xl overflow-hidden border border-border dark:border-white/10 hover:border-[#257300]/30 dark:hover:border-[#257300]/40 card-hover"
-                        >
-                            {/* Gold accent line at top */}
-                            <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#257300] via-gold to-[#257300] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
+                            className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
+                            style={{ backgroundImage: `url(${project.image})` }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent lg:hidden" />
 
-                            <div className="aspect-[4/3] w-full bg-gray-900 relative overflow-hidden">
-                                <div
-                                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                                    style={{ backgroundImage: `url(${project.image})` }}
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#0f160a] via-transparent to-transparent opacity-90" />
-                                {project.priority && (
-                                    <div className="absolute top-4 right-4 bg-gold text-[#0a0f05] text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
-                                        Priority
+                        <div className="absolute bottom-8 left-8 right-8">
+                            <GlassCard className="p-6 border-white/20 bg-white/10 backdrop-blur-xl">
+                                <h4 className="text-2xl font-display font-bold text-white mb-2">{project.title}</h4>
+                                <div className="flex items-center gap-2 text-[#B2CB20]">
+                                    <div className="w-8 h-[2px] bg-[#B2CB20]" />
+                                    <span className="text-sm font-bold uppercase tracking-widest">Target 2026</span>
+                                </div>
+                            </GlassCard>
+                        </div>
+                    </div>
+
+                    {/* Info Side */}
+                    <div className="p-8 md:p-12 lg:p-16">
+                        <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-10">
+                            {project.description}
+                        </p>
+
+                        <div className="space-y-6 mb-12">
+                            {project.details?.map((detail, i) => (
+                                <div key={i} className="flex items-center gap-4 group">
+                                    <div className="w-10 h-10 rounded-xl bg-[#257300]/10 dark:bg-[#B2CB20]/10 flex items-center justify-center text-[#257300] dark:text-[#B2CB20] group-hover:bg-[#257300] group-hover:text-white transition-all duration-300">
+                                        <ArrowRight className="w-5 h-5" />
                                     </div>
-                                )}
-                            </div>
+                                    <span className="text-gray-700 dark:text-gray-300 font-medium">{detail}</span>
+                                </div>
+                            ))}
+                        </div>
 
-                            <div className="p-6 relative -mt-20">
-                                <div className="bg-card/95 dark:bg-[#0a0f05]/95 backdrop-blur-md rounded-xl p-6 border border-border dark:border-white/10 shadow-xl group-hover:-translate-y-2 transition-transform duration-300">
-                                    <h4 className="text-xl font-display font-bold text-gray-900 dark:text-white mb-3">{project.title}</h4>
-                                    <p className="text-muted-foreground text-sm mb-6 line-clamp-2">{project.description}</p>
-
-                                    {/* Progress Bar */}
-                                    <div className="mb-6">
-                                        <div className="flex justify-between text-xs font-medium mb-2">
-                                            <span className="text-gray-800 dark:text-gray-200">Raised: ${project.progress.current.toLocaleString()}</span>
-                                            <span className="text-muted-foreground">Goal: ${project.progress.goal.toLocaleString()}</span>
-                                        </div>
-                                        <div className="w-full bg-muted dark:bg-white/10 rounded-full h-2 overflow-hidden">
-                                            <div
-                                                className="bg-gradient-to-r from-[#257300] to-gold h-full rounded-full transition-all duration-1000 ease-out"
-                                                style={{ width: `${(project.progress.current / project.progress.goal) * 100}%` }}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <Button className="w-full text-xs font-bold">
-                                        Give to This Project
-                                    </Button>
+                        {/* Progress */}
+                        <div className="bg-accent dark:bg-white/5 p-8 rounded-3xl border border-border dark:border-white/10 mb-10">
+                            <div className="flex justify-between items-end mb-4">
+                                <div>
+                                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest block mb-1">Current Progress</span>
+                                    <span className="text-3xl font-display font-bold text-gray-900 dark:text-white">${project.progress.current.toLocaleString()}</span>
+                                </div>
+                                <div className="text-right">
+                                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest block mb-1">Goal</span>
+                                    <span className="text-xl font-bold text-gray-500">${project.progress.goal.toLocaleString()}</span>
                                 </div>
                             </div>
+                            <div className="w-full h-4 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
+                                <div
+                                    className="h-full bg-gradient-to-r from-[#257300] via-gold to-[#257300] bg-[length:200%_auto] animate-gradient rounded-full transition-all duration-1000"
+                                    style={{ width: `${(project.progress.current / project.progress.goal) * 100}%` }}
+                                />
+                            </div>
+                            <span className="text-[10px] font-bold text-[#257300] dark:text-[#B2CB20] uppercase tracking-widest block mt-4 text-center">
+                                {Math.round((project.progress.current / project.progress.goal) * 100)}% Complete
+                            </span>
                         </div>
-                    ))}
+
+                        <Button size="xl" className="w-full rounded-2xl py-8 text-lg font-bold shadow-2xl shadow-primary/20 group">
+                            Partner With Us <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                    </div>
                 </div>
             </div>
         </section>

@@ -2,7 +2,8 @@
 
 import { Button } from "@/components/ui/button"
 import { homeData } from "@/data"
-import { Play, Headphones } from "lucide-react"
+import { Play } from "lucide-react"
+import Link from "next/link"
 
 export function LatestSermon() {
     return (
@@ -36,19 +37,26 @@ export function LatestSermon() {
                         <div className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
                         {homeData.latestSermon.badge}
                     </div>
-                    <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-8">
+                    <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-2">
                         {homeData.latestSermon.title}
                     </h2>
+                    <p className="text-[#257300] dark:text-[#B2CB20] font-bold text-xs tracking-widest uppercase mb-8">
+                        {homeData.latestSermon.tagline}
+                    </p>
                     <p className="text-muted-foreground text-lg mb-10 leading-relaxed max-w-lg">
                         {homeData.latestSermon.description}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4">
-                        <Button size="lg">
-                            {homeData.latestSermon.actions.watch}
-                        </Button>
-                        <Button variant="outline" size="lg">
-                            <Headphones className="mr-2 w-4 h-4" /> {homeData.latestSermon.actions.listen}
-                        </Button>
+                        <Link href={homeData.latestSermon.videoUrl} target="_blank">
+                            <Button size="lg" className="w-full sm:w-auto h-auto py-4 px-8 rounded-full shadow-lg hover:shadow-xl transition-all">
+                                <Play className="mr-2 w-4 h-4 fill-current" /> {homeData.latestSermon.actions.watch}
+                            </Button>
+                        </Link>
+                        <Link href="/media">
+                            <Button variant="outline" size="lg" className="w-full sm:w-auto h-auto py-4 px-8 rounded-full border-2 hover:bg-black/5 dark:hover:bg-white/5 transition-all">
+                                {homeData.latestSermon.actions.listen}
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </div>

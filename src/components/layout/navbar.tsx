@@ -109,7 +109,18 @@ export default function Navbar() {
                                 <ChevronDown className="w-3 h-3 transition-transform group-hover:rotate-180" />
                             </button>
                             <div className="absolute top-full left-0 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                                <div className="w-48 bg-white dark:bg-[#0a0f05] border border-black/10 dark:border-white/10 rounded-xl shadow-xl overflow-hidden p-2 flex flex-col gap-1">
+                                <div className="w-52 bg-white dark:bg-[#0a0f05] border border-black/10 dark:border-white/10 rounded-xl shadow-xl overflow-hidden p-2 flex flex-col gap-1">
+                                    <Link
+                                        href="/about"
+                                        className={cn(
+                                            "block px-4 py-2 rounded-lg text-sm transition-colors",
+                                            pathname === "/about"
+                                                ? "bg-[#257300]/10 text-[#257300] dark:text-[#B2CB20]"
+                                                : "text-gray-700 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10 hover:text-[#257300] dark:hover:text-[#B2CB20]"
+                                        )}
+                                    >
+                                        About Us
+                                    </Link>
                                     <Link
                                         href="/about/history"
                                         className={cn(
@@ -136,17 +147,50 @@ export default function Navbar() {
                             </div>
                         </div>
 
+                        {/* Ministries Dropdown */}
+                        <div className="relative group">
+                            <button
+                                className={cn(
+                                    "flex items-center gap-1 outline-none",
+                                    getLinkClasses(pathname.startsWith("/ministries") || pathname.startsWith("/peer-groups"))
+                                )}
+                            >
+                                Ministries
+                                <ChevronDown className="w-3 h-3 transition-transform group-hover:rotate-180" />
+                            </button>
+                            <div className="absolute top-full left-0 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                                <div className="w-52 bg-white dark:bg-[#0a0f05] border border-black/10 dark:border-white/10 rounded-xl shadow-xl overflow-hidden p-2 flex flex-col gap-1">
+                                    <Link
+                                        href="/ministries"
+                                        className={cn(
+                                            "block px-4 py-2 rounded-lg text-sm transition-colors",
+                                            pathname === "/ministries"
+                                                ? "bg-[#257300]/10 text-[#257300] dark:text-[#B2CB20]"
+                                                : "text-gray-700 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10 hover:text-[#257300] dark:hover:text-[#B2CB20]"
+                                        )}
+                                    >
+                                        Service Teams
+                                    </Link>
+                                    <Link
+                                        href="/peer-groups"
+                                        className={cn(
+                                            "block px-4 py-2 rounded-lg text-sm transition-colors",
+                                            pathname === "/peer-groups"
+                                                ? "bg-[#257300]/10 text-[#257300] dark:text-[#B2CB20]"
+                                                : "text-gray-700 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10 hover:text-[#257300] dark:hover:text-[#B2CB20]"
+                                        )}
+                                    >
+                                        Peer Groups
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+
                         <Link href="/events" className={getLinkClasses(pathname === "/events")}>
                             Events
                         </Link>
                         <Link href="/read" className={getLinkClasses(pathname === "/read")}>
                             Blog
-                        </Link>
-                        <Link href="/media" className={getLinkClasses(pathname === "/media")}>
-                            Media
-                        </Link>
-                        <Link href="/projects" className={getLinkClasses(pathname === "/projects")}>
-                            Projects
                         </Link>
                         <Link href="/give" className={getLinkClasses(pathname === "/give")}>
                             Give
@@ -209,6 +253,12 @@ export default function Navbar() {
                     <div className="mobile-link flex flex-col gap-4">
                         <span className="text-sm font-bold text-[#257300] dark:text-[#B2CB20] uppercase tracking-widest">About Us</span>
                         <Link
+                            href="/about"
+                            className="text-2xl font-display font-medium text-gray-700 dark:text-white/90 hover:text-[#257300] dark:hover:text-[#B2CB20] transition-colors pl-4 border-l-2 border-gray-200 dark:border-white/10 hover:border-[#257300] dark:hover:border-[#B2CB20]"
+                        >
+                            About Us
+                        </Link>
+                        <Link
                             href="/about/history"
                             className="text-2xl font-display font-medium text-gray-700 dark:text-white/90 hover:text-[#257300] dark:hover:text-[#B2CB20] transition-colors pl-4 border-l-2 border-gray-200 dark:border-white/10 hover:border-[#257300] dark:hover:border-[#B2CB20]"
                         >
@@ -219,6 +269,23 @@ export default function Navbar() {
                             className="text-2xl font-display font-medium text-gray-700 dark:text-white/90 hover:text-[#257300] dark:hover:text-[#B2CB20] transition-colors pl-4 border-l-2 border-gray-200 dark:border-white/10 hover:border-[#257300] dark:hover:border-[#B2CB20]"
                         >
                             Beliefs
+                        </Link>
+                    </div>
+
+                    {/* Mobile Ministries Section */}
+                    <div className="mobile-link flex flex-col gap-4">
+                        <span className="text-sm font-bold text-[#257300] dark:text-[#B2CB20] uppercase tracking-widest">Ministries</span>
+                        <Link
+                            href="/ministries"
+                            className="text-2xl font-display font-medium text-gray-700 dark:text-white/90 hover:text-[#257300] dark:hover:text-[#B2CB20] transition-colors pl-4 border-l-2 border-gray-200 dark:border-white/10 hover:border-[#257300] dark:hover:border-[#B2CB20]"
+                        >
+                            Service Teams
+                        </Link>
+                        <Link
+                            href="/peer-groups"
+                            className="text-2xl font-display font-medium text-gray-700 dark:text-white/90 hover:text-[#257300] dark:hover:text-[#B2CB20] transition-colors pl-4 border-l-2 border-gray-200 dark:border-white/10 hover:border-[#257300] dark:hover:border-[#B2CB20]"
+                        >
+                            Peer Groups
                         </Link>
                     </div>
 
@@ -233,18 +300,6 @@ export default function Navbar() {
                         className="mobile-link text-3xl font-display font-medium text-gray-900 dark:text-white hover:text-[#257300] dark:hover:text-[#B2CB20] transition-colors"
                     >
                         Blog
-                    </Link>
-                    <Link
-                        href="/media"
-                        className="mobile-link text-3xl font-display font-medium text-gray-900 dark:text-white hover:text-[#257300] dark:hover:text-[#B2CB20] transition-colors"
-                    >
-                        Media
-                    </Link>
-                    <Link
-                        href="/projects"
-                        className="mobile-link text-3xl font-display font-medium text-gray-900 dark:text-white hover:text-[#257300] dark:hover:text-[#B2CB20] transition-colors"
-                    >
-                        Projects
                     </Link>
                     <Link
                         href="/give"

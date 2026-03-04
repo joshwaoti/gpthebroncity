@@ -37,7 +37,6 @@ export default function NewSermonPage() {
         try {
             await createSermon({
                 ...form,
-                createdBy: user.id
             });
             router.push("/admin/media/sermons");
         } catch (error) {

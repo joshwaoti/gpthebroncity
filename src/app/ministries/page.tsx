@@ -6,8 +6,8 @@ import { MinistryGrid } from "@/components/ministries/ministry-grid"
 import { MinistryCTA } from "@/components/ministries/ministry-cta"
 
 export const metadata: Metadata = {
-    title: "Ministries | GPT Hebron City",
-    description: "Discover the vibrant ministries at GPT Hebron City. From Kids to Men and Women, there's a place for you to serve and belong.",
+    title: "Service Teams | GPT Hebron City",
+    description: "Discover our service teams at GPT Hebron City — Protocol, Hebron City Voices, and the Intercessory Ministry. Find where you can actively serve.",
 }
 
 export default function MinistriesPage() {

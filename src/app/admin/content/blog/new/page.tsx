@@ -51,7 +51,6 @@ export default function NewBlogPostPage() {
                 imageUrl: form.image,
                 slug: finalSlug,
                 status,
-                createdBy: user?.id || "unknown",
             });
             router.push("/admin/content/blog");
         } catch (err) {

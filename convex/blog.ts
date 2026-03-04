@@ -28,12 +28,15 @@ export const create = mutation({
         imageUrl: v.optional(v.string()),
         excerpt: v.optional(v.string()),
         slug: v.string(),
-        createdBy: v.string(),
         status: v.union(v.literal("published"), v.literal("draft")),
     },
     handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) throw new Error("Unauthenticated call to create blog post");
+
         return await ctx.db.insert("blogPosts", {
             ...args,
+            createdBy: identity.subject,
         });
     },
 });
@@ -51,6 +54,9 @@ export const getBySlug = query({
 export const remove = mutation({
     args: { id: v.id("blogPosts") },
     handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) throw new Error("Unauthenticated call to remove blog post");
+
         await ctx.db.delete(args.id);
     },
 });

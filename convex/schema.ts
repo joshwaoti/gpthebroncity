@@ -24,18 +24,26 @@ export default defineSchema({
         isFeatured: v.optional(v.boolean()),
         status: v.union(v.literal("active"), v.literal("draft"), v.literal("archived")),
         createdBy: v.string(),
-    }).index("by_status", ["status"]),
+        youtubeVideoId: v.optional(v.string()),
+    })
+        .index("by_status", ["status"])
+        .index("by_youtubeVideoId", ["youtubeVideoId"]),
 
     events: defineTable({
         title: v.string(),
         description: v.optional(v.string()),
         date: v.string(),
+        endDate: v.optional(v.string()),
+        startTime: v.optional(v.string()),
+        endTime: v.optional(v.string()),
         location: v.optional(v.string()),
         imageUrl: v.optional(v.string()),
         category: v.optional(v.string()),
         status: v.union(v.literal("upcoming"), v.literal("completed"), v.literal("cancelled")),
         createdBy: v.string(),
-    }).index("by_status", ["status"]),
+    })
+        .index("by_status", ["status"])
+        .index("by_status_date", ["status", "date"]),
 
     blogPosts: defineTable({
         title: v.string(),

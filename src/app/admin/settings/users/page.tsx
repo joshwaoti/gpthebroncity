@@ -5,16 +5,42 @@ import { api } from "@/../convex/_generated/api";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@clerk/nextjs";
-import { ShieldAlert, Shield, ShieldCheck, Mail } from "lucide-react";
+import { ShieldAlert, Shield, ShieldCheck, Mail, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { AdminPagination } from "@/components/admin/pagination";
+import { inviteAdminUser } from "@/actions/invite";
 
 export default function UsersAdminPage() {
     const { user } = useUser();
     const allUsers = useQuery((api as any).users.list);
     const updateRole = useMutation((api as any).users.updateRole); // Assume implemented in backend
     const [isUpdating, setIsUpdating] = useState<string | null>(null);
+
+    const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+    const [inviteEmail, setInviteEmail] = useState("");
+    const [inviteRole, setInviteRole] = useState("user");
+    const [inviteStatus, setInviteStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+    const [inviteError, setInviteError] = useState("");
+
+    const handleInvite = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!inviteEmail) return;
+        setInviteStatus("loading");
+        const res = await inviteAdminUser(inviteEmail, inviteRole);
+        if (res?.success) {
+            setInviteStatus("success");
+            setTimeout(() => {
+                setIsInviteModalOpen(false);
+                setInviteStatus("idle");
+                setInviteEmail("");
+                setInviteRole("user");
+            }, 2000);
+        } else {
+            setInviteStatus("error");
+            setInviteError(res?.error || "Failed to send invitation.");
+        }
+    };
 
     const userRole = (user?.publicMetadata?.role as string) || "super_admin";
 
@@ -68,6 +94,11 @@ export default function UsersAdminPage() {
             <AdminHeader
                 title="Team & Users"
                 breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Settings" }, { label: "Users" }]}
+                action={
+                    <Button onClick={() => setIsInviteModalOpen(true)} className="bg-[#257300] hover:bg-[#1a5000] text-white h-8 text-xs">
+                        <Mail className="w-3.5 h-3.5 mr-2" /> Invite User
+                    </Button>
+                }
             />
 
             <div className="p-6 space-y-6">
@@ -154,6 +185,67 @@ export default function UsersAdminPage() {
 
                 <AdminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
             </div>
+
+            {isInviteModalOpen && (
+                <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-background border border-border rounded-xl shadow-lg w-full max-w-md overflow-hidden">
+                        <div className="p-6 border-b border-border flex items-center justify-between">
+                            <h3 className="font-bold text-lg text-foreground">Invite New User</h3>
+                            <button onClick={() => setIsInviteModalOpen(false)} className="text-muted-foreground hover:text-foreground text-2xl leading-none">
+                                &times;
+                            </button>
+                        </div>
+                        <form onSubmit={handleInvite} className="p-6 space-y-4">
+                            <div>
+                                <label className="block text-sm font-semibold mb-1 text-foreground">Email Address</label>
+                                <input
+                                    type="email"
+                                    required
+                                    value={inviteEmail}
+                                    onChange={(e) => setInviteEmail(e.target.value)}
+                                    className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#257300]"
+                                    placeholder="colleague@church.org"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-semibold mb-1 text-foreground">Role</label>
+                                <select
+                                    value={inviteRole}
+                                    onChange={(e) => setInviteRole(e.target.value)}
+                                    className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#257300]"
+                                >
+                                    {Object.entries(roleLabels).map(([key, label]) => (
+                                        <option key={key} value={key}>{label}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {inviteStatus === "error" && (
+                                <div className="p-3 rounded-md bg-red-500/10 text-red-500 text-sm border border-red-500/20">
+                                    {inviteError}
+                                </div>
+                            )}
+
+                            {inviteStatus === "success" && (
+                                <div className="p-3 rounded-md bg-green-500/10 text-green-500 text-sm border border-green-500/20 flex items-center gap-2">
+                                    <ShieldCheck className="w-4 h-4" />
+                                    Invitation sent successfully!
+                                </div>
+                            )}
+
+                            <div className="pt-4 flex justify-end gap-3">
+                                <Button type="button" variant="outline" onClick={() => setIsInviteModalOpen(false)}>
+                                    Cancel
+                                </Button>
+                                <Button type="submit" disabled={inviteStatus === "loading" || inviteStatus === "success"} className="bg-[#257300] hover:bg-[#1a5000] text-white">
+                                    {inviteStatus === "loading" && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                                    Send Invitation
+                                </Button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

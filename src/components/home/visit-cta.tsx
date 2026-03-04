@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { homeData } from "@/data"
 import { MapPin, Clock, Navigation } from "lucide-react"
+import Link from "next/link"
 
 export function VisitSection() {
     return (
@@ -44,9 +45,15 @@ export function VisitSection() {
                         </div>
                     </div>
 
-                    <Button size="lg">
-                        <Navigation className="mr-2 w-4 h-4" /> {homeData.visit.action}
-                    </Button>
+                    <Link
+                        href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(homeData.visit.campus.address)}`}
+                        target="_blank"
+                    >
+                        <Button size="lg" className="h-auto py-4 px-8 rounded-full shadow-xl bg-primary hover:bg-primary/90 text-white gap-2">
+                            <Navigation className="w-5 h-5 text-white" />
+                            {homeData.visit.action}
+                        </Button>
+                    </Link>
                 </div>
 
                 {/* Real Google Map */}

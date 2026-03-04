@@ -12,10 +12,14 @@ import type * as auditLog from "../auditLog.js";
 import type * as blog from "../blog.js";
 import type * as contact from "../contact.js";
 import type * as content from "../content.js";
+import type * as crons from "../crons.js";
 import type * as events from "../events.js";
+import type * as http from "../http.js";
 import type * as projects from "../projects.js";
+import type * as seed_events from "../seed_events.js";
 import type * as sermons from "../sermons.js";
 import type * as users from "../users.js";
+import type * as youtube from "../youtube.js";
 
 import type {
   ApiFromModules,
@@ -28,10 +32,14 @@ declare const fullApi: ApiFromModules<{
   blog: typeof blog;
   contact: typeof contact;
   content: typeof content;
+  crons: typeof crons;
   events: typeof events;
+  http: typeof http;
   projects: typeof projects;
+  seed_events: typeof seed_events;
   sermons: typeof sermons;
   users: typeof users;
+  youtube: typeof youtube;
 }>;
 
 /**

@@ -42,7 +42,7 @@ export function MinistryGrid() {
 
                                 <Link href="/connect" className="mt-auto">
                                     <Button variant="outline" className="w-full justify-between group/btn">
-                                        Get Involved
+                                        Join this Team
                                         <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
                                     </Button>
                                 </Link>

@@ -9,13 +9,14 @@ import { useCountdown } from "@/hooks/use-countdown"
 import { ArrowRight, Bell } from "lucide-react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { getNextServiceDate } from "@/lib/utils/date-utils"
 
 gsap.registerPlugin(ScrollTrigger)
 
 export function Hero() {
     const containerRef = useRef<HTMLDivElement>(null)
     const titleRef = useRef<HTMLHeadingElement>(null)
-    const timeLeft = useCountdown(homeData.serviceTimes.nextService)
+    const timeLeft = useCountdown(getNextServiceDate())
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -76,26 +77,30 @@ export function Hero() {
                     <span className="text-xs font-bold text-[#B2CB20] tracking-widest uppercase">{homeData.hero.badge}</span>
                 </div>
 
-                <h1 ref={titleRef} className="text-5xl md:text-7xl lg:text-9xl font-display font-bold text-white mb-6 md:mb-8 tracking-tighter leading-[1.1] pb-2">
+                <h1 ref={titleRef} className="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-white mb-4 md:mb-6 tracking-tighter leading-[1.1] pb-2">
                     {homeData.hero.title.line1} <br />
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-500 italic pr-2">
                         {homeData.hero.title.line2}
                     </span>
                 </h1>
 
-                <p className="hero-element text-base md:text-xl text-gray-300 max-w-2xl mx-auto mb-10 md:mb-12 font-light leading-relaxed px-4 italic">
+                <p className="hero-element text-[#B2CB20] font-bold text-sm md:text-base tracking-[0.2em] uppercase mb-4 max-w-2xl mx-auto">
+                    {homeData.hero.tagline}
+                </p>
+
+                <p className="hero-element text-base md:text-lg text-gray-300 max-w-2xl mx-auto mb-12 md:mb-16 font-light leading-relaxed px-4 italic opacity-80 border-t border-white/10 pt-4">
                     {homeData.hero.description}
                 </p>
 
-                <div className="hero-element flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 w-full px-4">
+                <div className="hero-element flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-5 w-full px-4 mb-20 md:mb-24">
                     <Link href="/visit">
-                        <Button variant="default" size="xl" className="group text-lg w-full sm:w-auto">
+                        <Button variant="default" size="lg" className="group text-sm md:text-base px-6 md:px-7 py-4 md:py-4 h-auto rounded-xl shadow-xl transition-all duration-500 w-full sm:w-auto">
                             {homeData.hero.cta.primary}
-                            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                            <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </Button>
                     </Link>
                     <Link href="/media">
-                        <Button variant="secondary" size="xl" className="text-lg w-full sm:w-auto">
+                        <Button variant="secondary" size="lg" className="text-sm md:text-base px-6 md:px-7 py-4 md:py-4 h-auto rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 text-white w-full sm:w-auto">
                             {homeData.hero.cta.secondary}
                         </Button>
                     </Link>

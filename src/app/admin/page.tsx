@@ -29,8 +29,8 @@ function ProgressBar({ raised, goal }: { raised: number; goal: number }) {
 
 export default function AdminDashboardPage() {
     const { user } = useUser();
-    const latestSermons = useQuery(api.sermons.getLatest);
-    const upcomingEvents = useQuery(api.events.getUpcoming);
+    const latestSermons = useQuery(api.sermons.getLatest, {});
+    const upcomingEvents = useQuery(api.events.getUpcoming, {});
     const activeProjects = useQuery((api as any).projects.getActive, { limit: 3 });
     const latestPosts = useQuery(api.blog.getLatest, { limit: 3 });
     const projectTotals = useQuery((api as any).projects.getTotals);

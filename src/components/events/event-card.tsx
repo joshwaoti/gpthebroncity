@@ -1,94 +1,156 @@
+"use client"
 
 import Link from "next/link"
-import { CalendarDays, MapPin, ArrowRight } from "lucide-react"
+import { CalendarDays, MapPin, ArrowRight, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
+import { AddToCalendar } from "./add-to-calendar"
 
 interface EventCardProps {
+    _id?: string
+    id?: string
     title: string
-    date: Date
-    location: string
-    category: string
+    date: Date | string
+    endDate?: string
+    location?: string
+    category?: string
+    imageUrl?: string
     image?: string
-    slug: string
+    slug?: string
     featured?: boolean
+    description?: string
+    startTime?: string
+    endTime?: string
+}
+
+const CATEGORY_STYLES: Record<string, { bg: string; text: string; icon: string; lightText: string }> = {
+    Service: { bg: "from-green-700/20 to-green-900/30", text: "dark:text-green-400", lightText: "text-green-800", icon: "⛪" },
+    Fellowship: { bg: "from-blue-700/20 to-blue-900/30", text: "dark:text-blue-400", lightText: "text-blue-800", icon: "🤝" },
+    Worship: { bg: "from-purple-700/20 to-purple-900/30", text: "dark:text-purple-400", lightText: "text-purple-800", icon: "🙏" },
+    Kids: { bg: "from-orange-700/20 to-orange-900/30", text: "dark:text-orange-400", lightText: "text-orange-800", icon: "👶" },
+    Leadership: { bg: "from-yellow-700/20 to-yellow-900/30", text: "dark:text-yellow-400", lightText: "text-yellow-800", icon: "👑" },
+    Holiday: { bg: "from-red-700/20 to-red-900/30", text: "dark:text-red-400", lightText: "text-red-800", icon: "🎉" },
+    Family: { bg: "from-pink-700/20 to-pink-900/30", text: "dark:text-pink-400", lightText: "text-pink-800", icon: "👨‍👩‍👧" },
+    Youth: { bg: "from-indigo-700/20 to-indigo-900/30", text: "dark:text-indigo-400", lightText: "text-indigo-800", icon: "⚡" },
 }
 
 export function EventCard({
+    _id,
+    id,
     title,
     date,
+    endDate,
     location,
-    category,
+    category = "Service",
+    imageUrl,
     image,
     slug,
     featured = false,
+    description,
+    startTime,
+    endTime,
 }: EventCardProps) {
-    const day = date.getDate()
-    const month = date.toLocaleString('default', { month: 'short' }).toUpperCase()
+    const dateObj = typeof date === "string" ? new Date(date + "T00:00:00") : date;
+    const day = dateObj.getDate()
+    const month = dateObj.toLocaleString("default", { month: "short" }).toUpperCase()
+    const weekday = dateObj.toLocaleString("default", { weekday: "short" }).toUpperCase()
+    const year = dateObj.getFullYear()
+
+    const isMultiDay = !!endDate;
+    const endDateObj = endDate ? new Date(endDate + "T00:00:00") : null;
+    const endDay = endDateObj?.getDate();
+    const endMonth = endDateObj?.toLocaleString("default", { month: "short" })?.toUpperCase();
+
+    const eventLink = slug ? `/events/${slug}` : `/events/${_id || id}`;
+    const style = CATEGORY_STYLES[category] ?? CATEGORY_STYLES["Service"];
 
     return (
-        <div className={cn(
-            "group relative overflow-hidden rounded-2xl bg-card dark:bg-white/5 border border-border dark:border-white/10 hover:border-[#257300]/30 dark:hover:border-[#257300]/40 card-hover",
-            featured ? "col-span-1 md:col-span-2 lg:col-span-2 row-span-2" : ""
-        )}>
-            {/* Gold accent line at top */}
-            <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#257300] via-gold to-[#257300] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
-
+        <Link href={eventLink} className="group block h-full">
             <div className={cn(
-                "relative overflow-hidden",
-                featured ? "aspect-[21/9]" : "aspect-[16/9]"
+                "relative h-full overflow-hidden rounded-2xl border border-border dark:border-white/10",
+                "bg-gradient-to-br", style.bg,
+                "hover:border-[#257300]/40 transition-all duration-300",
+                "hover:shadow-lg hover:shadow-[#257300]/10 hover:-translate-y-0.5",
+                featured && "md:col-span-2"
             )}>
-                {image ? (
-                    <img
-                        src={image}
-                        alt={title}
-                        className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
-                    />
-                ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-muted to-border dark:from-white/5 dark:to-white/10" />
-                )}
+                {/* Top accent */}
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#257300] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                {/* Date Badge — gold tint */}
-                <div className="absolute top-4 left-4 bg-card/95 dark:bg-black/95 backdrop-blur-sm rounded-xl p-3 text-center min-w-[70px] shadow-lg border border-gold/20">
-                    <span className="block text-2xl font-bold text-[#257300] dark:text-[#B2CB20] leading-none mb-1">
-                        {day}
-                    </span>
-                    <span className="block text-[10px] font-bold text-gold uppercase tracking-wider">
-                        {month}
-                    </span>
-                </div>
+                <div className="p-6 flex flex-col h-full">
+                    {/* Date + Category badge */}
+                    <div className="flex items-start justify-between gap-3 mb-5">
+                        {/* Date block */}
+                        <div className="bg-card dark:bg-black/40 backdrop-blur rounded-xl p-3 text-center min-w-[64px] border border-border dark:border-white/10 shadow-sm">
+                            <span className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{weekday}</span>
+                            <span className="block text-3xl font-bold text-[#257300] dark:text-[#B2CB20] leading-tight">{day}</span>
+                            <span className="block text-[10px] font-bold text-gold uppercase tracking-widest">{month}</span>
+                            {isMultiDay && (
+                                <>
+                                    <span className="block text-[9px] text-muted-foreground my-0.5">—</span>
+                                    <span className="block text-xl font-bold text-[#257300] dark:text-[#B2CB20] leading-tight">{endDay}</span>
+                                    <span className="block text-[10px] font-bold text-gold uppercase tracking-widest">{endMonth}</span>
+                                </>
+                            )}
+                        </div>
 
-                {/* Category Badge */}
-                <div className="absolute top-4 right-4">
-                    <Badge variant="secondary" className="bg-[#257300]/90 hover:bg-[#257300] text-white border-none shadow-sm backdrop-blur-sm">
-                        {category}
-                    </Badge>
-                </div>
-            </div>
+                        {/* Icon + category */}
+                        <div className="flex flex-col items-end gap-2">
+                            <span className="text-3xl">{style.icon}</span>
+                            <Badge className={cn("text-[10px] px-2 py-0.5 border-none font-semibold", style.text, style.lightText)}>
+                                {category}
+                            </Badge>
+                        </div>
+                    </div>
 
-            <div className="p-6">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
-                    <MapPin className="w-4 h-4 text-[#257300] dark:text-[#B2CB20]" />
-                    <span>{location}</span>
-                </div>
-
-                <h3 className={cn(
-                    "font-display font-medium text-gray-900 dark:text-white mb-4 group-hover:text-[#257300] dark:group-hover:text-[#B2CB20] transition-colors",
-                    featured ? "text-3xl" : "text-xl"
-                )}>
-                    {title}
-                </h3>
-
-                <Link href={`/events/${slug}`}>
-                    <Button variant={featured ? "default" : "outline"} className={cn(
-                        "w-full sm:w-auto gap-2 group/btn"
+                    {/* Title */}
+                    <h3 className={cn(
+                        "font-display font-semibold text-gray-900 dark:text-white mb-3",
+                        "group-hover:text-[#257300] dark:group-hover:text-[#B2CB20] transition-colors",
+                        "line-clamp-2",
+                        featured ? "text-2xl" : "text-lg"
                     )}>
-                        Event Details
-                        <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
-                    </Button>
-                </Link>
+                        {title}
+                    </h3>
+
+                    {/* Description */}
+                    {description && (
+                        <p className="text-sm text-muted-foreground line-clamp-2 mb-4 flex-1">{description}</p>
+                    )}
+
+                    {/* Footer */}
+                    <div className="mt-auto pt-4 border-t border-border/50 flex items-center justify-between">
+                        <div className="flex flex-col gap-1">
+                            {location && (
+                                <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                                    <MapPin className="w-3 h-3 text-[#257300] dark:text-[#B2CB20] flex-shrink-0" />
+                                    <span className="truncate max-w-[150px]">{location}</span>
+                                </span>
+                            )}
+                            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                                <CalendarDays className="w-3 h-3 text-[#257300] dark:text-[#B2CB20] flex-shrink-0" />
+                                {isMultiDay ? `${day} ${month} – ${endDay} ${endMonth} ${year}` : `${day} ${month} ${year}`}
+                            </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <AddToCalendar
+                                variant="icon"
+                                className="text-muted-foreground hover:text-[#257300] dark:hover:text-[#B2CB20]"
+                                event={{
+                                    title,
+                                    description,
+                                    location,
+                                    date: typeof date === "string" ? date : date.toISOString().split("T")[0],
+                                    endDate,
+                                    startTime,
+                                    endTime,
+                                }}
+                            />
+                            <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-[#257300] dark:group-hover:text-[#B2CB20] group-hover:translate-x-1 transition-all" />
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </Link>
     )
 }

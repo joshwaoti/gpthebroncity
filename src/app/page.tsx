@@ -6,6 +6,7 @@ import Navbar from "@/components/layout/navbar"
 import { Footer } from "@/components/layout/footer"
 import { UpcomingEvents } from "@/components/home/upcoming-events"
 import { LatestInsights } from "@/components/home/latest-insights"
+import { SocialsSection } from "@/components/home/socials-section"
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <LatestSermon />
       <UpcomingEvents />
       <LatestInsights />
+      <SocialsSection />
       <VisitSection />
       <Footer />
     </main>

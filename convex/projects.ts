@@ -38,11 +38,14 @@ export const create = mutation({
         status: v.union(v.literal("active"), v.literal("completed"), v.literal("on_hold")),
         value: v.optional(v.number()),
         date: v.optional(v.string()),
-        createdBy: v.string(),
     },
     handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) throw new Error("Unauthenticated call to create project");
+
         return await ctx.db.insert("projects", {
             ...args,
+            createdBy: identity.subject,
         });
     },
 });
@@ -52,6 +55,9 @@ export const getAllAdmin = list;
 export const remove = mutation({
     args: { id: v.id("projects") },
     handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) throw new Error("Unauthenticated call to remove project");
+
         await ctx.db.delete(args.id);
     },
 });
