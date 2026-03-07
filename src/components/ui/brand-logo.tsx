@@ -6,15 +6,14 @@ interface BrandLogoProps {
 }
 
 export function BrandLogo({ className }: BrandLogoProps) {
-    // Always use logo-2.png as requested — this logo works on all backgrounds.
     return (
         <div className={className}>
             <Image
-                src="/assets/img/logo/logo-2.png"
+                src="/assets/img/logo/church-logo-white.png"
                 alt="GPT Hebron City Logo"
-                width={180}
-                height={50}
-                className="block"
+                width={160}
+                height={48}
+                className="h-full w-auto"
                 priority
             />
         </div>

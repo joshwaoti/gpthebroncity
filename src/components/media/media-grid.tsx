@@ -12,11 +12,12 @@ import { Loader2 } from "lucide-react"
 
 export function MediaGrid() {
     const [activeCategory, setActiveCategory] = useState("All")
+    const [searchQuery, setSearchQuery] = useState("")
 
     const { results, status, loadMore } = usePaginatedQuery(
         api.sermons.listPaginated,
         {},
-        { initialNumItems: 9 }
+        { initialNumItems: 20 }
     );
 
     // Map Convex data to expected frontend format, filter by category locally
@@ -30,16 +31,33 @@ export function MediaGrid() {
         category: sermon.category || "Sunday Service",
         videoUrl: sermon.videoUrl, // We map videoUrl in case the card needs it for a link
         duration: "", // Optional since we don't have duration from YT
+        description: sermon.description || "",
     }));
 
-    const filteredItems = activeCategory === "All"
+    // Filter by category
+    const categoryFiltered = activeCategory === "All"
         ? mappedItems
         : mappedItems.filter(item => item.category === activeCategory)
+
+    // Filter by search query
+    const filteredItems = searchQuery
+        ? categoryFiltered.filter(item => 
+            item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.preacher.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.series.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()))
+        )
+        : categoryFiltered
 
 
     return (
         <section className="pb-24 min-h-screen bg-background">
-            <MediaFilter activeCategory={activeCategory} onCategoryChange={setActiveCategory} />
+            <MediaFilter 
+                activeCategory={activeCategory} 
+                onCategoryChange={setActiveCategory}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+            />
 
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
@@ -71,7 +89,7 @@ export function MediaGrid() {
                             ))
                         ) : (
                             <div className="col-span-full text-center py-20 text-muted-foreground">
-                                <p>No media found in this category.</p>
+                                <p>No media found {searchQuery ? `matching "${searchQuery}"` : "in this category"}.</p>
                             </div>
                         )}
                     </AnimatePresence>

@@ -33,3 +33,31 @@ export function getNextServiceDate(): Date {
 
     return nextTarget;
 }
+
+export function isServiceLive(): boolean {
+    const now = new Date();
+    const day = now.getDay();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const currentTime = hours * 60 + minutes; // time in minutes
+
+    // Sunday service: 9:30 AM - 12:30 PM (570 - 750 minutes)
+    if (day === 0) {
+        if (currentTime >= 570 && currentTime <= 780) { // 9:30 AM to 1:00 PM
+            return true;
+        }
+    }
+
+    // Wednesday service: 6:00 PM - 8:00 PM (1080 - 1200 minutes)
+    if (day === 3) {
+        if (currentTime >= 1080 && currentTime <= 1200) { // 6:00 PM to 8:00 PM
+            return true;
+        }
+    }
+
+    return false;
+}
+
+export function getYouTubeLiveStreamUrl(): string {
+    return "https://www.youtube.com/@GPTHebronCityChurch";
+}

@@ -78,12 +78,12 @@ export default function Navbar() {
                 className={cn(
                     "fixed z-50",
                     isScrolled
-                        ? "top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-4xl bg-white/80 dark:bg-black/50 backdrop-blur-xl border border-black/10 dark:border-white/10 rounded-2xl py-3 shadow-2xl"
-                        : "top-0 left-0 right-0 w-full bg-transparent py-6"
+                        ? "top-3 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-4xl bg-white/80 dark:bg-black/50 backdrop-blur-xl border border-black/10 dark:border-white/10 rounded-2xl h-14 shadow-2xl flex items-center"
+                        : "top-0 left-0 right-0 w-full bg-transparent py-5"
                 )}
             >
                 <div className="container mx-auto px-4 flex items-center justify-between">
-                    <Link href="/" className="relative z-50 block">
+                    <Link href="/" className="relative z-50 block flex-shrink-0">
                         <BrandLogo
                             className={cn(isScrolled ? "h-8" : "h-10", "w-auto")}
                             variant={

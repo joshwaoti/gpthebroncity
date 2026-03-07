@@ -1,22 +1,35 @@
 "use client"
 
-import { useRef, useEffect } from "react"
+import { useRef, useEffect, useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { GlassCard } from "@/components/ui/glass-card"
 import { homeData } from "@/data"
 import { useCountdown } from "@/hooks/use-countdown"
-import { ArrowRight, Bell } from "lucide-react"
+import { ArrowRight, Bell, Play } from "lucide-react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { getNextServiceDate } from "@/lib/utils/date-utils"
+import { getNextServiceDate, isServiceLive, getYouTubeLiveStreamUrl } from "@/lib/utils/date-utils"
 
 gsap.registerPlugin(ScrollTrigger)
 
 export function Hero() {
     const containerRef = useRef<HTMLDivElement>(null)
     const titleRef = useRef<HTMLHeadingElement>(null)
+    const [isLive, setIsLive] = useState(false)
     const timeLeft = useCountdown(getNextServiceDate())
+
+    useEffect(() => {
+        // Check if service is live
+        setIsLive(isServiceLive());
+        
+        // Check every minute
+        const interval = setInterval(() => {
+            setIsLive(isServiceLive());
+        }, 60000);
+        
+        return () => clearInterval(interval);
+    }, [])
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -102,22 +115,41 @@ export function Hero() {
                 {/* Mobile Next Service Card */}
                 <div className="hero-element invisible mt-10 md:hidden w-full max-w-sm mx-auto">
                     <GlassCard variant="default" className="p-4 flex items-center justify-between bg-black/40 backdrop-blur-md border-white/10">
-                        <div className="text-left">
-                            <span className="text-[10px] font-bold text-[#B2CB20] uppercase tracking-widest block mb-1">Next Service</span>
-                            <div className="flex items-baseline gap-1">
-                                <span className="text-2xl font-bold font-display text-white">{timeLeft.days}</span>
-                                <span className="text-xs text-gray-400">Days</span>
-                                <span className="text-xl font-bold font-display text-white ml-2">{timeLeft.hours}</span>
-                                <span className="text-xs text-gray-400">Hrs</span>
-                                <span className="text-xl font-bold font-display text-white ml-2">{timeLeft.minutes}</span>
-                                <span className="text-xs text-gray-400">Min</span>
-                                <span className="text-lg font-bold font-display text-[#B2CB20] ml-2">{timeLeft.seconds}</span>
-                                <span className="text-xs text-gray-400">Sec</span>
+                        {isLive ? (
+                            <div className="flex items-center justify-between w-full">
+                                <div className="flex items-center gap-2">
+                                    <span className="relative flex h-3 w-3">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                                    </span>
+                                    <span className="text-sm font-bold text-red-500 uppercase tracking-wider">Live Service</span>
+                                </div>
+                                <a href={getYouTubeLiveStreamUrl()} target="_blank" rel="noopener noreferrer">
+                                    <Button size="sm" className="bg-red-500 hover:bg-red-600 text-white">
+                                        <Play className="w-3 h-3 mr-1" /> Watch
+                                    </Button>
+                                </a>
                             </div>
-                        </div>
-                        <Button variant="ghost" size="icon" className="text-white hover:text-[#B2CB20]">
-                            <Bell className="w-5 h-5" />
-                        </Button>
+                        ) : (
+                            <>
+                                <div className="text-left">
+                                    <span className="text-[10px] font-bold text-[#B2CB20] uppercase tracking-widest block mb-1">Next Service</span>
+                                    <div className="flex items-baseline gap-1">
+                                        <span className="text-2xl font-bold font-display text-white">{timeLeft.days}</span>
+                                        <span className="text-xs text-gray-400">Days</span>
+                                        <span className="text-xl font-bold font-display text-white ml-2">{timeLeft.hours}</span>
+                                        <span className="text-xs text-gray-400">Hrs</span>
+                                        <span className="text-xl font-bold font-display text-white ml-2">{timeLeft.minutes}</span>
+                                        <span className="text-xs text-gray-400">Min</span>
+                                        <span className="text-lg font-bold font-display text-[#B2CB20] ml-2">{timeLeft.seconds}</span>
+                                        <span className="text-xs text-gray-400">Sec</span>
+                                    </div>
+                                </div>
+                                <Button variant="ghost" size="icon" className="text-white hover:text-[#B2CB20]">
+                                    <Bell className="w-5 h-5" />
+                                </Button>
+                            </>
+                        )}
                     </GlassCard>
                 </div>
             </div>
@@ -125,22 +157,42 @@ export function Hero() {
             {/* Desktop Countdown Timer */}
             <div className="hero-element invisible absolute bottom-10 right-10 z-30 hidden md:block">
                 <GlassCard variant="default" className="p-6 min-w-[300px]">
-                    <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">{homeData.serviceTimes.label}</span>
-                        <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-                    </div>
-                    <div className="flex justify-between text-center gap-2 mb-4">
-                        <TimeUnit value={timeLeft.days} label="Days" />
-                        <Separator />
-                        <TimeUnit value={timeLeft.hours} label="Hrs" />
-                        <Separator />
-                        <TimeUnit value={timeLeft.minutes} label="Min" />
-                        <Separator />
-                        <TimeUnit value={timeLeft.seconds} label="Sec" color="text-[#B2CB20]" />
-                    </div>
-                    <Button variant="ghost" size="sm" className="w-full text-xs text-[#B2CB20] hover:text-white">
-                        <Bell className="w-3 h-3 mr-2" /> Notify Me
-                    </Button>
+                    {isLive ? (
+                        <div className="text-center">
+                            <div className="flex items-center justify-center gap-2 mb-4">
+                                <span className="relative flex h-3 w-3">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                                </span>
+                                <span className="text-xs font-bold text-red-500 uppercase tracking-widest">Live Now</span>
+                            </div>
+                            <p className="text-white font-bold text-lg mb-4">Join our Live Service</p>
+                            <a href={getYouTubeLiveStreamUrl()} target="_blank" rel="noopener noreferrer">
+                                <Button className="w-full bg-red-500 hover:bg-red-600 text-white">
+                                    <Play className="w-4 h-4 mr-2" /> Watch Live Service
+                                </Button>
+                            </a>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
+                                <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">{homeData.serviceTimes.label}</span>
+                                <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+                            </div>
+                            <div className="flex justify-between text-center gap-2 mb-4">
+                                <TimeUnit value={timeLeft.days} label="Days" />
+                                <Separator />
+                                <TimeUnit value={timeLeft.hours} label="Hrs" />
+                                <Separator />
+                                <TimeUnit value={timeLeft.minutes} label="Min" />
+                                <Separator />
+                                <TimeUnit value={timeLeft.seconds} label="Sec" color="text-[#B2CB20]" />
+                            </div>
+                            <Button variant="ghost" size="sm" className="w-full text-xs text-[#B2CB20] hover:text-white">
+                                <Bell className="w-3 h-3 mr-2" /> Notify Me
+                            </Button>
+                        </>
+                    )}
                 </GlassCard>
             </div>
 

@@ -38,13 +38,17 @@ export function ChildrensBlock() {
                         <div className="mb-12">
                             <span className="text-[#65A30D] font-bold tracking-widest uppercase text-xs mb-4 block">Project Overview</span>
                             <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-6 leading-tight">
-                                A vision for the future of our children&apos;s ministry.
+                                Tujenge NextGen Church – Building for the Future
                             </h2>
-                            <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-                                We are now in the phase of building the Children's Ministry Block and more church facilities as God raises us to new levels and new dimensions. This sanctuary is designed specifically for the next generation—a space that fosters learning, safety, and spiritual growth.
+                            <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-4">
+                                At Hebron City Church, we believe that children are not just the church of tomorrow — they are the church of today. They are a precious gift entrusted to us, and it is our responsibility to create an environment where they can grow in faith, discover Christ, and be firmly established in His ways.
                             </p>
-
-
+                            <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-4">
+                                For years, our children have faithfully gathered for church services in tents. While their joy and hunger for God have remained strong, the challenges have been real. During rainy seasons, services are interrupted by leaking tents and muddy grounds. On hot days, the intense heat makes it uncomfortable for them to fully concentrate and participate.
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-4">
+                                On 12th December 2023, we officially broke ground for our Children's Church building project, dubbed "Tujenge NextGen Church." It was a historic and faith-filled moment as Bishop Mwalili graciously joined us to preside over the groundbreaking ceremony. That day marked the beginning of a new chapter — a bold step of faith toward securing a permanent, safe, and inspiring space for our children.
+                            </p>
                         </div>
 
 

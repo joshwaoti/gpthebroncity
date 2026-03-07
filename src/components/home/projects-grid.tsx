@@ -64,13 +64,19 @@ export function ProjectsGrid() {
 
                         {/* Project Context */}
                         <div className="bg-accent dark:bg-white/5 p-8 rounded-3xl border border-border dark:border-white/10 mb-10">
-                            <h4 className="text-xl font-display font-bold text-gray-900 dark:text-white mb-3">Our Journey to Hebron City</h4>
-                            <p className="text-muted-foreground text-sm leading-relaxed mb-6">
-                                Since 2007, God has faithfully expanded our capacity from a congregation of 40 to our permanent home in Utawala. 2 Samuel 7:10 became our clarion call to secure our own place. Relocated in April 2021, we are currently finalizing the Children's Ministry Block—a critical phase of our development as we trust God for new dimensions.
+                            <h4 className="text-xl font-display font-bold text-gray-900 dark:text-white mb-3">Tujenge NextGen Church – Building for the Future</h4>
+                            <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                                At Hebron City Church, we believe that children are not just the church of tomorrow — they are the church of today. They are a precious gift entrusted to us, and it is our responsibility to create an environment where they can grow in faith, discover Christ, and be firmly established in His ways.
+                            </p>
+                            <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                                For years, our children have faithfully gathered for church services in tents. While their joy and hunger for God have remained strong, the challenges have been real. During rainy seasons, services are interrupted by leaking tents and muddy grounds. On hot days, the intense heat makes it uncomfortable for them to fully concentrate and participate.
+                            </p>
+                            <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                                On 12th December 2023, we officially broke ground for our Children's Church building project, dubbed "Tujenge NextGen Church." It was a historic and faith-filled moment as Bishop Mwalili graciously joined us to preside over the groundbreaking ceremony.
                             </p>
                             <div className="inline-flex items-center gap-2 text-sm font-semibold text-[#257300] dark:text-[#B2CB20]">
                                 <span className="w-2 h-2 rounded-full bg-[#257300] animate-pulse"></span>
-                                Currently Building: Phase 2 (Children's Block)
+                                Help Us Build the Future
                             </div>
                         </div>
 

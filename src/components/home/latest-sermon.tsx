@@ -6,6 +6,8 @@ import { Play } from "lucide-react"
 import Link from "next/link"
 
 export function LatestSermon() {
+    const videoUrl = homeData.latestSermon.videoUrl;
+    
     return (
         <section className="py-24 px-6 md:px-12 bg-accent dark:bg-[#050803] relative overflow-hidden transition-colors duration-300">
             {/* Decorative gradient */}
@@ -15,20 +17,22 @@ export function LatestSermon() {
 
             <div className="container mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-24 relative z-10">
                 {/* Thumbnail */}
-                <div className="lg:w-1/2 relative group cursor-pointer w-full">
-                    <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/10 dark:shadow-black/80 border border-border dark:border-white/10 aspect-video">
-                        <div
-                            className="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                            style={{ backgroundImage: `url(${homeData.latestSermon.thumbnail})` }}
-                        />
-                        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                            <div className="h-20 w-20 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:bg-[#257300] group-hover:text-white group-hover:border-transparent text-white">
-                                <Play className="w-8 h-8 fill-current ml-1" />
+                <div className="lg:w-1/2 relative group w-full">
+                    <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="block">
+                        <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/10 dark:shadow-black/80 border border-border dark:border-white/10 aspect-video">
+                            <div
+                                className="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                                style={{ backgroundImage: `url(${homeData.latestSermon.thumbnail})` }}
+                            />
+                            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                                <div className="h-20 w-20 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:bg-[#257300] group-hover:text-white group-hover:border-transparent text-white">
+                                    <Play className="w-8 h-8 fill-current ml-1" />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    {/* Gold offset border */}
-                    <div className="absolute -bottom-4 -right-4 w-full h-full border-2 border-gold/30 rounded-2xl -z-10" />
+                        {/* Gold offset border */}
+                        <div className="absolute -bottom-4 -right-4 w-full h-full border-2 border-gold/30 rounded-2xl -z-10" />
+                    </a>
                 </div>
 
                 {/* Content */}

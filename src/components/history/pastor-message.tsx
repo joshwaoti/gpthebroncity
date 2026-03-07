@@ -34,7 +34,7 @@ export function PastorMessage() {
             <div className="relative w-full h-[85vh] md:h-[110vh] lg:h-[120vh] min-h-[500px] md:min-h-[900px] overflow-hidden mb-[-120px] md:mb-0 z-0">
                 <div className="absolute inset-0 bg-gray-900">
                     <Image
-                        src="/assets/img/history_cover.jpg"
+                        src="/assets/img/history_cover_new.jpg"
                         alt="Pastor Albert & Mary Shitakwa"
                         fill
                         className="object-cover"

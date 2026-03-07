@@ -192,8 +192,8 @@ export const aboutData = {
 export const mediaData = {
     hero: {
         badge: "Featured Series",
-        title: "The Book of Hebrews",
-        description: "Join us as we explore the supremacy of Christ in our latest series through the book of Hebrews.",
+        title: "I am the Good Shepherd",
+        description: "Discover the depths of God's love as we explore Jesus as the Good Shepherd - He leads, protects, and provides. Based on John 10 and Psalm 23:1.",
         cta: "Watch Series",
         bgImage: "/assets/img/christreveaaled.png"
     },
