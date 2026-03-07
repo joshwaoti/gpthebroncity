@@ -4,6 +4,7 @@ import { Stats } from "@/components/history/stats"
 import { HistoryCTA } from "@/components/history/cta"
 import Navbar from "@/components/layout/navbar"
 import Footer from "@/components/layout/footer"
+import TeamShowcase from "@/components/ui/team-showcase"
 
 export default function HistoryPage() {
     return (
@@ -12,6 +13,7 @@ export default function HistoryPage() {
             <PastorMessage />
             <Stats />
             <Timeline />
+            <TeamShowcase />
             <HistoryCTA />
             <Footer />
         </main>

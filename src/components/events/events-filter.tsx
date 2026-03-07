@@ -30,7 +30,7 @@ export function EventFilters({
                         activeCategory === 'All' ? "bg-[#257300] hover:bg-[#257300]/90" : "hover:text-[#257300]"
                     )}
                 >
-                    All Events
+                    All
                 </Button>
                 {categories.map((category) => (
                     <Button

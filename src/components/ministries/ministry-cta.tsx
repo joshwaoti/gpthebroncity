@@ -7,7 +7,7 @@ import { HeartHandshake } from "lucide-react"
 
 export function MinistryCTA() {
     return (
-        <section className="py-24 bg-primary text-white relative overflow-hidden">
+        <section className="py-24 bg-[#257300] dark:bg-[#1a4a00] text-white relative overflow-hidden">
             {/* Decorative background */}
             <div className="absolute inset-0 opacity-10"
                 style={{

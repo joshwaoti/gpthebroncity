@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Montserrat, Merriweather, Oswald } from "next/font/google";
+import { Montserrat, Merriweather, Oswald, Dancing_Script } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -26,6 +26,12 @@ const oswald = Oswald({
     display: "swap",
 });
 
+const dancingScript = Dancing_Script({
+    subsets: ["latin"],
+    variable: "--font-handwriting",
+    display: "swap",
+});
+
 export const metadata: Metadata = {
     title: "GPT Hebron City | Christ Revealed, Christ Expressed",
     description: "Green Pastures Tabernacle Hebron City - A place where Christ is Revealed and Expressed.",
@@ -43,7 +49,8 @@ export default function RootLayout({
                     "min-h-screen font-sans antialiased",
                     montserrat.variable,
                     merriweather.variable,
-                    oswald.variable
+                    oswald.variable,
+                    dancingScript.variable
                 )}
             >
                 <ClerkProvider>

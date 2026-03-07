@@ -39,8 +39,8 @@ export function ConnectHero() {
             {/* Background */}
             <div className="absolute inset-0 z-0">
                 <div
-                    className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: `url(${connectPage.hero.bgImage})` }}
+                    className="absolute inset-0 bg-cover"
+                    style={{ backgroundImage: `url(${connectPage.hero.bgImage})`, backgroundPosition: "center 10%" }}
                 />
                 <div className="absolute inset-0 bg-black/60" />
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-black/40 to-black/30" />

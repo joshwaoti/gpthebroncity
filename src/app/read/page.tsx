@@ -1,74 +1,39 @@
-
 "use client"
 
 import { useState } from "react"
+import { usePaginatedQuery, useQuery } from "convex/react"
+import { api } from "@/../convex/_generated/api"
 import { FeaturedArticle } from "@/components/blog/featured-article"
 import { BlogCard } from "@/components/blog/blog-card"
 import { BlogFilters } from "@/components/blog/blog-filters"
+import { BlogSkeleton, FeaturedBlogSkeleton } from "@/components/blog/blog-skeleton"
 import Navbar from "@/components/layout/navbar"
 import Footer from "@/components/layout/footer"
+import { Button } from "@/components/ui/button"
 
-// Dummy Data
-const BLOG_POSTS = [
-    {
-        id: "1",
-        title: "The Theology of Community: Why We Gather",
-        excerpt: "In an increasingly digital world, the physical gathering of believers remains a cornerstone of spiritual growth. Explore the biblical mandate for community and how it shapes our identity as the body of Christ.",
-        date: "Feb 18, 2026",
-        author: "Pastor Albert Shitakwa",
-        category: "Theology",
-        image: "/assets/img/pasi.jpg",
-        slug: "theology-of-community",
-        readTime: "5 min",
-        featured: true
-    },
-    {
-        id: "2",
-        title: "Navigating Faith in the Marketplace",
-        excerpt: "How do we carry the Kingdom into our corporate spaces? Practical wisdom for professionals seeking to be salt and light in their workplaces.",
-        date: "Feb 15, 2026",
-        author: "Mary Shitakwa",
-        category: "Leadership",
-        image: "/assets/img/pasi.jpg",
-        slug: "faith-in-marketplace",
-        readTime: "4 min",
-        featured: false
-    },
-    {
-        id: "3",
-        title: "The Next Gen Church: Building for 2030",
-        excerpt: "A look at the strategic vision behind our new infrastructure projects and how they will serve the next generation of believers.",
-        date: "Feb 10, 2026",
-        author: "Bishop Stanley Mwalili",
-        category: "Vision",
-        image: "/assets/img/pasi.jpg",
-        slug: "next-gen-church",
-        readTime: "6 min",
-        featured: false
-    },
-    {
-        id: "4",
-        title: "Understanding the Trinity",
-        excerpt: "A deep dive into one of the most complex and beautiful mysteries of our faith. Why the triune nature of God matters for our daily walk.",
-        date: "Feb 5, 2026",
-        author: "Theology Team",
-        category: "Doctrine",
-        image: "/assets/img/pasi.jpg",
-        slug: "understanding-trinity",
-        readTime: "8 min",
-        featured: false
-    }
-]
-
-const CATEGORIES = ["Theology", "Leadership", "Vision", "Doctrine", "Family"]
+const CATEGORIES = ["Theology", "Leadership", "Vision", "Doctrine", "Family", "Community", "Growth", "Worship"]
 
 export default function ReadPage() {
     const [activeCategory, setActiveCategory] = useState('All')
 
-    const featuredPost = BLOG_POSTS.find(post => post.featured) || BLOG_POSTS[0]
-    const listPosts = BLOG_POSTS.filter(post =>
-        !post.featured && (activeCategory === 'All' || post.category === activeCategory)
+    // Fetch featured post (latest published)
+    const featuredPosts = useQuery(api.blog.getLatest, { limit: 1 })
+    const featuredPost: any = featuredPosts?.[0]
+
+    // Fetch paginated posts
+    const { results, status, loadMore } = usePaginatedQuery(
+        api.blog.listPaginated,
+        {
+            status: "published",
+            category: activeCategory === 'All' ? undefined : activeCategory
+        },
+        { initialNumItems: 6 }
     )
+
+    const isLoadingFeatured = featuredPosts === undefined
+    const isLoadingResults = status === "LoadingFirstPage"
+    const isLoadingMore = status === "LoadingMore"
+    const isDone = status === "Exhausted"
 
     return (
         <main className="min-h-screen bg-background">
@@ -91,7 +56,20 @@ export default function ReadPage() {
                         </p>
                     </div>
 
-                    <FeaturedArticle {...featuredPost} />
+                    {isLoadingFeatured ? (
+                        <FeaturedBlogSkeleton />
+                    ) : featuredPost && (
+                        <FeaturedArticle
+                            title={featuredPost.title}
+                            excerpt={featuredPost.excerpt}
+                            date={featuredPost.publishDate || new Date(featuredPost._creationTime).toLocaleDateString()}
+                            author={featuredPost.author}
+                            category={featuredPost.category || "General"}
+                            image={featuredPost.imageUrl || "/assets/img/pasi.jpg"}
+                            slug={featuredPost.slug}
+                            readTime="5 min"
+                        />
+                    )}
                 </section>
 
                 <section className="container mx-auto px-4">
@@ -101,11 +79,44 @@ export default function ReadPage() {
                         onCategoryChange={setActiveCategory}
                     />
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {listPosts.map((post) => (
-                            <BlogCard key={post.id} {...post} />
-                        ))}
-                    </div>
+                    {isLoadingResults ? (
+                        <BlogSkeleton />
+                    ) : results.length === 0 ? (
+                        <div className="text-center py-20 bg-accent/20 rounded-2xl border border-dashed border-border">
+                            <h3 className="text-xl font-medium text-muted-foreground">No articles found in this category</h3>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {results.map((post) => (
+                                    <BlogCard
+                                        key={post._id}
+                                        title={post.title}
+                                        excerpt={post.excerpt || ""}
+                                        date={post.publishDate || new Date(post._creationTime).toLocaleDateString()}
+                                        author={post.author || "Unknown"}
+                                        category={post.category || "General"}
+                                        image={post.imageUrl || "/assets/img/pasi.jpg"}
+                                        slug={post.slug}
+                                        readTime="4 min"
+                                    />
+                                ))}
+                            </div>
+
+                            {!isDone && (
+                                <div className="mt-16 flex justify-center">
+                                    <Button
+                                        onClick={() => loadMore(6)}
+                                        disabled={isLoadingMore}
+                                        variant="outline"
+                                        className="rounded-full px-8 py-6 border-[#257300] text-[#257300] hover:bg-[#257300] hover:text-white transition-all duration-300"
+                                    >
+                                        {isLoadingMore ? "Loading more..." : "Load More Articles"}
+                                    </Button>
+                                </div>
+                            )}
+                        </>
+                    )}
                 </section>
             </div>
             <Footer />

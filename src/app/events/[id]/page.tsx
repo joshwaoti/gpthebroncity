@@ -215,15 +215,17 @@ export default function EventDetailPage() {
                                 </p>
 
                                 {!isPast ? (
-                                    <AddToCalendar event={{
-                                        title: event.title,
-                                        description: event.description,
-                                        location: event.location,
-                                        date: event.date,
-                                        endDate: event.endDate,
-                                        startTime: event.startTime,
-                                        endTime: event.endTime
-                                    }} />
+                                    <div className="pb-4">
+                                        <AddToCalendar event={{
+                                            title: event.title,
+                                            description: event.description,
+                                            location: event.location,
+                                            date: event.date,
+                                            endDate: event.endDate,
+                                            startTime: event.startTime,
+                                            endTime: event.endTime
+                                        }} />
+                                    </div>
                                 ) : (
                                     <div className="bg-muted text-muted-foreground text-sm text-center rounded-lg p-3 mb-3">
                                         This event has already taken place

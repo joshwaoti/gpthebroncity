@@ -6,6 +6,7 @@ import { VisionMission } from "@/components/about/vision-mission"
 import { CoreValues } from "@/components/about/core-values"
 import { OurIdentity } from "@/components/about/our-identity"
 import { HistoryCTA } from "@/components/history/cta"
+import { BeliefsAccordion } from "@/components/beliefs/beliefs-accordion"
 
 export const metadata: Metadata = {
     title: "About Us | GPT Hebron City",
@@ -20,6 +21,7 @@ export default function AboutPage() {
             <VisionMission />
             <OurIdentity />
             <CoreValues />
+            <BeliefsAccordion />
             <HistoryCTA />
             <Footer />
         </main>

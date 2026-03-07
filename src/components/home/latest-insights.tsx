@@ -1,46 +1,16 @@
 
+"use client"
+
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { BlogCard } from "@/components/blog/blog-card"
-
-const LATEST_INSIGHTS = [
-    {
-        id: "1",
-        title: "The Theology of Community: Why We Gather",
-        excerpt: "In an increasingly digital world, the physical gathering of believers remains a cornerstone of spiritual growth.",
-        date: "Feb 18, 2026",
-        author: "Pastor Albert",
-        category: "Theology",
-        image: "/assets/img/pasi.jpg",
-        slug: "theology-of-community",
-        readTime: "5 min"
-    },
-    {
-        id: "2",
-        title: "Navigating Faith in the Marketplace",
-        excerpt: "How do we carry the Kingdom into our corporate spaces? Practical wisdom for professionals.",
-        date: "Feb 15, 2026",
-        author: "Mary Shitakwa",
-        category: "Leadership",
-        image: "/assets/img/pasi.jpg",
-        slug: "faith-in-marketplace",
-        readTime: "4 min"
-    },
-    {
-        id: "3",
-        title: "The Next Gen Church: Building for 2030",
-        excerpt: "A look at the strategic vision behind our new infrastructure projects.",
-        date: "Feb 10, 2026",
-        author: "Bishop Mwalili",
-        category: "Vision",
-        image: "/assets/img/pasi.jpg",
-        slug: "next-gen-church",
-        readTime: "6 min"
-    }
-]
+import { useQuery } from "convex/react"
+import { api } from "@/../convex/_generated/api"
 
 export function LatestInsights() {
+    const latestPosts = useQuery(api.blog.getLatest, { limit: 3 });
+
     return (
         <section className="py-24 bg-accent dark:bg-black relative">
             {/* Subtle pattern */}
@@ -67,11 +37,28 @@ export function LatestInsights() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {LATEST_INSIGHTS.map(post => (
-                        <BlogCard key={post.id} {...post} />
-                    ))}
+                    {latestPosts === undefined ? (
+                        <div className="col-span-full text-center text-muted-foreground py-8">Loading insights...</div>
+                    ) : latestPosts.length === 0 ? (
+                        <div className="col-span-full text-center text-muted-foreground py-8">No insights available right now.</div>
+                    ) : (
+                        latestPosts.map((post: any) => (
+                            <BlogCard
+                                key={post._id}
+                                title={post.title}
+                                excerpt={post.excerpt || ""}
+                                date={post.publishDate || new Date(post._creationTime).toLocaleDateString()}
+                                author={post.author || "Unknown"}
+                                category={post.category || "General"}
+                                image={post.imageUrl || "/assets/img/pasi.jpg"}
+                                slug={post.slug}
+                                readTime="4 min"
+                            />
+                        ))
+                    )}
                 </div>
             </div>
         </section>
     )
 }
+

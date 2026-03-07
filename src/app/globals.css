@@ -26,6 +26,7 @@
     --font-sans: var(--font-montserrat), ui-sans-serif, system-ui;
     --font-serif: var(--font-merriweather), ui-serif, Georgia;
     --font-display: var(--font-oswald), sans-serif;
+    --font-handwriting: var(--font-handwriting), cursive;
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);

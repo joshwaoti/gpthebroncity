@@ -12,7 +12,7 @@ import Footer from "@/components/layout/footer"
 import { usePaginatedQuery, useQuery } from "convex/react"
 import { api } from "@/../convex/_generated/api"
 
-const CATEGORIES = ["All", "Service", "Fellowship", "Worship", "Kids", "Leadership", "Holiday", "Family", "Youth"]
+const CATEGORIES = ["Service", "Fellowship", "Worship", "Kids", "Leadership", "Holiday", "Family", "Youth"]
 
 export default function EventsPage() {
     const [view, setView] = useState<'list' | 'calendar'>('list')

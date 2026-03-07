@@ -27,16 +27,12 @@ export const homeData = {
                 title: "Children's Church Block",
                 description: "Creating a safe, engaging, and spiritually nourishing space for our children to grow in faith. This is our primary focus for 2026 as we invest in the future of Hebron City.",
                 image: "/assets/img/construct.jpg",
-                progress: {
-                    current: 120500,
-                    goal: 250000,
-                },
                 priority: true,
                 details: [
-                    "Capacity for 500+ children",
-                    "Modern learning environments",
+                    "Nurturing environment for our children",
+                    "Modern learning facilities",
                     "Safety-first design philosophy",
-                    "State-of-the-art media facilities"
+                    "State-of-the-art community spaces"
                 ]
             },
         ],
@@ -259,17 +255,17 @@ export const projectsPage = {
         title: "Building the Next Gen Church",
         subtitle: "Vision 2026",
         description: "We are building a legacy for future generations. Join us as we expand our territory and create spaces for worship, fellowship, and discipleship.",
-        bgImage: "/assets/img/bg_full_1.jpg",
+        bgImage: "/assets/img/projects_hero.jpg",
         stats: [
-            { label: "Total Goal", value: "$500,000" },
-            { label: "Raised So Far", value: "$175,500" },
-            { label: "Completion", value: "35%" }
+            { label: "Location", value: "Utawala, Nairobi" },
+            { label: "Established", value: "Feb 2007" },
+            { label: "Current Phase", value: "Children's Block" }
         ]
     },
     cta: {
         title: "Partner With Us",
-        description: "Your generosity clears the way for the Gospel. Every seed sown is a brick in the wall of this great work.",
-        buttonText: "Give Now"
+        description: "Join us in our journey to build a homeland where our community can flourish. Together, we are creating a legacy for the next generation.",
+        buttonText: "Join the Vision"
     }
 }
 
@@ -278,7 +274,7 @@ export const givingPage = {
         title: "Worship Through Giving",
         subtitle: "Tithes & Offerings",
         description: "Your generosity empowers the church to preach the gospel, disciple believers, and serve our community. Thank you for your faithfulness.",
-        bgImage: "/assets/img/bg_full_1.jpg"
+        bgImage: "/assets/img/giving_cover.jpg"
     },
     methods: [
         {
@@ -331,10 +327,10 @@ export const connectPage = {
         title: "Connect With Us",
         subtitle: "Join the Family",
         description: "Life is better together. Whether you have a prayer request, a testimony, or just want to say hello, we'd love to hear from you.",
-        bgImage: "/assets/img/misc/bg-subheader.jpg" // Using a generic bg or reuse one
+        bgImage: "/assets/img/connect_cover.jpg"
     },
     socials: [
-        { platform: "YouTube", handle: "@GPTHebronCity", link: "https://youtube.com/@GPTHebronCity", followers: "5k+" },
+        { platform: "YouTube", handle: "@GPTHebronCityChurch", link: "https://www.youtube.com/@GPTHebronCityChurch", followers: "5k+" },
         { platform: "Facebook", handle: "GPT Hebron City", link: "https://facebook.com/GPTHebronCity", followers: "12k+" },
         { platform: "Instagram", handle: "@gpthebroncity", link: "https://instagram.com/gpthebroncity", followers: "8k+" },
         { platform: "TikTok", handle: "@gpthebroncity", link: "https://tiktok.com/@gpthebroncity", followers: "15k+" }
@@ -387,7 +383,7 @@ export const ministriesPage = {
         title: "Serve & Belong",
         subtitle: "Our Service Teams",
         description: "These are groups actively involved in service at GPT Hebron City. Every member is called to serve — find where your gift fits in.",
-        bgImage: "/assets/img/bg_full_1.jpg"
+        bgImage: "/assets/img/ministries_cover.jpg"
     },
     items: [
         {
@@ -402,7 +398,7 @@ export const ministriesPage = {
             id: "worship",
             title: "Hebron City Voices",
             description: "This is a team with the role of leading the congregation in corporate praise and worship. Their main mandate is to provide an enabling environment for authentic and passionate worship through spiritual music.",
-            image: "/assets/img/events.jpg",
+            image: "/assets/img/ministries_worship.jpg",
             schedule: "Practice: Saturdays; Every Service",
             leader: "Worship Leader"
         },
@@ -410,7 +406,7 @@ export const ministriesPage = {
             id: "intercessory",
             title: "Intercessory Ministry",
             description: "This is a group mandated to see the church become a fervently and effectively praying church. They seek to recruit, empower and engage all church members to a life of prayer. Their program includes morning intercession sessions every Sunday, prayer seminars, trainings and equipping forums.",
-            image: "/assets/img/citycenter.jpg",
+            image: "/assets/img/ministries_intercessory.jpg",
             schedule: "Sundays (Morning Intercession) & Special Sessions",
             leader: "Intercession Head"
         }
@@ -427,7 +423,7 @@ export const peerGroupsPage = {
         title: "Find Your Community",
         subtitle: "Our Peer Groups",
         description: "Life is better together. Our peer groups are designed to foster discipleship, friendship, and meaningful fellowship at a personal level within GPT Hebron City.",
-        bgImage: "/assets/img/bg_full_1.jpg"
+        bgImage: "/assets/img/peer_groups_cover.jpg"
     },
     items: [
         {
@@ -435,7 +431,7 @@ export const peerGroupsPage = {
             title: "Eagles Fellowship",
             subtitle: "Men's Fellowship",
             description: "This is a group of men in GPT-HC. The acronym E.A.G.L.E.S defines the objective of the fellowship which is to raise men who are Excellent, Accountable, Godly, Leaders, Empowered, Serving in the Vineyard of the Lord.",
-            image: "/assets/img/citycenter.jpg",
+            image: "/assets/img/peers_eagles.jpg",
             schedule: "Regular Fellowships",
             targetGroup: "Men"
         },
@@ -444,7 +440,7 @@ export const peerGroupsPage = {
             title: "Wings Fellowship",
             subtitle: "Women's Fellowship",
             description: "These are the ladies in GPT-HC. Their goal is to build strong God-fearing families and be actively involved in ministry. WINGS stands for Women In God's Service.",
-            image: "/assets/img/citycenter.jpg",
+            image: "/assets/img/peers_wings.jpg",
             schedule: "Regular Fellowships",
             targetGroup: "Women"
         },
@@ -453,7 +449,7 @@ export const peerGroupsPage = {
             title: "Over-comers Fellowship",
             subtitle: "Young Adults (20+)",
             description: "This is a group of single young people, 20 years old and above, in college, campus or working with a passion for God. Their vision and mission entails a pursuit for holistic growth, serving God with passion and strength of their youth and living an overcoming Christian lifestyle.",
-            image: "/assets/img/citycenter.jpg",
+            image: "/assets/img/peers_overcomers.jpg",
             schedule: "Regular Meetings",
             targetGroup: "Young Adults (20+)"
         },
@@ -462,7 +458,7 @@ export const peerGroupsPage = {
             title: "Teens Fellowship",
             subtitle: "Ages 13-19",
             description: "This group is comprised of teenagers from the age of 13 years to 19 years. Their programs usually include discussions on topical issues pertinent to this age group, sound biblical teaching, singing and dancing, drama and Q&A interactive sessions.",
-            image: "/assets/img/citycenter.jpg",
+            image: "/assets/img/peers_teens.jpg",
             schedule: "Every Sunday",
             targetGroup: "Teens (13-19)"
         },
@@ -471,7 +467,7 @@ export const peerGroupsPage = {
             title: "Children's Church",
             subtitle: "Ages 3-12",
             description: "This is a church designed to ground our children in the word of God in a simple, exciting environment — raising children who fear and love God. They are divided into three groups: ages 3-5, 6-8, and pre-teens 9-12. Their programs include Bible stories, prayer, games with life skills lessons, biblical puzzles and more.",
-            image: "/assets/img/citycenter.jpg",
+            image: "/assets/img/peers_children.jpg",
             schedule: "Sundays 8:30 AM & 11:00 AM",
             targetGroup: "Children (3-12)"
         },

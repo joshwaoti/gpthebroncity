@@ -1,3 +1,4 @@
+"use client"
 
 import Link from "next/link"
 import Image from "next/image"
@@ -6,48 +7,50 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Navbar from "@/components/layout/navbar"
 import Footer from "@/components/layout/footer"
+import { useQuery } from "convex/react"
+import { api } from "@/../convex/_generated/api"
+import { Skeleton } from "@/components/ui/skeleton"
+import { use } from "react"
 
-const RELATED_ARTICLES = [
-    {
-        title: "Navigating Faith in the Marketplace",
-        excerpt: "How do we carry the Kingdom into our corporate spaces?",
-        date: "Feb 15, 2026",
-        author: "Mary Shitakwa",
-        category: "Leadership",
-        image: "/assets/img/pasi.jpg",
-        slug: "faith-in-marketplace",
-        readTime: "4 min"
-    },
-    {
-        title: "The Next Gen Church: Building for 2030",
-        excerpt: "A look at the strategic vision behind our new infrastructure projects.",
-        date: "Feb 10, 2026",
-        author: "Bishop Stanley Mwalili",
-        category: "Vision",
-        image: "/assets/img/pasi.jpg",
-        slug: "next-gen-church",
-        readTime: "6 min"
-    },
-    {
-        title: "Understanding the Trinity",
-        excerpt: "A deep dive into one of the most complex and beautiful mysteries of our faith.",
-        date: "Feb 5, 2026",
-        author: "Theology Team",
-        category: "Doctrine",
-        image: "/assets/img/pasi.jpg",
-        slug: "understanding-trinity",
-        readTime: "8 min"
+export default function SingleArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+    const resolvedParams = use(params)
+    const post = useQuery(api.blog.getBySlug, { slug: resolvedParams.slug })
+    const relatedPosts = useQuery(api.blog.getLatest, { limit: 3 })?.filter(p => p.slug !== resolvedParams.slug).slice(0, 3)
+
+    if (post === undefined) {
+        return (
+            <main className="min-h-screen bg-background">
+                <Navbar />
+                <div className="pt-24 pb-20 container mx-auto px-4 max-w-4xl mt-12">
+                    <Skeleton className="w-48 h-6 mb-8" />
+                    <Skeleton className="w-32 h-8 mb-6 mx-auto" />
+                    <Skeleton className="w-full h-12 mb-6" />
+                    <Skeleton className="w-3/4 h-12 mb-12 mx-auto" />
+                    <Skeleton className="w-full aspect-[21/9] rounded-2xl mb-12" />
+                    <Skeleton className="w-full h-4 mb-4" />
+                    <Skeleton className="w-full h-4 mb-4" />
+                    <Skeleton className="w-3/4 h-4" />
+                </div>
+            </main>
+        )
     }
-]
 
-export function generateStaticParams() {
-    return [
-        { slug: "theology-of-community" },
-        ...RELATED_ARTICLES.map((a) => ({ slug: a.slug })),
-    ]
-}
+    if (post === null) {
+        return (
+            <main className="min-h-screen bg-background flex flex-col">
+                <Navbar />
+                <div className="flex-1 flex flex-col items-center justify-center pt-24 pb-20">
+                    <h1 className="font-serif text-3xl font-bold mb-6 text-gray-900 dark:text-white">Article not found</h1>
+                    <p className="text-muted-foreground mb-8">The article you are looking for does not exist or has been removed.</p>
+                    <Link href="/read">
+                        <Button className="bg-[#257300] hover:bg-[#257300]/90 text-white rounded-full">Back to Articles</Button>
+                    </Link>
+                </div>
+                <Footer />
+            </main>
+        )
+    }
 
-export default function SingleArticlePage({ params }: { params: { slug: string } }) {
     return (
         <main className="min-h-screen bg-background">
             <Navbar />
@@ -58,60 +61,45 @@ export default function SingleArticlePage({ params }: { params: { slug: string }
                     </Link>
 
                     <header className="mb-12 text-center">
-                        <Badge className="bg-[#257300] text-white border-none mb-6">
-                            Theology
+                        <Badge className="bg-[#257300] hover:bg-[#257300]/90 text-white border-none mb-6">
+                            {post.category || "General"}
                         </Badge>
                         <h1 className="font-serif text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
-                            The Theology of Community: Why We Gather
+                            {post.title}
                         </h1>
 
                         <div className="flex items-center justify-center gap-4 text-muted-foreground flex-wrap">
                             <div className="flex items-center gap-2">
                                 <div className="w-10 h-10 rounded-full overflow-hidden relative">
-                                    <Image src="/assets/img/pasi.jpg" alt="Pastor Albert" fill className="object-cover" />
+                                    <Image src="/assets/img/pasi.jpg" alt={post.author || "Author"} fill className="object-cover" />
                                 </div>
-                                <span className="font-medium text-gray-900 dark:text-white">Pastor Albert Shitakwa</span>
+                                <span className="font-medium text-gray-900 dark:text-white">{post.author || "Unknown"}</span>
                             </div>
                             <span>·</span>
-                            <span className="flex items-center gap-1"><CalendarDays className="w-3.5 h-3.5" /> Feb 18, 2026</span>
+                            <span className="flex items-center gap-1"><CalendarDays className="w-3.5 h-3.5" /> {post.publishDate || new Date(post._creationTime).toLocaleDateString()}</span>
                             <span>·</span>
                             <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> 5 min read</span>
                         </div>
                     </header>
 
-                    <div className="aspect-[21/9] w-full bg-muted rounded-2xl mb-12 overflow-hidden">
-                        <img
-                            src="/assets/img/pasi.jpg"
-                            alt="Community Gathering"
-                            className="w-full h-full object-cover"
+                    <div className="aspect-[21/9] w-full bg-muted rounded-2xl mb-12 overflow-hidden relative">
+                        <Image
+                            src={post.imageUrl || "/assets/img/pasi.jpg"}
+                            alt={post.title}
+                            fill
+                            className="object-cover"
                         />
                     </div>
 
                     <div className="prose prose-lg dark:prose-invert mx-auto font-sans text-gray-700 dark:text-gray-300">
-                        <p className="lead text-xl md:text-2xl font-serif text-gray-900 dark:text-white mb-8">
-                            In an increasingly digital world, the physical gathering of believers remains a cornerstone of spiritual growth.
-                        </p>
-                        <p>
-                            The early church understood something that modern believers sometimes forget: authentic community requires proximity. When we gather together in worship, we participate in something sacred — a tangible expression of the body of Christ working in unity.
-                        </p>
-                        <h2>The Biblical Mandate</h2>
-                        <p>
-                            Throughout Scripture, we see a consistent pattern of God's people gathering together. From the tabernacle in the wilderness to Solomon's temple, from synagogues to the upper room, God has always called His people to assemble. This is not merely tradition — it is a divine design.
-                        </p>
-                        <blockquote>
-                            "And let us consider how we may spur one another on toward love and good deeds, not giving up meeting together..."
-                            <cite>— Hebrews 10:24-25</cite>
-                        </blockquote>
-                        <p>
-                            The writer of Hebrews understood that isolation weakens faith while community strengthens it. When we gather, we bring our gifts, our struggles, and our faith into a shared space where iron sharpens iron.
-                        </p>
-                        <h2>Community in Practice</h2>
-                        <p>
-                            At GPT Hebron City, we believe that every service, every Bible study, every fellowship meal is an opportunity to experience the Kingdom of God on earth. Our gathering is not an obligation — it is a celebration of what God is doing among us.
-                        </p>
-                        <p>
-                            As we look toward the future, our commitment to community remains unwavering. Whether through in-person gatherings at our Utawala campus or through our expanding digital outreach, the heartbeat of Hebron City is relationship — with God and with one another.
-                        </p>
+                        {post.excerpt && (
+                            <p className="lead text-xl md:text-2xl font-serif text-gray-900 dark:text-white mb-8">
+                                {post.excerpt}
+                            </p>
+                        )}
+                        <div className="whitespace-pre-wrap">
+                            {post.content}
+                        </div>
                     </div>
 
                     {/* Share Section */}
@@ -137,36 +125,43 @@ export default function SingleArticlePage({ params }: { params: { slug: string }
                 </article>
 
                 {/* Related Articles */}
-                <section className="container mx-auto px-4 mt-24">
-                    <div className="flex items-center gap-3 mb-3">
-                        <div className="w-8 h-[2px] bg-gold" />
-                        <span className="text-[#257300] dark:text-[#B2CB20] font-bold tracking-widest uppercase text-sm">Continue Reading</span>
-                    </div>
-                    <h2 className="text-3xl md:text-4xl font-display font-bold text-gray-900 dark:text-white mb-10">
-                        Related Articles
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {RELATED_ARTICLES.map((article, i) => (
-                            <Link key={i} href={`/read/${article.slug}`} className="group">
-                                <div className="bg-card dark:bg-white/5 rounded-2xl border border-border dark:border-white/10 overflow-hidden card-hover">
-                                    <div className="aspect-[16/9] overflow-hidden">
-                                        <img src={article.image} alt={article.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                                    </div>
-                                    <div className="p-6">
-                                        <span className="text-xs text-gold font-bold uppercase tracking-wider">{article.category}</span>
-                                        <h3 className="font-display text-lg font-bold text-gray-900 dark:text-white mt-2 mb-2 group-hover:text-[#257300] dark:group-hover:text-[#B2CB20] transition-colors line-clamp-2">
-                                            {article.title}
-                                        </h3>
-                                        <p className="text-muted-foreground text-sm line-clamp-2">{article.excerpt}</p>
-                                        <div className="mt-4 flex items-center text-sm font-semibold text-[#257300] dark:text-[#B2CB20]">
-                                            Read Article <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                {relatedPosts && relatedPosts.length > 0 && (
+                    <section className="container mx-auto px-4 mt-24">
+                        <div className="flex items-center gap-3 mb-3">
+                            <div className="w-8 h-[2px] bg-gold" />
+                            <span className="text-[#257300] dark:text-[#B2CB20] font-bold tracking-widest uppercase text-sm">Continue Reading</span>
+                        </div>
+                        <h2 className="text-3xl md:text-4xl font-display font-bold text-gray-900 dark:text-white mb-10">
+                            Related Articles
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {relatedPosts.map((article) => (
+                                <Link key={article._id} href={`/read/${article.slug}`} className="group">
+                                    <div className="bg-card dark:bg-white/5 rounded-2xl border border-border dark:border-white/10 overflow-hidden card-hover h-full flex flex-col">
+                                        <div className="aspect-[16/9] overflow-hidden relative">
+                                            <Image
+                                                src={article.imageUrl || "/assets/img/pasi.jpg"}
+                                                alt={article.title}
+                                                fill
+                                                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                            />
+                                        </div>
+                                        <div className="p-6 flex-1 flex flex-col">
+                                            <span className="text-xs text-gold font-bold uppercase tracking-wider">{article.category || "General"}</span>
+                                            <h3 className="font-display text-lg font-bold text-gray-900 dark:text-white mt-2 mb-2 group-hover:text-[#257300] dark:group-hover:text-[#B2CB20] transition-colors line-clamp-2">
+                                                {article.title}
+                                            </h3>
+                                            <p className="text-muted-foreground text-sm line-clamp-2">{article.excerpt}</p>
+                                            <div className="mt-auto pt-4 flex items-center text-sm font-semibold text-[#257300] dark:text-[#B2CB20]">
+                                                Read Article <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
-                </section>
+                                </Link>
+                            ))}
+                        </div>
+                    </section>
+                )}
             </div>
             <Footer />
         </main>

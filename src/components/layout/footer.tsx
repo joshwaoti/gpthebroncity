@@ -1,17 +1,17 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, Heart } from "lucide-react"
+import { ArrowRight, Heart, Facebook, Youtube, Instagram } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import { connectPage } from "@/data"
 
 const quickLinks = [
     { label: "Home", href: "/" },
     { label: "About Us", href: "/about" },
     { label: "Our History", href: "/about/history" },
-    { label: "Beliefs", href: "/about/beliefs" },
     { label: "Media", href: "/media" },
-    { label: "Projects", href: "/projects" },
+    { label: "Hebron City", href: "/projects" },
 ]
 
 const connectLinks = [
@@ -23,12 +23,12 @@ const connectLinks = [
     { label: "Connect", href: "/connect" },
 ]
 
-const socialLinks = [
-    { icon: "F", url: "#", label: "Facebook" },
-    { icon: "I", url: "#", label: "Instagram" },
-    { icon: "Y", url: "#", label: "YouTube" },
-    { icon: "X", url: "#", label: "X (Twitter)" },
-]
+const socialIcons: Record<string, React.ReactNode> = {
+    Facebook: <Facebook className="w-4 h-4" />,
+    YouTube: <Youtube className="w-4 h-4" />,
+    Instagram: <Instagram className="w-4 h-4" />,
+    TikTok: <span className="text-xs font-bold">T</span>,
+}
 
 export function Footer() {
     return (
@@ -62,14 +62,16 @@ export function Footer() {
                                 </p>
                                 {/* Social links */}
                                 <div className="flex gap-2">
-                                    {socialLinks.map((social) => (
+                                    {connectPage.socials.map((social) => (
                                         <a
-                                            key={social.label}
-                                            href={social.url}
-                                            aria-label={social.label}
+                                            key={social.platform}
+                                            href={social.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            aria-label={social.platform}
                                             className="w-9 h-9 rounded-lg bg-white/5 hover:bg-[#C8A229]/20 border border-white/10 hover:border-[#C8A229]/40 flex items-center justify-center text-white/50 hover:text-[#C8A229] transition-all duration-300"
                                         >
-                                            <span className="text-xs font-bold">{social.icon}</span>
+                                            {socialIcons[social.platform]}
                                         </a>
                                     ))}
                                 </div>
@@ -167,9 +169,14 @@ export function Footer() {
                     <p className="text-xs text-white/40">
                         © {new Date().getFullYear()} GPT Hebron City. All rights reserved.
                     </p>
-                    <p className="text-xs text-white/30 flex items-center gap-1">
+                    <a 
+                        href="https://otieno.vercel.app" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-xs text-white/30 flex items-center gap-1 hover:text-white transition-colors"
+                    >
                         Made with <Heart className="w-3 h-3 text-[#C8A229] fill-current" /> by Zitrion
-                    </p>
+                    </a>
                 </div>
             </div>
         </footer>

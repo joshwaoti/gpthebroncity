@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { HeartHandshake } from "lucide-react"
 import { projectsPage } from "@/data"
+import Link from "next/link"
 
 export function PartnerCTA() {
     return (
@@ -26,9 +27,11 @@ export function PartnerCTA() {
                     {projectsPage.cta.description}
                 </p>
 
-                <Button size="lg" className="text-lg px-10 py-6 h-auto shadow-xl shadow-primary/20 hover:scale-105 transition-transform duration-300">
-                    {projectsPage.cta.buttonText}
-                </Button>
+                <Link href="/give">
+                    <Button size="lg" className="text-lg px-10 py-6 h-auto shadow-xl shadow-primary/20 hover:scale-105 transition-transform duration-300">
+                        {projectsPage.cta.buttonText}
+                    </Button>
+                </Link>
             </div>
         </section>
     )

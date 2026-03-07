@@ -35,20 +35,23 @@ export default function Navbar() {
     const isHomePage = pathname === "/"
     const isLightBg = mounted && resolvedTheme === "light" && !isScrolled && !isHomePage
 
-    // When scrolled, the pill bg adapts via dark: classes; at rest we drive it manually.
-    const linkColor = isLightBg ? "text-gray-900 hover:text-[#B2CB20]" : "text-white/90 hover:text-[#B2CB20]"
-    const iconColor = isLightBg ? "text-gray-900" : "text-white"
-    const logoVariant = isLightBg ? "default" : "white"
+    // Most pages have dark cover images, so use light gray for better readability
+    const linkColor = isScrolled ? "text-gray-700" : "text-gray-200"
+    const iconColor = isScrolled ? "text-gray-700" : "text-gray-200"
+    const logoVariant = isScrolled && isLightBg ? "default" : "white"
 
     // Helper for consistency
-    const getLinkClasses = (isActive: boolean) => cn(
-        "text-sm font-medium transition-colors",
-        isActive
-            ? "text-[#257300] dark:text-[#B2CB20]"
-            : isScrolled
-                ? "text-gray-800 dark:text-white/80 hover:text-[#257300] dark:hover:text-[#B2CB20]"
-                : linkColor
-    )
+    // Most pages have dark covers, so use light gray for readability
+    const getLinkClasses = (isActive: boolean) => {
+        if (isActive) {
+            return "text-sm font-medium transition-colors text-[#257300] dark:text-[#B2CB20]"
+        }
+        if (isScrolled) {
+            return "text-sm font-medium transition-colors text-gray-700 dark:text-white/80 hover:text-[#257300] dark:hover:text-[#B2CB20]"
+        }
+        // Not scrolled - use light gray for dark backgrounds
+        return "text-sm font-medium transition-colors text-gray-200 hover:text-white"
+    }
 
     // GSAP Animation for Mobile Menu
     React.useEffect(() => {
@@ -131,17 +134,6 @@ export default function Navbar() {
                                         )}
                                     >
                                         Our Journey
-                                    </Link>
-                                    <Link
-                                        href="/about/beliefs"
-                                        className={cn(
-                                            "block px-4 py-2 rounded-lg text-sm transition-colors",
-                                            pathname === "/about/beliefs"
-                                                ? "bg-[#257300]/10 text-[#257300] dark:text-[#B2CB20]"
-                                                : "text-gray-700 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10 hover:text-[#257300] dark:hover:text-[#B2CB20]"
-                                        )}
-                                    >
-                                        Beliefs
                                     </Link>
                                 </div>
                             </div>
@@ -263,12 +255,6 @@ export default function Navbar() {
                             className="text-2xl font-display font-medium text-gray-700 dark:text-white/90 hover:text-[#257300] dark:hover:text-[#B2CB20] transition-colors pl-4 border-l-2 border-gray-200 dark:border-white/10 hover:border-[#257300] dark:hover:border-[#B2CB20]"
                         >
                             Our Journey
-                        </Link>
-                        <Link
-                            href="/about/beliefs"
-                            className="text-2xl font-display font-medium text-gray-700 dark:text-white/90 hover:text-[#257300] dark:hover:text-[#B2CB20] transition-colors pl-4 border-l-2 border-gray-200 dark:border-white/10 hover:border-[#257300] dark:hover:border-[#B2CB20]"
-                        >
-                            Beliefs
                         </Link>
                     </div>
 

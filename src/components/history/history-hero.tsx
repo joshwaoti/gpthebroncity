@@ -29,13 +29,14 @@ export function HistoryHero() {
             {/* Background */}
             <div className="absolute inset-0 z-0">
                 <div
-                    className="w-full h-full bg-cover bg-center"
-                    style={{ backgroundImage: `url('/assets/img/bg-subheader.jpg')` }}
+                    className="w-full h-full bg-cover"
+                    style={{ backgroundImage: `url('/assets/img/bg-subheader.jpg')`, backgroundPosition: "center 30%" }}
                 />
-                <div className="absolute inset-0 bg-black/60 z-10" />
+                <div className="absolute inset-0 bg-black/70 z-10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30 z-20" />
             </div>
 
-            <div className="relative z-20 container mx-auto px-4 text-center">
+            <div className="relative z-30 container mx-auto px-4 text-center">
                 <div className="inline-block px-4 py-1 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm mb-6">
                     <span className="text-xs font-bold text-[#B2CB20] tracking-widest uppercase">Our Story</span>
                 </div>

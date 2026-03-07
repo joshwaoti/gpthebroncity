@@ -12,19 +12,19 @@ const milestones = [
         year: "The Beginning",
         title: "Bidco Towers - 5th Floor",
         description: "It started with faith, 40 individuals, and a vision concerning the 5th floor. In a small rented hall, the seeds of a great movement were sown. The atmosphere was charged with expectation, and though the numbers were few, the spirit was mighty.",
-        image: "/assets/img/citycenter.jpg"
+        image: "/assets/img/bidco_towers.jpg"
     },
     {
         year: "Expansion",
         title: "Moi Avenue Primary",
         description: "As the family grew, the walls of Bidco could no longer contain the praise. We moved to Moi Avenue Primary, a season of explosion in numbers and spirit. We learned to setup and teardown, a mobile tabernacle for a mobile God.",
-        image: "/assets/img/citycenter.jpg"
+        image: "/assets/img/moi_ave.jpg"
     },
     {
         year: "Present Day",
         title: "The Utawala Vision",
         description: "The wandering ceased as we stepped into our promised land. GPT Hebron City in Utawala became not just a building, but a beacon of hope for the community. A permanent sanctuary where generations will encounter God.",
-        image: "/assets/img/citycenter.jpg"
+        image: "/assets/img/utawala_vision.jpg"
     }
 ]
 

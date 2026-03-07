@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { GlassCard } from "@/components/ui/glass-card"
 import { homeData } from "@/data"
 import { ArrowRight } from "lucide-react"
+import Link from "next/link"
 
 export function ProjectsGrid() {
     const project = homeData.projects.items[0]
@@ -61,32 +62,23 @@ export function ProjectsGrid() {
                             ))}
                         </div>
 
-                        {/* Progress */}
+                        {/* Project Context */}
                         <div className="bg-accent dark:bg-white/5 p-8 rounded-3xl border border-border dark:border-white/10 mb-10">
-                            <div className="flex justify-between items-end mb-4">
-                                <div>
-                                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest block mb-1">Current Progress</span>
-                                    <span className="text-3xl font-display font-bold text-gray-900 dark:text-white">${project.progress.current.toLocaleString()}</span>
-                                </div>
-                                <div className="text-right">
-                                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest block mb-1">Goal</span>
-                                    <span className="text-xl font-bold text-gray-500">${project.progress.goal.toLocaleString()}</span>
-                                </div>
+                            <h4 className="text-xl font-display font-bold text-gray-900 dark:text-white mb-3">Our Journey to Hebron City</h4>
+                            <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+                                Since 2007, God has faithfully expanded our capacity from a congregation of 40 to our permanent home in Utawala. 2 Samuel 7:10 became our clarion call to secure our own place. Relocated in April 2021, we are currently finalizing the Children's Ministry Block—a critical phase of our development as we trust God for new dimensions.
+                            </p>
+                            <div className="inline-flex items-center gap-2 text-sm font-semibold text-[#257300] dark:text-[#B2CB20]">
+                                <span className="w-2 h-2 rounded-full bg-[#257300] animate-pulse"></span>
+                                Currently Building: Phase 2 (Children's Block)
                             </div>
-                            <div className="w-full h-4 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
-                                <div
-                                    className="h-full bg-gradient-to-r from-[#257300] via-gold to-[#257300] bg-[length:200%_auto] animate-gradient rounded-full transition-all duration-1000"
-                                    style={{ width: `${(project.progress.current / project.progress.goal) * 100}%` }}
-                                />
-                            </div>
-                            <span className="text-[10px] font-bold text-[#257300] dark:text-[#B2CB20] uppercase tracking-widest block mt-4 text-center">
-                                {Math.round((project.progress.current / project.progress.goal) * 100)}% Complete
-                            </span>
                         </div>
 
-                        <Button size="xl" className="w-full rounded-2xl py-8 text-lg font-bold shadow-2xl shadow-primary/20 group">
-                            Partner With Us <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </Button>
+                        <Link href="/give">
+                            <Button size="xl" className="w-full rounded-2xl py-8 text-lg font-bold shadow-2xl shadow-primary/20 group">
+                                Partner With Us <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </div>

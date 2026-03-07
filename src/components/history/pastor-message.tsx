@@ -29,31 +29,21 @@ export function PastorMessage() {
     }, [])
 
     return (
-        <section ref={containerRef} className="relative bg-background pt-24 pb-24">
-            {/* Hero Image Section */}
-            <div className="relative w-full h-[60vh] min-h-[500px] overflow-hidden mb-[-100px] z-0">
+        <section ref={containerRef} className="relative bg-background pt-0 pb-24">
+            {/* Hero Image Section - Increased desktop height and removed overlap to reveal faces */}
+            <div className="relative w-full h-[85vh] md:h-[110vh] lg:h-[120vh] min-h-[500px] md:min-h-[900px] overflow-hidden mb-[-120px] md:mb-0 z-0">
                 <div className="absolute inset-0 bg-gray-900">
                     <Image
-                        src="/assets/img/pasi.jpg"
+                        src="/assets/img/history_cover.jpg"
                         alt="Pastor Albert & Mary Shitakwa"
                         fill
-                        className="object-cover object-top opacity-80"
+                        className="object-cover"
+                        style={{ objectPosition: "center 15%" }}
                         priority
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background"></div>
-                </div>
-
-                <div className="absolute bottom-32 left-0 right-0 text-center z-10 px-4">
-                    <span className="inline-block px-3 py-1 rounded-full bg-[#B2CB20]/20 text-[#B2CB20] text-xs font-bold tracking-widest uppercase mb-4 backdrop-blur-sm border border-[#B2CB20]/30">
-                        Senior Pastors
-                    </span>
-                    <h1 className="text-5xl md:text-7xl font-display font-bold text-white mb-2 shadow-sm">
-                        Pastor Albert & <br />
-                        <span className="italic font-serif text-[#B2CB20]">Mary Shitakwa</span>
-                    </h1>
-                    <p className="text-gray-300 text-lg max-w-2xl mx-auto font-light">
-                        Leading Green Pastures Tabernacle Hebron City with a vision to reveal Christ and express His love to our generation.
-                    </p>
+                    {/* Gradient overlay - theme responsive using from-background */}
+                    <div className="absolute inset-0 bg-black/20" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
                 </div>
             </div>
 

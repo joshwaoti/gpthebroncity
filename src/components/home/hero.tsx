@@ -33,30 +33,23 @@ export function Hero() {
             })
 
             // Title Reveal
-            gsap.from(titleRef.current, {
-                y: 100,
-                opacity: 0,
-                duration: 1.5,
-                ease: "power4.out",
-                delay: 0.2,
-            })
+            gsap.fromTo(titleRef.current,
+                { y: 100, autoAlpha: 0 },
+                { y: 0, autoAlpha: 1, duration: 1.5, ease: "power4.out", delay: 0.2 }
+            )
 
             // Stagger other elements
-            gsap.from(".hero-element", {
-                y: 50,
-                opacity: 0,
-                duration: 1,
-                stagger: 0.1,
-                ease: "power3.out",
-                delay: 0.8,
-            })
+            gsap.fromTo(".hero-element",
+                { y: 50, autoAlpha: 0 },
+                { y: 0, autoAlpha: 1, duration: 1, stagger: 0.1, ease: "power3.out", delay: 0.8 }
+            )
         }, containerRef)
 
         return () => ctx.revert()
     }, [])
 
     return (
-        <div ref={containerRef} className="relative h-screen w-full overflow-hidden flex items-center justify-center">
+        <div ref={containerRef} className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-[#0a0f05]">
             {/* Background */}
             <div className="absolute inset-0 z-0">
                 <div
@@ -69,7 +62,7 @@ export function Hero() {
 
             {/* Content */}
             <div className="relative z-20 container mx-auto px-4 text-center mt-0 md:mt-20 flex flex-col items-center justify-center h-full">
-                <div className="hero-element inline-flex items-center gap-2 px-4 py-1 rounded-full border border-[#B2CB20]/30 bg-[#B2CB20]/10 backdrop-blur-sm mb-6 md:mb-8">
+                <div className="hero-element invisible inline-flex items-center gap-2 px-4 py-1 rounded-full border border-[#B2CB20]/30 bg-[#B2CB20]/10 backdrop-blur-sm mb-6 md:mb-8">
                     <span className="relative flex h-2 w-2">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#B2CB20] opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-[#B2CB20]"></span>
@@ -77,22 +70,22 @@ export function Hero() {
                     <span className="text-xs font-bold text-[#B2CB20] tracking-widest uppercase">{homeData.hero.badge}</span>
                 </div>
 
-                <h1 ref={titleRef} className="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-white mb-4 md:mb-6 tracking-tighter leading-[1.1] pb-2">
+                <h1 ref={titleRef} className="invisible text-5xl md:text-7xl lg:text-8xl font-display font-bold text-white mb-4 md:mb-6 tracking-tighter leading-[1.1] pb-2">
                     {homeData.hero.title.line1} <br />
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-500 italic pr-2">
                         {homeData.hero.title.line2}
                     </span>
                 </h1>
 
-                <p className="hero-element text-[#B2CB20] font-bold text-sm md:text-base tracking-[0.2em] uppercase mb-4 max-w-2xl mx-auto">
+                <p className="hero-element invisible text-[#B2CB20] font-bold text-sm md:text-base tracking-[0.2em] uppercase mb-4 max-w-2xl mx-auto">
                     {homeData.hero.tagline}
                 </p>
 
-                <p className="hero-element text-base md:text-lg text-gray-300 max-w-2xl mx-auto mb-12 md:mb-16 font-light leading-relaxed px-4 italic opacity-80 border-t border-white/10 pt-4">
+                <p className="hero-element invisible text-base md:text-lg text-gray-300 max-w-2xl mx-auto mb-12 md:mb-16 font-light leading-relaxed px-4 italic opacity-80 border-t border-white/10 pt-4">
                     {homeData.hero.description}
                 </p>
 
-                <div className="hero-element flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-5 w-full px-4 mb-20 md:mb-24">
+                <div className="hero-element invisible flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-5 w-full px-4 mb-20 md:mb-24">
                     <Link href="/visit">
                         <Button variant="default" size="lg" className="group text-sm md:text-base px-6 md:px-7 py-4 md:py-4 h-auto rounded-xl shadow-xl transition-all duration-500 w-full sm:w-auto">
                             {homeData.hero.cta.primary}
@@ -107,7 +100,7 @@ export function Hero() {
                 </div>
 
                 {/* Mobile Next Service Card */}
-                <div className="hero-element mt-10 md:hidden w-full max-w-sm mx-auto">
+                <div className="hero-element invisible mt-10 md:hidden w-full max-w-sm mx-auto">
                     <GlassCard variant="default" className="p-4 flex items-center justify-between bg-black/40 backdrop-blur-md border-white/10">
                         <div className="text-left">
                             <span className="text-[10px] font-bold text-[#B2CB20] uppercase tracking-widest block mb-1">Next Service</span>
@@ -130,7 +123,7 @@ export function Hero() {
             </div>
 
             {/* Desktop Countdown Timer */}
-            <div className="hero-element absolute bottom-10 right-10 z-30 hidden md:block">
+            <div className="hero-element invisible absolute bottom-10 right-10 z-30 hidden md:block">
                 <GlassCard variant="default" className="p-6 min-w-[300px]">
                     <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
                         <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">{homeData.serviceTimes.label}</span>
@@ -151,13 +144,6 @@ export function Hero() {
                 </GlassCard>
             </div>
 
-            {/* Scroll Indicator */}
-            <div className="hero-element absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce cursor-pointer flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
-                <span className="text-[10px] uppercase tracking-widest text-white/60">Scroll</span>
-                <div className="w-6 h-10 rounded-full border-2 border-white/50 flex justify-center pt-2">
-                    <div className="w-1 h-2 bg-white rounded-full animate-scroll" />
-                </div>
-            </div>
         </div>
     )
 }
