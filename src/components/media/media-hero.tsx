@@ -6,9 +6,6 @@ import { Play } from "lucide-react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { mediaData } from "@/data"
-import { useQuery } from "convex/react"
-import { api } from "@/../convex/_generated/api"
-import Link from "next/link"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -17,10 +14,6 @@ const YOUTUBE_PLAYLISTS_URL = "https://www.youtube.com/@GPTHebronCityChurch/play
 export function MediaHero() {
     const containerRef = useRef<HTMLDivElement>(null)
     const titleRef = useRef<HTMLHeadingElement>(null)
-    
-    // Fetch latest sermon for featured data
-    const latestSermons = useQuery(api.sermons.getLatest);
-    const featuredSermon = latestSermons?.[0];
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -51,7 +44,7 @@ export function MediaHero() {
             <div className="absolute inset-0 z-0">
                 <div
                     className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: `url(${featuredSermon?.thumbnailUrl || mediaData.hero.bgImage})` }}
+                    style={{ backgroundImage: `url(${mediaData.hero.bgImage})` }}
                 />
                 <div className="absolute inset-0 bg-black/60" />
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
@@ -65,15 +58,15 @@ export function MediaHero() {
                     </div>
 
                     <h1 ref={titleRef} className="text-5xl md:text-7xl font-display font-bold text-white mb-6 leading-tight">
-                        {featuredSermon?.title || mediaData.hero.title}
+                        {mediaData.hero.title}
                     </h1>
 
                     <p className="hero-content text-xl text-gray-200 mb-8 max-w-xl leading-relaxed">
-                        {featuredSermon?.description || mediaData.hero.description}
+                        {mediaData.hero.description}
                     </p>
 
                     <div className="hero-content flex flex-wrap gap-4">
-                        <a href={featuredSermon?.videoUrl || YOUTUBE_PLAYLISTS_URL} target="_blank" rel="noopener noreferrer">
+                        <a href={YOUTUBE_PLAYLISTS_URL} target="_blank" rel="noopener noreferrer">
                             <Button size="lg" className="gap-2 text-lg px-8">
                                 <Play className="w-5 h-5 fill-current" /> {mediaData.hero.cta}
                             </Button>
