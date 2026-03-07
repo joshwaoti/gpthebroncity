@@ -36,9 +36,9 @@ export default function Navbar() {
     const isLightBg = mounted && resolvedTheme === "light" && !isScrolled && !isHomePage
 
     // Most pages have dark cover images, so use light gray for better readability
-    const linkColor = isScrolled ? "text-gray-700" : "text-gray-200"
-    const iconColor = isScrolled ? "text-gray-700" : "text-gray-200"
-    const logoVariant = isScrolled && isLightBg ? "default" : "white"
+    const linkColor = isScrolled ? "text-gray-700" : (isLightBg ? "text-gray-700" : "text-gray-200")
+    const iconColor = isScrolled ? "text-gray-700" : (isLightBg ? "text-gray-700" : "text-gray-200")
+    const logoVariant = (isScrolled && isLightBg) || isLightBg ? "default" : "white"
 
     // Helper for consistency
     // Most pages have dark covers, so use light gray for readability
@@ -48,6 +48,10 @@ export default function Navbar() {
         }
         if (isScrolled) {
             return "text-sm font-medium transition-colors text-gray-700 dark:text-white/80 hover:text-[#257300] dark:hover:text-[#B2CB20]"
+        }
+        // Not scrolled - use dark text for light backgrounds, light text for dark backgrounds
+        if (isLightBg) {
+            return "text-sm font-medium transition-colors text-gray-700 hover:text-[#257300] dark:hover:text-[#B2CB20]"
         }
         // Not scrolled - use light gray for dark backgrounds
         return "text-sm font-medium transition-colors text-gray-200 hover:text-white"
@@ -78,8 +82,10 @@ export default function Navbar() {
                 className={cn(
                     "fixed z-50",
                     isScrolled
-                        ? "top-3 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-4xl bg-white/80 dark:bg-black/50 backdrop-blur-xl border border-black/10 dark:border-white/10 rounded-2xl h-14 shadow-2xl flex items-center"
-                        : "top-0 left-0 right-0 w-full bg-transparent py-5"
+                        ? "top-3 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-4xl bg-transparent dark:bg-transparent backdrop-blur-xl border border-black/10 dark:border-white/10 rounded-2xl h-14 shadow-2xl flex items-center"
+                        : isLightBg
+                            ? "top-0 left-0 right-0 w-full bg-transparent border-b border-black/5 py-5"
+                            : "top-0 left-0 right-0 w-full bg-transparent py-5"
                 )}
             >
                 <div className="container mx-auto px-4 flex items-center justify-between">

@@ -74,10 +74,10 @@ export function ProjectsGrid() {
                             <p className="text-muted-foreground text-sm leading-relaxed mb-4">
                                 On 12th December 2023, we officially broke ground for our Children's Church building project, dubbed "Tujenge NextGen Church." It was a historic and faith-filled moment as Bishop Mwalili graciously joined us to preside over the groundbreaking ceremony.
                             </p>
-                            <div className="inline-flex items-center gap-2 text-sm font-semibold text-[#257300] dark:text-[#B2CB20]">
+                            <Link href="/projects" className="inline-flex items-center gap-2 text-sm font-semibold text-[#257300] dark:text-[#B2CB20] hover:underline">
                                 <span className="w-2 h-2 rounded-full bg-[#257300] animate-pulse"></span>
-                                Help Us Build the Future
-                            </div>
+                                More info
+                            </Link>
                         </div>
 
                         <Link href="/give">

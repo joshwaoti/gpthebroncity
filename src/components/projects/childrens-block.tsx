@@ -1,9 +1,10 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { CheckCircle2, ChevronRight, Download, Share2, Shield, Users, Warehouse } from "lucide-react"
+import { CheckCircle2, HeartHandshake, Calendar, MapPin } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { projectsPage } from "@/data"
 
 export function ChildrensBlock() {
     return (
@@ -24,11 +25,28 @@ export function ChildrensBlock() {
                                 />
                             </div>
 
-
-
                             <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent text-white">
                                 <h3 className="text-2xl font-display font-bold mb-1">Children's Church Block</h3>
                                 <p className="text-sm text-gray-300">Phase 2 In Progress</p>
+                            </div>
+                        </div>
+
+                        {/* Quick Info Card */}
+                        <div className="mt-6 bg-accent dark:bg-white/5 border border-border dark:border-white/10 rounded-2xl p-6">
+                            <h4 className="text-lg font-display font-bold text-gray-900 dark:text-white mb-4">Project Details</h4>
+                            <div className="space-y-3">
+                                <div className="flex items-center gap-3 text-sm">
+                                    <MapPin className="w-5 h-5 text-[#65A30D]" />
+                                    <span className="text-gray-600 dark:text-gray-400">Utawala, Buru Farmers Rd</span>
+                                </div>
+                                <div className="flex items-center gap-3 text-sm">
+                                    <Calendar className="w-5 h-5 text-[#65A30D]" />
+                                    <span className="text-gray-600 dark:text-gray-400">Groundbreaking: Dec 12, 2023</span>
+                                </div>
+                                <div className="flex items-center gap-3 text-sm">
+                                    <HeartHandshake className="w-5 h-5 text-[#65A30D]" />
+                                    <span className="text-gray-600 dark:text-gray-400">Paybill: 552800 | A/C: 200777</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -38,20 +56,42 @@ export function ChildrensBlock() {
                         <div className="mb-12">
                             <span className="text-[#65A30D] font-bold tracking-widest uppercase text-xs mb-4 block">Project Overview</span>
                             <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-6 leading-tight">
-                                Tujenge NextGen Church – Building for the Future
+                                {projectsPage.overview.title}
                             </h2>
-                            <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-4">
-                                At Hebron City Church, we believe that children are not just the church of tomorrow — they are the church of today. They are a precious gift entrusted to us, and it is our responsibility to create an environment where they can grow in faith, discover Christ, and be firmly established in His ways.
-                            </p>
-                            <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-4">
-                                For years, our children have faithfully gathered for church services in tents. While their joy and hunger for God have remained strong, the challenges have been real. During rainy seasons, services are interrupted by leaking tents and muddy grounds. On hot days, the intense heat makes it uncomfortable for them to fully concentrate and participate.
-                            </p>
-                            <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-4">
-                                On 12th December 2023, we officially broke ground for our Children's Church building project, dubbed "Tujenge NextGen Church." It was a historic and faith-filled moment as Bishop Mwalili graciously joined us to preside over the groundbreaking ceremony. That day marked the beginning of a new chapter — a bold step of faith toward securing a permanent, safe, and inspiring space for our children.
-                            </p>
+                            
+                            <div className="space-y-4 text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
+                                <p>
+                                    {projectsPage.overview.introduction}
+                                </p>
+                                <p>
+                                    {projectsPage.overview.challenge}
+                                </p>
+                                <p>
+                                    {projectsPage.overview.resolution}
+                                </p>
+                            </div>
                         </div>
 
-
+                        {/* Why This Project Matters */}
+                        <div className="mb-12 bg-gradient-to-br from-[#65A30D]/10 to-[#65A30D]/5 dark:from-[#65A30D]/20 dark:to-[#65A30D]/5 border border-[#65A30D]/20 rounded-3xl p-8">
+                            <h3 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
+                                <CheckCircle2 className="w-7 h-7 text-[#65A30D]" />
+                                Why This Project Matters
+                            </h3>
+                            <p className="text-gray-700 dark:text-gray-300 text-lg mb-6 italic">
+                                {projectsPage.overview.vision}
+                            </p>
+                            <ul className="space-y-4">
+                                {projectsPage.overview.whyItMatters.map((item, i) => (
+                                    <li key={i} className="flex items-start gap-4">
+                                        <div className="w-6 h-6 rounded-full bg-[#65A30D] flex items-center justify-center flex-shrink-0 mt-0.5">
+                                            <CheckCircle2 className="w-4 h-4 text-white" />
+                                        </div>
+                                        <span className="text-gray-700 dark:text-gray-300 font-medium">{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
 
                         {/* Timeline */}
                         <div className="space-y-12 relative border-l-2 border-dashed border-gray-200 dark:border-white/10 ml-4 pl-12">
@@ -120,18 +160,32 @@ export function ChildrensBlock() {
                             </div>
                         </div>
 
-                        {/* Footer Call to Action (Legacy) */}
-                        <div className="mt-20 pt-10 border-t border-gray-100 dark:border-white/10 text-center">
-                            <h3 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-2">Be Part of the Legacy</h3>
-                            <p className="text-gray-500 mb-6">Your partnership today builds the spiritual home for tomorrow's leaders.</p>
-                            <div className="flex justify-center gap-4">
-                                <Link href="/give">
-                                    <Button className="bg-[#3F6212] hover:bg-[#365314] rounded-full px-6">Join the Vision</Button>
-                                </Link>
-                                <Link href="/projects">
-                                    <Button variant="outline" className="rounded-full px-6"><Share2 className="w-4 h-4 mr-2" /> Share Project</Button>
-                                </Link>
+                        {/* Giving Information */}
+                        <div className="mt-16 bg-gradient-to-br from-[#65A30D] to-[#4D7C0F] text-white rounded-3xl p-8 md:p-10 shadow-2xl">
+                            <div className="text-center mb-8">
+                                <HeartHandshake className="w-12 h-12 mx-auto mb-4 text-white/90" />
+                                <h3 className="text-3xl font-display font-bold mb-3">{projectsPage.giving.title}</h3>
+                                <p className="text-white/90 text-lg leading-relaxed mb-6">
+                                    {projectsPage.giving.description}
+                                </p>
                             </div>
+
+                            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 mb-6">
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    <div className="text-center">
+                                        <p className="text-white/70 text-sm uppercase tracking-wider mb-2">Paybill Number</p>
+                                        <p className="text-3xl font-display font-bold">{projectsPage.giving.paybill}</p>
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="text-white/70 text-sm uppercase tracking-wider mb-2">Account Number</p>
+                                        <p className="text-3xl font-display font-bold">{projectsPage.giving.accountNumber}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p className="text-center text-white/90 text-sm leading-relaxed italic">
+                                {projectsPage.giving.cta}
+                            </p>
                         </div>
                     </div>
                 </div>

@@ -51,9 +51,9 @@ export function VisitSection() {
                     >
                         <Button
                             size="lg"
-                            className="h-auto py-4 px-8 rounded-full shadow-xl bg-primary hover:bg-primary/90 dark:bg-gold dark:hover:bg-gold/90 dark:text-[#0a0f05] text-white gap-2 transition-all duration-300 hover:scale-105 active:scale-95 group"
+                            className="h-auto py-4 px-8 rounded-full shadow-xl bg-primary hover:bg-primary/90 text-white dark:bg-white dark:hover:bg-gray-100 dark:text-black gap-2 transition-all duration-300 hover:scale-105 active:scale-95 group"
                         >
-                            <Navigation className="w-5 h-5 text-white dark:text-[#0a0f05] group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                            <Navigation className="w-5 h-5 text-white dark:text-black group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                             {homeData.visit.action}
                         </Button>
                     </Link>

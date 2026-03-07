@@ -6,17 +6,15 @@ import { api } from "@/../convex/_generated/api";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
 import { Button } from "@/components/ui/button";
-import { Plus, Edit2, Trash2, Play, Search, FolderOpen, RefreshCw } from "lucide-react";
+import { Plus, Edit2, Trash2, Play, Search, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { AdminPagination } from "@/components/admin/pagination";
 
 export default function SermonsPage() {
     const sermons = useQuery(api.sermons.list, {});
-    const series = useQuery((api as any).sermons.getAllSeries) as any[];
     const removeSermon = useMutation((api as any).sermons.remove);
     const [search, setSearch] = useState("");
-    const [seriesFilter, setSeriesFilter] = useState("all");
     const [deleteId, setDeleteId] = useState<any>(null);
     const [isDeleting, setIsDeleting] = useState(false);
     const syncSermons = useAction(api.youtube.syncSermons);
@@ -41,8 +39,7 @@ export default function SermonsPage() {
 
     const filtered = sermons?.filter((s: any) => {
         const matchSearch = s.title.toLowerCase().includes(search.toLowerCase()) || (s.pastor || "").toLowerCase().includes(search.toLowerCase());
-        const matchSeries = seriesFilter === "all" || s.seriesId === seriesFilter;
-        return matchSearch && matchSeries;
+        return matchSearch;
     }) || [];
 
     const ITEMS_PER_PAGE = 10;
@@ -81,10 +78,6 @@ export default function SermonsPage() {
                         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search sermons..." className="w-full bg-background border border-border rounded-lg pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#257300]" />
                     </div>
                     <div className="flex gap-2">
-                        <select value={seriesFilter} onChange={e => setSeriesFilter(e.target.value)} className="bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#257300]">
-                            <option value="all">All Series</option>
-                            {series?.map((s: any) => <option key={s?._id} value={s?._id}>{s.title}</option>)}
-                        </select>
                         <Button onClick={handleSync} disabled={isSyncing} variant="outline" className="gap-2 whitespace-nowrap">
                             <RefreshCw className={cn("w-4 h-4", isSyncing && "animate-spin")} />
                             {isSyncing ? "Syncing..." : "Sync YouTube"}
@@ -94,27 +87,6 @@ export default function SermonsPage() {
                         </Link>
                     </div>
                 </div>
-
-                {/* Series folders */}
-                {series && series.length > 0 && (
-                    <div className="mb-6">
-                        <p className="text-xs text-muted-foreground font-medium mb-2 uppercase tracking-wide">Sermon Series</p>
-                        <div className="flex gap-2 flex-wrap">
-                            {series.map((s: any) => (
-                                <button key={s?._id} onClick={() => setSeriesFilter(seriesFilter === s?._id ? "all" : s?._id)}
-                                    className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all",
-                                        seriesFilter === s?._id
-                                            ? "bg-[#257300] text-white border-[#257300]"
-                                            : "bg-card text-muted-foreground border-border hover:border-[#257300]/50"
-                                    )}>
-                                    <FolderOpen className="w-3 h-3" />
-                                    {s.title}
-                                    <span className="bg-current/10 px-1 rounded-full">{s.sermonCount ?? 0}</span>
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                )}
 
                 <div className="rounded-xl border border-border bg-card overflow-hidden">
                     <table className="w-full text-sm">

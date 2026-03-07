@@ -186,6 +186,25 @@ export function AdminSidebar({ userRole, userName, userEmail }: AdminSidebarProp
                             );
                         }
 
+                        // Handle items with subItems when collapsed - make them expand the sidebar instead of navigating
+                        if (item.subItems && collapsed) {
+                            return (
+                                <button
+                                    key={item.href}
+                                    onClick={() => setCollapsed(false)}
+                                    className={cn(
+                                        "flex items-center justify-center gap-3 px-2 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer",
+                                        active
+                                            ? "bg-[#257300]/10 dark:bg-[#257300]/20 text-[#257300] dark:text-[#6EA704]"
+                                            : "text-zinc-500 dark:text-white/50 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/5"
+                                    )}
+                                    title={item.label}
+                                >
+                                    <Icon className="w-4 h-4 flex-shrink-0" />
+                                </button>
+                            );
+                        }
+
                         return (
                             <Link
                                 key={item.href}

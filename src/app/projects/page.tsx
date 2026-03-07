@@ -4,7 +4,6 @@ import Footer from "@/components/layout/footer"
 import { ProjectsHero } from "@/components/projects/projects-hero"
 import { ChildrensBlock } from "@/components/projects/childrens-block"
 
-import { PartnerCTA } from "@/components/projects/partner-cta"
 
 export const metadata: Metadata = {
     title: "Project Hebron City | GPT Hebron City",
@@ -18,7 +17,6 @@ export default function ProjectsPage() {
             <ProjectsHero />
             <ChildrensBlock />
 
-            <PartnerCTA />
             <Footer />
         </main>
     )

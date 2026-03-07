@@ -18,21 +18,21 @@ export const homeData = {
         label: "Next Service",
     },
     projects: {
-        title: "Building the Next Gen Church",
+        title: "Tujenge NextGen Church – Building for the Future",
         subtitle: "Our Projects",
         linkText: "View All Projects",
         items: [
             {
                 id: 1,
                 title: "Children's Church Block",
-                description: "Creating a safe, engaging, and spiritually nourishing space for our children to grow in faith. This is our primary focus for 2026 as we invest in the future of Hebron City.",
+                description: "Creating a safe, engaging, and spiritually nourishing space for our children to grow in faith. On 12th December 2023, we broke ground on this historic project with Bishop Mwalili presiding over the ceremony.",
                 image: "/assets/img/construct.jpg",
                 priority: true,
                 details: [
-                    "Nurturing environment for our children",
-                    "Modern learning facilities",
-                    "Safety-first design philosophy",
-                    "State-of-the-art community spaces"
+                    "Safe and weather-proof worship space",
+                    "Structured classrooms for biblical teaching",
+                    "Clean and child-friendly environment",
+                    "Consistent ministry without weather interruptions"
                 ]
             },
         ],
@@ -253,20 +253,41 @@ export const mediaData = {
 
 export const projectsPage = {
     hero: {
-        title: "Building the Next Gen Church",
+        title: "Tujenge NextGen Church – Building for the Future",
         subtitle: "Vision 2026",
-        description: "We are building a legacy for future generations. Join us as we expand our territory and create spaces for worship, fellowship, and discipleship.",
+        description: "At Hebron City Church, we believe that children are not just the church of tomorrow — they are the church of today. Join us in building a permanent, safe, and inspiring space for our children to grow in faith and discover Christ.",
         bgImage: "/assets/img/projects_hero.jpg",
         stats: [
             { label: "Location", value: "Utawala, Nairobi" },
-            { label: "Established", value: "Feb 2007" },
-            { label: "Current Phase", value: "Children's Block" }
+            { label: "Launched", value: "Dec 12, 2023" },
+            { label: "Current Phase", value: "Phase 2 - In Progress" }
         ]
     },
-    cta: {
+    overview: {
+        title: "Tujenge NextGen Church – Building for the Future",
+        introduction: "At Hebron City Church, we believe that children are not just the church of tomorrow — they are the church of today. They are a precious gift entrusted to us, and it is our responsibility to create an environment where they can grow in faith, discover Christ, and be firmly established in His ways.",
+        challenge: "For years, our children have faithfully gathered for church services in tents. While their joy and hunger for God have remained strong, the challenges have been real. During rainy seasons, services are interrupted by leaking tents and muddy grounds. On hot days, the intense heat makes it uncomfortable for them to fully concentrate and participate. Dust, wind, and unpredictable weather have often made it difficult to provide a safe, consistent, and conducive learning environment.",
+        resolution: "These challenges stirred our hearts and strengthened our resolve. On 12th December 2023, we officially broke ground for our Children's Church building project, dubbed 'Tujenge NextGen Church.' It was a historic and faith-filled moment as Bishop Mwalili graciously joined us to preside over the groundbreaking ceremony. That day marked the beginning of a new chapter — a bold step of faith toward securing a permanent, safe, and inspiring space for our children.",
+        whyItMatters: [
+            "Provide a safe and weather-proof worship space",
+            "Create structured classrooms for biblical teaching",
+            "Offer a clean and child-friendly environment",
+            "Enable consistent ministry without weather interruptions",
+            "Position us to disciple the next generation effectively"
+        ],
+        vision: "We are not just putting up a structure — we are laying a foundation for generations to come."
+    },
+    giving: {
         title: "Partner With Us",
-        description: "Join us in our journey to build a homeland where our community can flourish. Together, we are creating a legacy for the next generation.",
-        buttonText: "Join the Vision"
+        description: "We invite you to be part of this legacy. Your support will help us build a place where children can encounter Christ, grow spiritually, and be equipped to impact their world.",
+        paybill: "552800",
+        accountNumber: "200777",
+        cta: "Every seed sown brings us closer to completing this vision. Together, let us Tujenge NextGen Church — and build a lasting altar for the generations that follow."
+    },
+    cta: {
+        title: "Build a Lasting Legacy",
+        description: "Your generosity today builds the spiritual home for tomorrow's leaders. Join us in creating a safe, inspiring environment where children can encounter Christ and grow in faith.",
+        buttonText: "Give to the Vision"
     }
 }
 

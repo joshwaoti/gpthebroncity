@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 
 export function MediaGrid() {
-    const [activeCategory, setActiveCategory] = useState("All")
     const [searchQuery, setSearchQuery] = useState("")
 
     const { results, status, loadMore } = usePaginatedQuery(
@@ -20,7 +19,7 @@ export function MediaGrid() {
         { initialNumItems: 20 }
     );
 
-    // Map Convex data to expected frontend format, filter by category locally
+    // Map Convex data to expected frontend format
     const mappedItems = results.map(sermon => ({
         id: sermon._id,
         title: sermon.title,
@@ -34,27 +33,20 @@ export function MediaGrid() {
         description: sermon.description || "",
     }));
 
-    // Filter by category
-    const categoryFiltered = activeCategory === "All"
-        ? mappedItems
-        : mappedItems.filter(item => item.category === activeCategory)
-
-    // Filter by search query
+    // Filter by search query only
     const filteredItems = searchQuery
-        ? categoryFiltered.filter(item => 
+        ? mappedItems.filter(item => 
             item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             item.preacher.toLowerCase().includes(searchQuery.toLowerCase()) ||
             item.series.toLowerCase().includes(searchQuery.toLowerCase()) ||
             (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()))
         )
-        : categoryFiltered
+        : mappedItems
 
 
     return (
         <section className="pb-24 min-h-screen bg-background">
             <MediaFilter 
-                activeCategory={activeCategory} 
-                onCategoryChange={setActiveCategory}
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
             />

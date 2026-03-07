@@ -6,11 +6,12 @@ import { AdminHeader } from "@/components/admin/admin-header";
 import { StatCard } from "@/components/admin/stat-card";
 import {
     Video, Calendar, FileText, Mail,
-    ChevronRight
+    ChevronRight, ChevronLeft
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@clerk/nextjs";
+import { useState } from "react";
 
 function ProgressBar({ raised, goal }: { raised: number; goal: number }) {
     const pct = Math.min(100, Math.round((raised / goal) * 100));
@@ -29,6 +30,9 @@ function ProgressBar({ raised, goal }: { raised: number; goal: number }) {
 
 export default function AdminDashboardPage() {
     const { user } = useUser();
+    const [eventsPage, setEventsPage] = useState(1);
+    const eventsPerPage = 5;
+    
     const latestSermons = useQuery(api.sermons.getLatest, {});
     const upcomingEvents = useQuery(api.events.getUpcoming, {});
     const activeProjects = useQuery((api as any).projects.getActive, { limit: 3 });
@@ -54,6 +58,13 @@ export default function AdminDashboardPage() {
     };
 
     const userRole = (user?.publicMetadata?.role as string) || "super_admin";
+
+    // Calculate paginated events
+    const totalEvents = upcomingEvents?.length || 0;
+    const totalPages = Math.ceil(totalEvents / eventsPerPage);
+    const startIndex = (eventsPage - 1) * eventsPerPage;
+    const endIndex = startIndex + eventsPerPage;
+    const currentEvents = upcomingEvents?.slice(startIndex, endIndex) || [];
 
     return (
         <div>
@@ -205,10 +216,10 @@ export default function AdminDashboardPage() {
                         </Link>
                     </div>
                     <div className="space-y-3">
-                        {!upcomingEvents || upcomingEvents.length === 0 ? (
+                        {!currentEvents || currentEvents.length === 0 ? (
                             <p className="text-sm text-muted-foreground">No upcoming events</p>
                         ) : (
-                            upcomingEvents.filter(Boolean).map(event => (
+                            currentEvents.filter(Boolean).map(event => (
                                 <div key={event?._id} className="flex items-center gap-4 p-3 rounded-lg bg-accent/50">
                                     <div className="bg-[#257300]/10 rounded-lg p-2 text-center min-w-[48px]">
                                         <p className="text-xs text-[#6EA704] font-medium">{event?.date ? new Date(event.date).toLocaleString("en", { month: "short" }) : ""}</p>
@@ -225,6 +236,50 @@ export default function AdminDashboardPage() {
                             ))
                         )}
                     </div>
+                    
+                    {/* Pagination Controls */}
+                    {totalPages > 1 && (
+                        <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
+                            <div className="text-sm text-muted-foreground">
+                                Showing {startIndex + 1} to {Math.min(endIndex, totalEvents)} of {totalEvents} events
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => setEventsPage(prev => Math.max(1, prev - 1))}
+                                    disabled={eventsPage === 1}
+                                    className="gap-1"
+                                >
+                                    <ChevronLeft className="w-4 h-4" />
+                                    Previous
+                                </Button>
+                                <div className="flex items-center gap-1">
+                                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                                        <Button
+                                            key={page}
+                                            variant={eventsPage === page ? "default" : "ghost"}
+                                            size="sm"
+                                            onClick={() => setEventsPage(page)}
+                                            className="w-8 h-8 p-0"
+                                        >
+                                            {page}
+                                        </Button>
+                                    ))}
+                                </div>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => setEventsPage(prev => Math.min(totalPages, prev + 1))}
+                                    disabled={eventsPage === totalPages}
+                                    className="gap-1"
+                                >
+                                    Next
+                                    <ChevronRight className="w-4 h-4" />
+                                </Button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
