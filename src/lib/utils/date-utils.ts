@@ -4,8 +4,8 @@ export function getNextServiceDate(): Date {
     // Sunday 09:30 EAT (UTC+3)
 
     const targets = [
-        { day: 3, hours: 17, minutes: 30 }, // Wednesday
-        { day: 0, hours: 9, minutes: 30 },  // Sunday
+        { day: 3, hours: 18, minutes: 0 }, // Wednesday 6:00 PM
+        { day: 0, hours: 9, minutes: 30 },  // Sunday 9:30 AM
     ];
 
     let nextTarget = new Date(now);

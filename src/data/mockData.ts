@@ -54,10 +54,11 @@ export const homeData = {
         bgImage: "/assets/img/misc/bg-subheader.jpg",
         campus: {
             name: "Hebron City Campus",
-            address: "Eastern Bypass, Utawala, Nairobi, Kenya",
+            address: "Utawala, Buru Farmers Rd",
+            mapLink: "https://maps.app.goo.gl/SVuHC7DMgHYPkCrQ9"
         },
         times: {
-            sunday: "8:30 AM & 11:00 AM",
+            sunday: "9:30 AM & 10:15 AM",
             wednesday: "6:00 PM",
         },
         action: "Get Directions",
@@ -283,8 +284,9 @@ export const givingPage = {
             type: "mobile",
             description: "Fast and secure mobile money transfer.",
             details: [
-                { label: "Paybill Number", value: "247247" },
-                { label: "Account Number", value: "123456" }
+                { label: "Till Number", value: "902780" },
+                { label: "Paybill Number", value: "552800" },
+                { label: "Account Number", value: "200777" }
             ]
         },
         {
@@ -293,20 +295,9 @@ export const givingPage = {
             type: "bank",
             description: "Direct bank deposit or transfer.",
             details: [
-                { label: "Bank Name", value: "Equity Bank" },
-                { label: "Branch", value: "Utawala" },
-                { label: "Account Name", value: "GPT Hebron City" },
-                { label: "Account Number", value: "0123456789012" }
-            ]
-        },
-        {
-            id: "pesalink",
-            title: "PesaLink",
-            type: "online",
-            description: "Instant inter-bank transfer.",
-            details: [
-                { label: "Bank", value: "Equity Bank" },
-                { label: "Phone Linked", value: "0712 345 678" }
+                { label: "Bank Name", value: "SBM Bank -Corner House" },
+                { label: "Account Name", value: "Green Pastures Tabernacle Church -City Center" },
+                { label: "Account Number", value: "0412387081001" }
             ]
         },
         {
@@ -316,7 +307,7 @@ export const givingPage = {
             description: "For international giving.",
             details: [
                 { label: "Recipient", value: "GPT Hebron City" },
-                { label: "Phone Number", value: "+254 712 345 678" }
+                { label: "Phone Number", value: "+254799930957" }
             ]
         }
     ]
@@ -338,7 +329,7 @@ export const connectPage = {
     contactInfo: {
         phone: "+254 712 345 678",
         email: "info@gpthebroncity.org",
-        address: "Eastern Bypass, Utawala, Nairobi"
+        address: "Utawala, Buru Farmers Rd"
     }
 }
 
@@ -350,13 +341,13 @@ export const visitPage = {
         bgImage: "/assets/img/bg_full_1.jpg"
     },
     services: [
-        { day: "Sunday", time: "8:30 AM", label: "First Service" },
-        { day: "Sunday", time: "11:00 AM", label: "Second Service" },
+        { day: "Sunday", time: "9:30 AM", label: "First Service" },
+        { day: "Sunday", time: "10:15 AM", label: "Second Service" },
         { day: "Wednesday", time: "6:00 PM", label: "Midweek Service" }
     ],
     location: {
-        address: "Eastern Bypass, Utawala, Nairobi, Kenya",
-        mapLink: "https://maps.google.com/?q=GPT+Hebron+City"
+        address: "Utawala, Buru Farmers Rd",
+        mapLink: "https://maps.app.goo.gl/SVuHC7DMgHYPkCrQ9"
     },
     faqs: [
         {
@@ -397,6 +388,7 @@ export const ministriesPage = {
         {
             id: "worship",
             title: "Hebron City Voices",
+            title_alias: "Worship Team",
             description: "This is a team with the role of leading the congregation in corporate praise and worship. Their main mandate is to provide an enabling environment for authentic and passionate worship through spiritual music.",
             image: "/assets/img/ministries_worship.jpg",
             schedule: "Practice: Saturdays; Every Service",

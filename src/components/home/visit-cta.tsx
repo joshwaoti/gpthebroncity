@@ -46,11 +46,14 @@ export function VisitSection() {
                     </div>
 
                     <Link
-                        href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(homeData.visit.campus.address)}`}
+                        href={homeData.visit.campus.mapLink}
                         target="_blank"
                     >
-                        <Button size="lg" className="h-auto py-4 px-8 rounded-full shadow-xl bg-primary hover:bg-primary/90 text-white gap-2">
-                            <Navigation className="w-5 h-5 text-white" />
+                        <Button
+                            size="lg"
+                            className="h-auto py-4 px-8 rounded-full shadow-xl bg-primary hover:bg-primary/90 dark:bg-gold dark:hover:bg-gold/90 dark:text-[#0a0f05] text-white gap-2 transition-all duration-300 hover:scale-105 active:scale-95 group"
+                        >
+                            <Navigation className="w-5 h-5 text-white dark:text-[#0a0f05] group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                             {homeData.visit.action}
                         </Button>
                     </Link>
@@ -59,7 +62,7 @@ export function VisitSection() {
                 {/* Real Google Map */}
                 <div className="hidden md:block h-[400px] w-full rounded-2xl overflow-hidden border border-border dark:border-white/10 shadow-2xl">
                     <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.818!2d36.966!3d-1.2756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f13f1a20c0001%3A0x82d04d47dcb2e2e1!2sGPT%20Hebron%20City!5e0!3m2!1sen!2ske!4v1708300000000!5m2!1sen!2ske"
+                        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3988.825!2d36.94901!3d-1.26477!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f13f1a20c0001%3A0x82d04d47dcb2e2e1!2sGPT%20Hebron%20City!5e0!3m2!1sen!2ske!4v1708300000000!5m2!1sen!2ske"
                         width="100%"
                         height="100%"
                         style={{ border: 0 }}

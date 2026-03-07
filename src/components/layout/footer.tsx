@@ -96,7 +96,7 @@ export function Footer() {
                                         ✉ info@gpthebroncity.org
                                     </a>
                                     <div className="flex items-center gap-2">
-                                        📍 Utawala, Nairobi
+                                        📍 Utawala, Buru Farmers Rd
                                     </div>
                                 </div>
                             </div>
@@ -158,7 +158,7 @@ export function Footer() {
                                 ✉ info@gpthebroncity.org
                             </a>
                             <div className="flex items-center gap-2">
-                                📍 Utawala, Nairobi
+                                📍 Utawala, Buru Farmers Rd
                             </div>
                         </div>
                     </div>
@@ -169,9 +169,9 @@ export function Footer() {
                     <p className="text-xs text-white/40">
                         © {new Date().getFullYear()} GPT Hebron City. All rights reserved.
                     </p>
-                    <a 
-                        href="https://otieno.vercel.app" 
-                        target="_blank" 
+                    <a
+                        href="https://otieno.vercel.app"
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="text-xs text-white/30 flex items-center gap-1 hover:text-white transition-colors"
                     >

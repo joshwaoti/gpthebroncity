@@ -39,11 +39,14 @@ export function ServiceInfo() {
                             {visitPage.location.address}
                         </p>
                         <p className="text-muted-foreground">
-                            We are conveniently located along the Eastern Bypass. Look for the GPT Hebron City sign!
+                            We are conveniently located along Buru Farmers Rd. Look for the GPT Hebron City sign!
                         </p>
                         <Link href={visitPage.location.mapLink} target="_blank">
-                            <Button size="lg" className="gap-2 mt-4">
-                                Open in Google Maps <MapPin className="w-4 h-4" />
+                            <Button
+                                size="lg"
+                                className="h-auto py-4 px-8 rounded-full shadow-xl bg-primary hover:bg-primary/90 dark:bg-gold dark:hover:bg-gold/90 dark:text-[#0a0f05] text-white gap-2 transition-all duration-300 hover:scale-105 active:scale-95 group"
+                            >
+                                Open in Google Maps <MapPin className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                             </Button>
                         </Link>
                     </div>
