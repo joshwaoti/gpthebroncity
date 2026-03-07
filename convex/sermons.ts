@@ -5,41 +5,55 @@ import { v } from "convex/values";
 export const getLatest = query({
     args: {},
     handler: async (ctx) => {
-        return await ctx.db
+        const sermons = await ctx.db
             .query("sermons")
             .withIndex("by_status", (q) => q.eq("status", "active"))
-            .order("desc")
-            .take(5);
+            .collect();
+        
+        // Sort by date field (most recent first)
+        return sermons
+            .filter(s => s.date)
+            .sort((a, b) => new Date(b.date!).getTime() - new Date(a.date!).getTime())
+            .slice(0, 5);
     },
 });
 
 export const listPaginated = query({
     args: { paginationOpts: paginationOptsValidator },
     handler: async (ctx, args) => {
-        // Since we don't have an index on date, but _creationTime is usually correlated with date for new items
-        // Wait, for imported older YouTube videos, _creationTime is today. 
-        // We will just order by _creationTime for now, which Convex does natively fast for pagination.
-        // Actually the best is to query backwards by index or creation time. 
-        // However, we recently added the videos. If the user wants to truly order by published date from YT,
-        // we should add an index on "date" in schema if we wanted to paginate.
-        // For now we'll paginate naturally by descending _creationTime which is fast.
-        return await ctx.db.query("sermons")
+        const result = await ctx.db.query("sermons")
             .withIndex("by_status", (q) => q.eq("status", "active"))
             .order("desc")
             .paginate(args.paginationOpts);
+        
+        // Re-sort the page results by date (most recent first)
+        const sortedPage = result.page.sort((a, b) => 
+            new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime()
+        );
+        
+        return {
+            ...result,
+            page: sortedPage,
+        };
     },
 });
 
 export const list = query({
     args: { status: v.optional(v.string()) },
     handler: async (ctx, args) => {
+        let sermons;
         if (args.status) {
-            return await ctx.db.query("sermons")
+            sermons = await ctx.db.query("sermons")
                 .withIndex("by_status", (sq) => sq.eq("status", args.status as any))
                 .order("desc")
                 .collect();
+        } else {
+            sermons = await ctx.db.query("sermons").order("desc").collect();
         }
-        return await ctx.db.query("sermons").order("desc").collect();
+        // Sort by date (most recent first)
+        return sermons.sort((a, b) => 
+            new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime()
+        );
     },
 });
 

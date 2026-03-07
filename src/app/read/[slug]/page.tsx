@@ -54,7 +54,14 @@ export default function SingleArticlePage({ params }: { params: Promise<{ slug: 
     return (
         <main className="min-h-screen bg-background">
             <Navbar />
-            <div className="pt-24 pb-20">
+            <div className="relative pt-20 pb-16 overflow-hidden">
+                {/* Gradient blobs for navbar visibility */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute -top-10 -right-10 w-64 h-64 bg-[#257300]/10 rounded-full blur-3xl" />
+                    <div className="absolute -bottom-10 -left-10 w-56 h-56 bg-gold/10 rounded-full blur-3xl" />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-64 bg-[#257300]/5 rounded-full blur-3xl" />
+                </div>
+                <div className="pt-24 pb-20">
                 <article className="container mx-auto px-4 max-w-4xl">
                     <Link href="/read" className="inline-flex items-center gap-2 text-muted-foreground hover:text-[#257300] mb-8 transition-colors group">
                         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Articles
@@ -162,6 +169,7 @@ export default function SingleArticlePage({ params }: { params: Promise<{ slug: 
                         </div>
                     </section>
                 )}
+                </div>
             </div>
             <Footer />
         </main>

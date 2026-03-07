@@ -81,7 +81,14 @@ export default function EventDetailPage() {
     return (
         <main className="min-h-screen bg-background">
             <Navbar />
-            <div className="pt-24 pb-20">
+            <div className="relative pt-20 pb-16 overflow-hidden">
+                {/* Gradient blobs for navbar visibility */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute -top-10 -right-10 w-64 h-64 bg-[#257300]/10 rounded-full blur-3xl" />
+                    <div className="absolute -bottom-10 -left-10 w-56 h-56 bg-gold/10 rounded-full blur-3xl" />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-64 bg-[#257300]/5 rounded-full blur-3xl" />
+                </div>
+                <div className="pt-24 pb-20">
                 {/* Hero Banner - imageless, gradient-based */}
                 <div className={cn(
                     "relative w-full overflow-hidden",
@@ -138,6 +145,7 @@ export default function EventDetailPage() {
                             </div>
                         </div>
                     </div>
+                </div>
                 </div>
 
                 {/* Content */}
