@@ -4,6 +4,7 @@ import { useRef, useEffect, useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { GlassCard } from "@/components/ui/glass-card"
+import ShinyText from "@/components/ui/shiny-text"
 import { homeData } from "@/data"
 import { useCountdown } from "@/hooks/use-countdown"
 import { ArrowRight, Bell, Play } from "lucide-react"
@@ -91,7 +92,17 @@ export function Hero() {
                 </h1>
 
                 <p className="hero-element invisible text-[#B2CB20] font-bold text-sm md:text-base tracking-[0.2em] uppercase mb-4 max-w-2xl mx-auto">
-                    {homeData.hero.tagline}
+                    <ShinyText
+                        text={homeData.hero.tagline}
+                        speed={3}
+                        delay={0}
+                        color="#b2cb20"
+                        shineColor="#ffffff"
+                        spread={120}
+                        direction="left"
+                        yoyo={true}
+                        pauseOnHover={false}
+                    />
                 </p>
 
                 <p className="hero-element invisible text-base md:text-lg text-gray-300 max-w-2xl mx-auto mb-12 md:mb-16 font-light leading-relaxed px-4 italic opacity-80 border-t border-white/10 pt-4">

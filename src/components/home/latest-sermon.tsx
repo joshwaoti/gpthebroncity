@@ -22,7 +22,7 @@ export function LatestSermon() {
                         <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/10 dark:shadow-black/80 border border-border dark:border-white/10 aspect-video">
                             <div
                                 className="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                                style={{ backgroundImage: `url(${homeData.latestSermon.thumbnail})` }}
+                                style={{ backgroundImage: `url(/assets/img/christreveaaled.png)` }}
                             />
                             <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                                 <div className="h-20 w-20 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:bg-[#257300] group-hover:text-white group-hover:border-transparent text-white">
