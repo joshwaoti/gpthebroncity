@@ -22,7 +22,7 @@ const milestones = [
     },
     {
         year: "Present Day",
-        title: "The Utawala Vision",
+        title: "Hebron City Project",
         description: "The wandering ceased as we stepped into our promised land. GPT Hebron City in Utawala became not just a building, but a beacon of hope for the community. A permanent sanctuary where generations will encounter God.",
         image: "/assets/img/utawala_vision.jpg"
     }

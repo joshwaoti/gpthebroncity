@@ -16,7 +16,7 @@ export function MediaGrid() {
     const { results, status, loadMore } = usePaginatedQuery(
         api.sermons.listPaginated,
         {},
-        { initialNumItems: 20 }
+        { initialNumItems: 6 }
     );
 
     // Map Convex data to expected frontend format
@@ -56,7 +56,7 @@ export function MediaGrid() {
                     <AnimatePresence mode="popLayout">
                         {status === "LoadingFirstPage" ? (
                             // Show skeletons while loading first page
-                            Array.from({ length: 9 }).map((_, i) => (
+                            Array.from({ length: 6 }).map((_, i) => (
                                 <motion.div
                                     key={`skeleton-${i}`}
                                     initial={{ opacity: 0 }}
@@ -90,7 +90,7 @@ export function MediaGrid() {
                 {status === "CanLoadMore" && (
                     <div className="mt-12 flex justify-center">
                         <Button
-                            onClick={() => loadMore(9)}
+                            onClick={() => loadMore(6)}
                             size="lg"
                             variant="outline"
                             className="px-8 rounded-full border-primary/20 hover:bg-primary/5 hover:text-primary transition-colors"

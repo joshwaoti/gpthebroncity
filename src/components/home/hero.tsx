@@ -75,7 +75,7 @@ export function Hero() {
 
             {/* Content */}
             <div className="relative z-20 container mx-auto px-4 text-center mt-0 md:mt-20 flex flex-col items-center justify-center h-full">
-                <div className="hero-element invisible inline-flex items-center gap-2 px-4 py-1 rounded-full border border-[#B2CB20]/30 bg-[#B2CB20]/10 backdrop-blur-sm mb-6 md:mb-8">
+                <div className="hero-element invisible inline-flex items-center gap-2 px-4 py-1 rounded-full border border-[#B2CB20]/30 bg-[#B2CB20]/10 backdrop-blur-sm mt-16 mb-6 md:mb-8">
                     <span className="relative flex h-2 w-2">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#B2CB20] opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-[#B2CB20]"></span>

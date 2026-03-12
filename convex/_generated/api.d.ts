@@ -11,6 +11,7 @@
 import type * as auditLog from "../auditLog.js";
 import type * as blog from "../blog.js";
 import type * as check_db from "../check_db.js";
+import type * as clean_data from "../clean_data.js";
 import type * as contact from "../contact.js";
 import type * as content from "../content.js";
 import type * as crons from "../crons.js";
@@ -38,6 +39,7 @@ declare const fullApi: ApiFromModules<{
   auditLog: typeof auditLog;
   blog: typeof blog;
   check_db: typeof check_db;
+  clean_data: typeof clean_data;
   contact: typeof contact;
   content: typeof content;
   crons: typeof crons;

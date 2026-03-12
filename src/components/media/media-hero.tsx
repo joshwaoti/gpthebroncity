@@ -9,7 +9,8 @@ import { mediaData } from "@/data"
 
 gsap.registerPlugin(ScrollTrigger)
 
-const YOUTUBE_PLAYLISTS_URL = "https://www.youtube.com/@GPTHebronCityChurch/playlists";
+const YOUTUBE_CHANNEL_URL = "https://www.youtube.com/@GPTHebronCityChurch/playlists";
+const YOUTUBE_PLAYLIST_URL = "https://www.youtube.com/playlist?list=PLVD4zPkAlzg7PJkAYAa6_Gp-rrHKIrA2s";
 
 export function MediaHero() {
     const containerRef = useRef<HTMLDivElement>(null)
@@ -66,12 +67,12 @@ export function MediaHero() {
                     </p>
 
                     <div className="hero-content flex flex-wrap gap-4">
-                        <a href={YOUTUBE_PLAYLISTS_URL} target="_blank" rel="noopener noreferrer">
+                        <a href={YOUTUBE_PLAYLIST_URL} target="_blank" rel="noopener noreferrer">
                             <Button size="lg" className="gap-2 text-lg px-8">
                                 <Play className="w-5 h-5 fill-current" /> {mediaData.hero.cta}
                             </Button>
                         </a>
-                        <a href={YOUTUBE_PLAYLISTS_URL} target="_blank" rel="noopener noreferrer">
+                        <a href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noopener noreferrer">
                             <Button size="lg" variant="secondary" className="text-lg px-8">
                                 View All Series
                             </Button>

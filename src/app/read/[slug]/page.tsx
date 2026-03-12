@@ -105,7 +105,7 @@ export default function SingleArticlePage({ params }: { params: Promise<{ slug: 
                             </p>
                         )}
                         <div className="whitespace-pre-wrap">
-                            {post.content}
+                            {post.content.replace(/\*/g, '')}
                         </div>
                     </div>
 

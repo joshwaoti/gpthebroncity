@@ -64,6 +64,9 @@ export function EventCard({
 
     const eventLink = slug ? `/events/${slug}` : `/events/${_id || id}`;
     const style = CATEGORY_STYLES[category] ?? CATEGORY_STYLES["Service"];
+    
+    const isAutoImported = description && description.toLowerCase().includes("automatically imported");
+    const displayDescription = !isAutoImported ? description : null;
 
     return (
         <Link href={eventLink} className="group block h-full">
@@ -114,8 +117,8 @@ export function EventCard({
                     </h3>
 
                     {/* Description */}
-                    {description && (
-                        <p className="text-sm text-muted-foreground line-clamp-2 mb-4 flex-1">{description}</p>
+                    {displayDescription && (
+                        <p className="text-sm text-muted-foreground line-clamp-2 mb-4 flex-1">{displayDescription}</p>
                     )}
 
                     {/* Footer */}
@@ -138,7 +141,7 @@ export function EventCard({
                                 className="text-muted-foreground hover:text-[#257300] dark:hover:text-[#B2CB20]"
                                 event={{
                                     title,
-                                    description,
+                                    description: displayDescription ?? undefined,
                                     location,
                                     date: typeof date === "string" ? date : date.toISOString().split("T")[0],
                                     endDate,

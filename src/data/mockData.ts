@@ -42,8 +42,8 @@ export const homeData = {
         title: "Christ Revealed, Christ Expressed",
         tagline: "Seeing Him Clearly. Embracing Him Deeply. Expressing Him Boldly.",
         description: "Join us as we dive deep into our 2026 theme, exploring what it means to truly know Christ and effectively express Him in our daily lives.",
-        thumbnail: "/assets/img/christreveaaled.png",
-        videoUrl: "https://www.youtube.com/live/PezCso4RaR8?si=pWO7gI3Lqbxu2fgG",
+        thumbnail: "/assets/img/christrevealed.png",
+        videoUrl: "https://www.youtube.com/playlist?list=PLVD4zPkAlzg7PJkAYAa6_Gp-rrHKIrA2s",
         actions: {
             watch: "Watch Sermon",
             listen: "View all sermons",
@@ -400,28 +400,58 @@ export const ministriesPage = {
     items: [
         {
             id: "protocol",
-            title: "Protocol Ministry",
-            description: "This ministry embodies servant-hood. They are a team of committed brethren given to kingdom service through hospitality. They help with bringing order in the services by efficiently and effectively facilitating those who come to church. They make every person, both members and visitors, feel welcomed and loved.",
+            title: "Protocol Team",
+            description: "The Protocol Team is a ministry that started out as two ministry groups; Ushering and Hospitality. Ushering concerns receiving worshippers during our mid-week and Sunday services. Hospitality concerns hosting guests and serves as the first contact between first-time visitors and the Church.",
             image: "/assets/img/citycenter.jpg",
-            schedule: "Every Service",
-            leader: "Protocol Head"
+            schedule: "First Sunday of the Month & Every Service",
+            leader: "Protocol Head",
+            fullDescription: "The Protocol Team is a ministry that started out as two ministry groups; Ushering and Hospitality. Our vision is to offer world-class hospitality to both Church members and guests. This breeds our mission which is to provide an environment in Church that allows orderliness in service and excellent hospitality for our guests. We meet every first Sunday of the month to discuss our progress, refine our hospitality standards, and strategize on their implementation.",
         },
         {
             id: "worship",
             title: "Hebron City Voices",
             title_alias: "Worship Team",
-            description: "This is a team with the role of leading the congregation in corporate praise and worship. Their main mandate is to provide an enabling environment for authentic and passionate worship through spiritual music.",
+            description: "Hebron City Voices (HCV) exists to create an atmosphere for the congregation to worship God through music. We believe that the Lord longs for us to encounter Him in ways that transform how we live.",
             image: "/assets/img/ministries_worship.jpg",
-            schedule: "Practice: Saturdays; Every Service",
-            leader: "Worship Leader"
+            schedule: "Fridays (Rehearsals) & Every Sunday Service",
+            leader: "Worship Leader",
+            fullDescription: "Hebron City Voices (HCV) exists to create an atmosphere for the congregation to worship God through music. We believe that the Lord longs for us to encounter Him in ways that transform how we live. We desire to lead the congregation into deeper worship through musical excellence, passionate worship, and creativity. Above all, our desire is for God to be glorified in all our weekly services as we serve Him through music. Our heart's worship to God is our highest calling, more than a voice, more than an instrument, and more than a song.\n\nQualifications for Membership:\n• A team member must be born again and committed to cultivating a personal relationship with God for spiritual growth.\n• A team member is to be a committed member and regular attendee of GPT Hebron City.\n• A team member needs to possess basic musical skills to serve with excellence.\n• A team member must be willing to accept necessary time commitments for Friday afternoon rehearsals (for band members) and Saturday morning rehearsals.\n\nExpectations:\n1. Probation Period: New team members undergo a mandatory probation and induction period of three (3) months.\n2. Personal Practice: Team members are expected to be committed to personal practice in preparation for group rehearsals and worship services.\n3. Weekly Rehearsals: All team members are required to faithfully attend weekly rehearsals and worship services.\n4. Personal Spiritual Growth: Each team member is expected to cultivate a personal relationship with God through prayer, Bible study, and fellowship.",
         },
         {
             id: "intercessory",
             title: "Intercessory Ministry",
-            description: "This is a group mandated to see the church become a fervently and effectively praying church. They seek to recruit, empower and engage all church members to a life of prayer. Their program includes morning intercession sessions every Sunday, prayer seminars, trainings and equipping forums.",
+            description: "The Intercessory Group is a team of dedicated brethren who come together to engage in prayers for the sake of families, the Church, and the nation. It is an open-entry team since every born-again individual takes an active role in intercession.",
             image: "/assets/img/ministries_intercessory.jpg",
-            schedule: "Sundays (Morning Intercession) & Special Sessions",
-            leader: "Intercession Head"
+            schedule: "First Sunday Monthly & Fridays 6:00 PM",
+            leader: "Intercession Head",
+            fullDescription: "The Intercessory Group is a team of dedicated brethren who come together to engage in prayers for the sake of families, the Church, and the nation. It is an open-entry team since every born-again individual takes an active role in intercession.\n\nThe vision of this group is to see a praying Church that is vibrant and thirsty for God; a church that is given to prayer and fasting for the sake of upholding God's Kingdom agenda and imitating our author, Jesus Christ.\n\nWe hold a meeting every first Sunday of the month to evaluate our progress and strategize on the way forward. Together with the rest of the Church, we meet every Friday at 6.00 pm for an hour of corporate prayer.\n\nWe also engage in prayer retreats, visit the sick in hospitals and homes, conduct chain prayers within the group, organize and lead church overnight prayer meetings (keshas), and plan prayer and fasting weeks for the Church.",
+        },
+        {
+            id: "children-teens",
+            title: "Children & Teens Ministry",
+            description: "The Children and Teens Ministry at GPT Hebron City comprise children aged 2-12 years and teenagers aged 13-19 years. The vision is to raise a generation trained in the ways of the Lord.",
+            image: "/assets/img/ministries_children.jpg",
+            schedule: "Sundays 11:30 AM - 1:00 PM",
+            leader: "Children & Teens Pastor",
+            fullDescription: "The Children and Teens Ministry at GPT Hebron City comprise children aged 2-12 years and teenagers aged 13-19 years. While our teens meet in one class, children's classes are divided into four age groups:\n• 3 to 5 year-olds currently called Tigris\n• 6 to 7 year-olds presently named Gihon\n• 8 to 9 year-olds christened Pishon\n• 10 to 12-year-olds dubbed Euphrates\n\nThe ministry began as a response to the specific needs of children, which cannot be effectively addressed within the main church service.\n\nThe vision of the ministry is to raise \"a generation trained in the ways of the Lord\" while our mission is to establish and equip the children with the Word of God at their level through collaborations with their parents to ultimately bring up a Godly offspring.\n\nThe children and teens meet in their respective classes every Sunday from 11:30 am to 1:00 pm for enrichment through the Word of God. The ministry also coordinates retreats for both prayer and interactions, the practice of various forms of ministry; such as dance, skits, recitations, memory verses, and even preaching; and vocational bible schools (VBS) among others.\n\nThe facilitators meet on the first Sunday of the month to review the progress, share feedback, and plan for the ministry's programs.",
+        },
+        {
+            id: "media",
+            title: "Media Team",
+            description: "Hebron City Media plays a vital role in ensuring the dissemination of information in various forms to further the vision and mission of GPT Hebron City.",
+            image: "/assets/img/ministries_media.jpg",
+            schedule: "Every Service & Events",
+            leader: "Media Director",
+            fullDescription: "Hebron City Media plays a vital role in ensuring the dissemination of information in various forms to further the vision and mission of GPT Hebron City.\n\nWe fulfill our mandate using various forms of media – audio, visual, electronic, and social media. We see technology as a critical tool of communication and hence utilize technology to augment worship, preaching, and teaching with the aim of glorifying Jesus Christ.\n\nOur role in our weekly services includes managing sound and other technical aspects of the service, slide and video projection, lighting, photography and videography, audio and video production, and video streaming to Facebook and YouTube platforms. In addition, we manage the Church's social media platforms and handle electronic communications.\n\nSimply put, we have a heart for God, eyes for video, and an ear for sound! We thrive on support from volunteers and welcome participation in creating awareness of the Gospel to the community.",
+        },
+        {
+            id: "security",
+            title: "Security Team",
+            description: "The Security Team helps to provide protection to all people attending church services and special events. It comprises church members who are physically capable, qualified to serve, and willing to respond to security needs.",
+            image: "/assets/img/ministries_security.jpg",
+            schedule: "Every Service & Events",
+            leader: "Security Head",
+            fullDescription: "The Security Team helps to provide protection to all people attending church services and special events. It comprises church members who are physically capable, qualified to serve, and willing to respond to the security needs of the church in the event of a critical incident or security crisis.\n\nTeam members are familiar with service time protocols, pre-service checks, and their specific assignments and roles.\n\nOur vision is to ensure the safest possible environment for all Church attendees throughout the week.\n\nWe collaborate with the local security agencies and teams to ensure that members can worship in an environment that is free from safety and security risks. We also work with the Church leadership to plan, create and implement strict security policies and procedures.",
         }
     ],
     cta: {
@@ -443,28 +473,31 @@ export const peerGroupsPage = {
             id: "eagles",
             title: "Eagles Fellowship",
             subtitle: "Men's Fellowship",
-            description: "This is a group of men in GPT-HC. The acronym E.A.G.L.E.S defines the objective of the fellowship which is to raise men who are Excellent, Accountable, Godly, Leaders, Empowered, Serving in the Vineyard of the Lord.",
+            description: "EAGLES is the name that was coined to stand for the married men in GPT Hebron City. Our tagline is Visionary Godly Men, which was derived from one of many traits of an Eagle i.e. sharp and clear vision.",
             image: "/assets/img/peers_eagles.jpg",
-            schedule: "Regular Fellowships",
-            targetGroup: "Men"
+            schedule: "Monthly & Eagles' Week Annually",
+            targetGroup: "Married Men",
+            fullDescription: "EAGLES is the name that was coined to stand for the married men in GPT Hebron City. Our tagline is Visionary Godly Men, which was derived from one of many traits of an Eagle i.e. sharp and clear vision.\n\nOur vision is to be Visionary Godly Men who take their God-given position in families, business circles, career opportunities, societal obligations, and the body of Christ. We purpose to be men who are role models to society and to those who are aspiring to marry. In our families, which is our first ministry as husbands, we look to provide the following Ps; Provide, Protect, Promote, Prophesy (give direction), and be Priests.\n\nWe normally have Eagles' week once a year, where married men lead all the church activities in the entire week, including mid-week services. This provides a platform for the men to exercise their gifts and ministries within the church setting.\n\nWe also meet once every month and purpose to achieve four (4) goals i.e. Bonding, Discipleship (spiritual growth and development), Economic development, and Outreach. As such, our outdoor activities are pegged to the above goals and include but are not limited to; Outreach (reaching out to the lost), In-reach (ministering to one another, especially in times of need), Bonding Sessions (goat-eating and retreats), and Forums on health and finances, and Mentoring Young Adults."
         },
         {
             id: "wings",
             title: "Wings Fellowship",
             subtitle: "Women's Fellowship",
-            description: "These are the ladies in GPT-HC. Their goal is to build strong God-fearing families and be actively involved in ministry. WINGS stands for Women In God's Service.",
+            description: "WINGS (Women IN God's Service) is a group of married and widowed ladies in Church who are Kingdom-focused, spiritually alert, and earthly relevant.",
             image: "/assets/img/peers_wings.jpg",
-            schedule: "Regular Fellowships",
-            targetGroup: "Women"
+            schedule: "Second Sunday Monthly",
+            targetGroup: "Married & Widowed Women",
+            fullDescription: "WINGS (Women IN God's Service) is a group of married and widowed ladies in Church who are Kingdom-focused, spiritually alert, and earthly relevant. It is also a platform where many discover their talents, friendships are born, fellowship is strengthened, standing with one another is encouraged, corporate prayer is practiced and encouraged, and learning through organized seminars to enhance self/personal development both spiritually and in other skills such as e.g. cookery, financial management, and relationships.\n\nOur vision is to empower married women to serve God in their calling, build and maintain strong God-fearing families for posterity, and encourage the spirit of fellowship in their circles of influence. Our mission is to be Kingdom-focused, spiritually alert, and earthly relevant as the ambassadors of Christ on earth with a mandate of fulfilling the Great Commission - Matthew 28:16-20.\n\nThis group meets once a month i.e. every second Sunday of the month. We engage in various activities as stipulated in our annual calendar including; group discussions, prayer retreats, all ladies' seminars (for both single and married ladies), retreats, school missions, visits to children's homes, cookery sessions, and mentoring the younger generation."
         },
         {
             id: "overcomers",
-            title: "Over-comers Fellowship",
+            title: "Overcomers Fellowship",
             subtitle: "Young Adults (20+)",
-            description: "This is a group of single young people, 20 years old and above, in college, campus or working with a passion for God. Their vision and mission entails a pursuit for holistic growth, serving God with passion and strength of their youth and living an overcoming Christian lifestyle.",
+            description: "The Overcomers is a group of unmarried, young adults who are called to be effective young disciples for Christ by developing and implementing a comprehensive approach to youth ministry.",
             image: "/assets/img/peers_overcomers.jpg",
-            schedule: "Regular Meetings",
-            targetGroup: "Young Adults (20+)"
+            schedule: "Quarterly & Monthly",
+            targetGroup: "Unmarried Young Adults (20+)",
+            fullDescription: "The Overcomers is a group of unmarried, young adults who are called to be effective young disciples for Christ by developing and implementing a comprehensive approach to youth ministry in the areas of group building, worship, discipleship, mission, and outreach.\n\n1 John 2:13-14, reads \"…I write to you, young men, because you have overcome the wicked one… I have written to you, young men, because you are strong, and the word of God abides in you, and you have overcome the wicked one.\" John demystifies further in 1 John 5:4 and says: \"...For whatever is born of God overcomes the world. And this is the victory that has overcome the world -- our faith.\"\n\nThese scriptures form part of our mission and vision. Our vision is to be an effective and vibrant youth ministry that will lay a solid foundation of Biblical truth for the rest of the Overcomer's life. Our mission is that every Overcomer will live a life pleasing to the Lord, walking according to His ways, bearing fruit in their life, and growing in their love and knowledge of Him ~ Colossians 1:9-10.\n\nAs a youth group, we strive to discover our spiritual gifting and abilities and in turn, use them to serve the church and advance the Gospel to the young generation within our reach. We meet quarterly for planned activities in our annual calendar and monthly as part of the church calendar.\n\nOur activities include Forums with our Pastors, School and Hospital Missions, Outreach and Retreats, Camping, Evangelism, Fellowship, and Mentorship Programs led by EAGLES and WINGS."
         },
         {
             id: "teens",
@@ -472,26 +505,29 @@ export const peerGroupsPage = {
             subtitle: "Ages 13-19",
             description: "This group is comprised of teenagers from the age of 13 years to 19 years. Their programs usually include discussions on topical issues pertinent to this age group, sound biblical teaching, singing and dancing, drama and Q&A interactive sessions.",
             image: "/assets/img/peers_teens.jpg",
-            schedule: "Every Sunday",
-            targetGroup: "Teens (13-19)"
+            schedule: "Sundays 11:30 AM - 1:00 PM",
+            targetGroup: "Teens (13-19)",
+            fullDescription: "This group is comprised of teenagers from the age of 13 years to 19 years. Their programs usually include discussions on topical issues pertinent to this age group, sound biblical teaching, singing and dancing, drama and Q&A interactive sessions.\n\nThe teens meet in their respective classes every Sunday from 11:30 am to 1:00 pm for enrichment through the Word of God. The ministry also coordinates retreats for both prayer and interactions, the practice of various forms of ministry such as dance, skits, recitations, memory verses, and even preaching.\n\nThe facilitators meet on the first Sunday of the month to review the progress, share feedback, and plan for the ministry's programs."
         },
         {
             id: "childrens-church",
             title: "Children's Church",
             subtitle: "Ages 3-12",
-            description: "This is a church designed to ground our children in the word of God in a simple, exciting environment — raising children who fear and love God. They are divided into three groups: ages 3-5, 6-8, and pre-teens 9-12. Their programs include Bible stories, prayer, games with life skills lessons, biblical puzzles and more.",
+            description: "This is a church designed to ground our children in the word of God in a simple, exciting environment — raising children who fear and love God.",
             image: "/assets/img/peers_children.jpg",
-            schedule: "Sundays 8:30 AM & 11:00 AM",
-            targetGroup: "Children (3-12)"
+            schedule: "Sundays 11:30 AM - 1:00 PM",
+            targetGroup: "Children (3-12)",
+            fullDescription: "This is a church designed to ground our children in the word of God in a simple, exciting environment — raising children who fear and love God. Children's classes are divided into four age groups:\n• 3 to 5 year-olds currently called Tigris\n• 6 to 7 year-olds presently named Gihon\n• 8 to 9 year-olds christened Pishon\n• 10 to 12-year-olds dubbed Euphrates\n\nThe children meet every Sunday from 11:30 am to 1:00 pm for enrichment through the Word of God. Their programs include Bible stories, prayer, games with life skills lessons, biblical puzzles, crafts, and more.\n\nThe ministry also coordinates retreats, vocational bible schools (VBS), and various forms of ministry including dance, skits, and recitations."
         },
         {
             id: "marriage",
             title: "Marriage Ministry",
             subtitle: "Couples",
-            description: "We provide forums for couples to be enriched in their marriage through teaching, mentorship and counseling. The programs include interactive sessions where we discuss relevant topics on marriage and family — helping every couple enjoy marriage as God intended.",
+            description: "We provide forums for couples to be enriched in their marriage through teaching, mentorship and counseling.",
             image: "/assets/img/citycenter.jpg",
-            schedule: "Regular Sessions",
-            targetGroup: "Couples"
+            schedule: "Monthly",
+            targetGroup: "Couples",
+            fullDescription: "We provide forums for couples to be enriched in their marriage through teaching, mentorship and counseling. The programs include interactive sessions where we discuss relevant topics on marriage and family — helping every couple enjoy marriage as God intended.\n\nOur activities include pre-marital counseling, marriage enrichment workshops, couples' retreats, and ongoing support groups. Whether you're engaged, newly married, or have been married for years, you'll find a supportive community here.\n\nThe ministry works closely with Eagles and Wings to provide comprehensive support for families."
         }
     ],
     cta: {
