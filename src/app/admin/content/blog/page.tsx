@@ -272,8 +272,10 @@ export default function BlogAdminPage() {
                                                             <Eye className="mr-2 h-4 w-4" /> View
                                                         </Link>
                                                     </DropdownMenuItem>
-                                                    <DropdownMenuItem disabled>
-                                                        <Pencil className="mr-2 h-4 w-4" /> Edit
+                                                    <DropdownMenuItem asChild>
+                                                        <Link href={`/admin/content/blog/${blog._id}`} className="flex items-center">
+                                                            <Pencil className="mr-2 h-4 w-4" /> Edit
+                                                        </Link>
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem
