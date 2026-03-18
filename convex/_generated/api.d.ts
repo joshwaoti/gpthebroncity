@@ -16,6 +16,7 @@ import type * as contact from "../contact.js";
 import type * as content from "../content.js";
 import type * as crons from "../crons.js";
 import type * as debug from "../debug.js";
+import type * as eventRegistrations from "../eventRegistrations.js";
 import type * as events from "../events.js";
 import type * as fix_blog_images from "../fix_blog_images.js";
 import type * as http from "../http.js";
@@ -44,6 +45,7 @@ declare const fullApi: ApiFromModules<{
   content: typeof content;
   crons: typeof crons;
   debug: typeof debug;
+  eventRegistrations: typeof eventRegistrations;
   events: typeof events;
   fix_blog_images: typeof fix_blog_images;
   http: typeof http;

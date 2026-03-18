@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { CalendarDays, MapPin, ArrowRight, Clock } from "lucide-react"
+import { CalendarDays, MapPin, ArrowRight, Clock, ClipboardList } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
@@ -22,6 +22,7 @@ interface EventCardProps {
     description?: string
     startTime?: string
     endTime?: string
+    requiresRegistration?: boolean
 }
 
 const CATEGORY_STYLES: Record<string, { bg: string; text: string; icon: string; lightText: string }> = {
@@ -50,6 +51,7 @@ export function EventCard({
     description,
     startTime,
     endTime,
+    requiresRegistration,
 }: EventCardProps) {
     const dateObj = typeof date === "string" ? new Date(date + "T00:00:00") : date;
     const day = dateObj.getDate()
@@ -103,6 +105,12 @@ export function EventCard({
                             <Badge className={cn("text-[10px] px-2 py-0.5 border-none font-semibold", style.text, style.lightText)}>
                                 {category}
                             </Badge>
+                            {requiresRegistration && (
+                                <Badge className="text-[10px] px-2 py-0.5 bg-[#257300]/10 text-[#257300] dark:text-[#B2CB20] border border-[#257300]/20 gap-1 font-semibold">
+                                    <ClipboardList className="w-2.5 h-2.5" />
+                                    Register
+                                </Badge>
+                            )}
                         </div>
                     </div>
 

@@ -9,8 +9,10 @@ import { Button } from "@/components/ui/button";
 import { useRouter, useParams } from "next/navigation";
 import { Save, ArrowLeft, Trash2 } from "lucide-react";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
+import { RegistrationFormBuilder } from "@/components/admin/events/registration-form-builder";
 
 const CATEGORIES = ["Service", "Fellowship", "Worship", "Kids", "Leadership", "Holiday", "Family", "Youth"] as const;
+type Tab = "details" | "registration";
 
 export default function EditEventPage() {
     const params = useParams();
@@ -20,15 +22,16 @@ export default function EditEventPage() {
     const updateEvent = useMutation(api.events.update);
     const removeEvent = useMutation(api.events.remove);
 
+    const [activeTab, setActiveTab] = useState<Tab>("details");
     const [isLoading, setIsLoading] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [form, setForm] = useState({
         title: "",
-        date: "",          // YYYY-MM-DD
-        endDate: "",       // YYYY-MM-DD
-        startTime: "",     // HH:MM
-        endTime: "",       // HH:MM
+        date: "",
+        endDate: "",
+        startTime: "",
+        endTime: "",
         location: "",
         category: "Service" as (typeof CATEGORIES)[number],
         description: "",
@@ -125,114 +128,145 @@ export default function EditEventPage() {
                 title="Edit Event"
                 breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Events", href: "/admin/events" }, { label: event.title }]}
             />
-            <div className="p-6 max-w-3xl mx-auto space-y-5">
-                {/* Basic info */}
-                <div className="rounded-xl border border-border bg-card p-5 space-y-4">
-                    <h3 className="font-semibold text-foreground">Basic Information</h3>
-                    <div>
-                        <label className="text-xs text-muted-foreground">Event Title *</label>
-                        <input
-                            value={form.title}
-                            onChange={e => set("title", e.target.value)}
-                            className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
-                        />
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                        <div>
-                            <label className="text-xs text-muted-foreground">Start Date *</label>
-                            <input
-                                type="date"
-                                value={form.date}
-                                onChange={e => set("date", e.target.value)}
-                                className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
-                            />
-                        </div>
-                        <div>
-                            <label className="text-xs text-muted-foreground">End Date (multi-day)</label>
-                            <input
-                                type="date"
-                                value={form.endDate}
-                                onChange={e => set("endDate", e.target.value)}
-                                className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
-                            />
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                        <div>
-                            <label className="text-xs text-muted-foreground">Start Time</label>
-                            <input
-                                type="time"
-                                value={form.startTime}
-                                onChange={e => set("startTime", e.target.value)}
-                                className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
-                            />
-                        </div>
-                        <div>
-                            <label className="text-xs text-muted-foreground">End Time</label>
-                            <input
-                                type="time"
-                                value={form.endTime}
-                                onChange={e => set("endTime", e.target.value)}
-                                className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <label className="text-xs text-muted-foreground">Location</label>
-                        <input
-                            value={form.location}
-                            onChange={e => set("location", e.target.value)}
-                            className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
-                        />
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                        <div>
-                            <label className="text-xs text-muted-foreground">Category</label>
-                            <select
-                                value={form.category}
-                                onChange={e => set("category", e.target.value as any)}
-                                className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
-                            >
-                                {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-                            </select>
-                        </div>
-                        <div>
-                            <label className="text-xs text-muted-foreground">Status</label>
-                            <select
-                                value={form.status}
-                                onChange={e => set("status", e.target.value as any)}
-                                className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
-                            >
-                                <option value="upcoming">Upcoming</option>
-                                <option value="completed">Completed</option>
-                                <option value="cancelled">Cancelled</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <label className="text-xs text-muted-foreground">Description</label>
-                        <textarea
-                            value={form.description}
-                            onChange={e => set("description", e.target.value)}
-                            rows={4}
-                            className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1 resize-none"
-                        />
-                    </div>
-                </div>
 
-                {/* Actions */}
-                <div className="flex gap-3">
-                    <Button variant="outline" onClick={() => router.back()} className="gap-2">
-                        <ArrowLeft className="w-4 h-4" /> Cancel
-                    </Button>
-                    <Button onClick={handleSubmit} disabled={isLoading} className="flex-1 gap-2">
-                        <Save className="w-4 h-4" /> {isLoading ? "Saving..." : "Save Changes"}
-                    </Button>
-                    <Button variant="destructive" onClick={() => setShowDelete(true)} className="gap-2">
-                        <Trash2 className="w-4 h-4" /> Delete
-                    </Button>
+            {/* Tabs */}
+            <div className="border-b border-border px-6">
+                <div className="flex gap-0 max-w-3xl mx-auto">
+                    {(["details", "registration"] as Tab[]).map((tab) => (
+                        <button
+                            key={tab}
+                            onClick={() => setActiveTab(tab)}
+                            className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors capitalize ${
+                                activeTab === tab
+                                    ? "border-[#257300] text-[#257300]"
+                                    : "border-transparent text-muted-foreground hover:text-foreground"
+                            }`}
+                        >
+                            {tab === "registration" ? "Registration Form" : "Event Details"}
+                        </button>
+                    ))}
                 </div>
             </div>
+
+            <div className="p-6 max-w-3xl mx-auto space-y-5">
+                {activeTab === "details" && (
+                    <>
+                        {/* Basic info */}
+                        <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+                            <h3 className="font-semibold text-foreground">Basic Information</h3>
+                            <div>
+                                <label className="text-xs text-muted-foreground">Event Title *</label>
+                                <input
+                                    value={form.title}
+                                    onChange={e => set("title", e.target.value)}
+                                    className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="text-xs text-muted-foreground">Start Date *</label>
+                                    <input
+                                        type="date"
+                                        value={form.date}
+                                        onChange={e => set("date", e.target.value)}
+                                        className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs text-muted-foreground">End Date (multi-day)</label>
+                                    <input
+                                        type="date"
+                                        value={form.endDate}
+                                        onChange={e => set("endDate", e.target.value)}
+                                        className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
+                                    />
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="text-xs text-muted-foreground">Start Time</label>
+                                    <input
+                                        type="time"
+                                        value={form.startTime}
+                                        onChange={e => set("startTime", e.target.value)}
+                                        className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs text-muted-foreground">End Time</label>
+                                    <input
+                                        type="time"
+                                        value={form.endTime}
+                                        onChange={e => set("endTime", e.target.value)}
+                                        className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="text-xs text-muted-foreground">Location</label>
+                                <input
+                                    value={form.location}
+                                    onChange={e => set("location", e.target.value)}
+                                    className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="text-xs text-muted-foreground">Category</label>
+                                    <select
+                                        value={form.category}
+                                        onChange={e => set("category", e.target.value as any)}
+                                        className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
+                                    >
+                                        {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="text-xs text-muted-foreground">Status</label>
+                                    <select
+                                        value={form.status}
+                                        onChange={e => set("status", e.target.value as any)}
+                                        className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
+                                    >
+                                        <option value="upcoming">Upcoming</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="cancelled">Cancelled</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label className="text-xs text-muted-foreground">Description</label>
+                                <textarea
+                                    value={form.description}
+                                    onChange={e => set("description", e.target.value)}
+                                    rows={4}
+                                    className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1 resize-none"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex gap-3">
+                            <Button variant="outline" onClick={() => router.back()} className="gap-2">
+                                <ArrowLeft className="w-4 h-4" /> Cancel
+                            </Button>
+                            <Button onClick={handleSubmit} disabled={isLoading} className="flex-1 gap-2">
+                                <Save className="w-4 h-4" /> {isLoading ? "Saving..." : "Save Changes"}
+                            </Button>
+                            <Button variant="destructive" onClick={() => setShowDelete(true)} className="gap-2">
+                                <Trash2 className="w-4 h-4" /> Delete
+                            </Button>
+                        </div>
+                    </>
+                )}
+
+                {activeTab === "registration" && (
+                    <div className="rounded-xl border border-border bg-card p-5">
+                        <RegistrationFormBuilder eventId={id} />
+                    </div>
+                )}
+            </div>
+
             <ConfirmDialog
                 isOpen={showDelete}
                 onClose={() => setShowDelete(false)}

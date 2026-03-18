@@ -42,6 +42,7 @@ export default defineSchema({
     location: v.optional(v.string()),
     imageUrl: v.optional(v.string()),
     category: v.optional(v.string()),
+    requiresRegistration: v.optional(v.boolean()),
     status: v.union(
       v.literal("upcoming"),
       v.literal("completed"),
@@ -51,6 +52,40 @@ export default defineSchema({
   })
     .index("by_status", ["status"])
     .index("by_status_date", ["status", "date"]),
+
+  eventRegistrationForms: defineTable({
+    eventId: v.id("events"),
+    enabled: v.boolean(),
+    fields: v.array(
+      v.object({
+        id: v.string(),
+        label: v.string(),
+        type: v.union(
+          v.literal("text"),
+          v.literal("email"),
+          v.literal("phone"),
+          v.literal("number"),
+          v.literal("textarea"),
+          v.literal("select"),
+        ),
+        required: v.boolean(),
+        options: v.optional(v.array(v.string())),
+        placeholder: v.optional(v.string()),
+      }),
+    ),
+    maxCapacity: v.optional(v.number()),
+  }).index("by_eventId", ["eventId"]),
+
+  eventRegistrations: defineTable({
+    eventId: v.id("events"),
+    formId: v.id("eventRegistrationForms"),
+    data: v.any(),
+    submittedAt: v.number(),
+    email: v.optional(v.string()),
+    status: v.union(v.literal("confirmed"), v.literal("cancelled")),
+  })
+    .index("by_eventId", ["eventId"])
+    .index("by_eventId_email", ["eventId", "email"]),
 
   blogPosts: defineTable({
     title: v.string(),

@@ -1,17 +1,19 @@
 "use client"
 
-import { useParams } from "next/navigation"
+import { useParams, useSearchParams } from "next/navigation"
 import { useQuery } from "convex/react"
 import { api } from "@/../convex/_generated/api"
 import { Id } from "@/../convex/_generated/dataModel"
 import Link from "next/link"
-import { ArrowLeft, CalendarDays, MapPin, Clock, Share2, ChevronRight } from "lucide-react"
+import { useState, useEffect } from "react"
+import { ArrowLeft, CalendarDays, MapPin, Clock, Share2, ChevronRight, ClipboardList, Check, Link2, Copy } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Navbar from "@/components/layout/navbar"
 import { Footer } from "@/components/layout/footer"
 import { cn } from "@/lib/utils"
 import { AddToCalendar } from "@/components/events/add-to-calendar"
+import { RegistrationModal } from "@/components/events/registration-modal"
 
 const CATEGORY_STYLES: Record<string, { bg: string; gradient: string; text: string; icon: string; lightText: string }> = {
     Service: { bg: "bg-green-900/20", gradient: "from-green-900/40 to-black", text: "dark:text-green-400", lightText: "text-green-800", icon: "⛪" },
@@ -26,10 +28,21 @@ const CATEGORY_STYLES: Record<string, { bg: string; gradient: string; text: stri
 
 export default function EventDetailPage() {
     const params = useParams()
+    const searchParams = useSearchParams()
     const id = params.id as string
+    const [regModalOpen, setRegModalOpen] = useState(false)
+    const [shareCopied, setShareCopied] = useState(false)
+    const [linkCopied, setLinkCopied] = useState(false)
 
     // Always call hook at top level (never inside try/catch)
     const event = useQuery(api.events.getById, { id: id as Id<"events"> })
+    const regForm = useQuery(api.eventRegistrations.getForm, { eventId: id as Id<"events"> })
+
+    useEffect(() => {
+        if (searchParams.get("register") === "true" && regForm?.enabled) {
+            setRegModalOpen(true)
+        }
+    }, [searchParams, regForm])
 
     if (event === undefined) {
         return (
@@ -77,6 +90,37 @@ export default function EventDetailPage() {
     const endDateObj = event.endDate ? new Date(event.endDate + "T00:00:00") : null;
     const isMultiDay = !!endDateObj;
     const isPast = event.date < new Date().toISOString().split("T")[0];
+
+    const eventUrl = typeof window !== "undefined" ? `${window.location.origin}/events/${id}` : "";
+    const registrationUrl = `${eventUrl}?register=true`;
+
+    const handleShare = async () => {
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: event.title,
+                    text: `Check out this event: ${event.title}`,
+                    url: eventUrl,
+                });
+            } catch (err) {
+                if ((err as Error).name !== "AbortError") {
+                    await navigator.clipboard.writeText(eventUrl);
+                    setShareCopied(true);
+                    setTimeout(() => setShareCopied(false), 2000);
+                }
+            }
+        } else {
+            await navigator.clipboard.writeText(eventUrl);
+            setShareCopied(true);
+            setTimeout(() => setShareCopied(false), 2000);
+        }
+    };
+
+    const handleCopyLink = async () => {
+        await navigator.clipboard.writeText(registrationUrl);
+        setLinkCopied(true);
+        setTimeout(() => setLinkCopied(false), 2000);
+    };
 
     return (
         <main className="min-h-screen bg-background">
@@ -202,11 +246,46 @@ export default function EventDetailPage() {
                             )}
 
                             {/* Share */}
-                            <div className="flex items-center gap-4 pt-4 border-t border-border">
-                                <span className="text-sm font-medium text-gray-900 dark:text-white">Share this event</span>
-                                <Button variant="outline" size="icon" className="rounded-full w-9 h-9">
-                                    <Share2 className="w-4 h-4" />
-                                </Button>
+                            <div className="pt-4 border-t border-border">
+                                <div className="flex items-center gap-4">
+                                    <span className="text-sm font-medium text-gray-900 dark:text-white">Share this event</span>
+                                    <div className="flex items-center gap-2">
+                                        <Button 
+                                            variant="outline" 
+                                            size="icon" 
+                                            className="rounded-full w-9 h-9"
+                                            onClick={handleShare}
+                                            title="Share"
+                                        >
+                                            {shareCopied ? <Check className="w-4 h-4 text-green-500" /> : <Share2 className="w-4 h-4" />}
+                                        </Button>
+                                        <Button 
+                                            variant="outline" 
+                                            size="icon" 
+                                            className="rounded-full w-9 h-9"
+                                            onClick={handleCopyLink}
+                                            title="Copy registration link"
+                                        >
+                                            {linkCopied ? <Check className="w-4 h-4 text-green-500" /> : <Link2 className="w-4 h-4" />}
+                                        </Button>
+                                    </div>
+                                </div>
+                                <div className="mt-3 p-3 bg-muted/50 rounded-lg border border-border">
+                                    <p className="text-xs text-muted-foreground mb-2">Registration link (opens form directly):</p>
+                                    <div className="flex items-center gap-2">
+                                        <code className="text-xs flex-1 truncate bg-background px-2 py-1.5 rounded border border-border font-mono">
+                                            {registrationUrl}
+                                        </code>
+                                        <Button 
+                                            variant="ghost" 
+                                            size="icon" 
+                                            className="h-8 w-8 flex-shrink-0"
+                                            onClick={handleCopyLink}
+                                        >
+                                            {linkCopied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
+                                        </Button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -223,7 +302,16 @@ export default function EventDetailPage() {
                                 </p>
 
                                 {!isPast ? (
-                                    <div className="pb-4">
+                                    <div className="space-y-3 pb-2">
+                                        {regForm?.enabled && (
+                                            <Button
+                                                onClick={() => setRegModalOpen(true)}
+                                                className="w-full gap-2 bg-[#257300] hover:bg-[#1e5c00] text-white"
+                                            >
+                                                <ClipboardList className="w-4 h-4" />
+                                                Register for this Event
+                                            </Button>
+                                        )}
                                         <AddToCalendar event={{
                                             title: event.title,
                                             description: event.description,
@@ -263,6 +351,15 @@ export default function EventDetailPage() {
                 </div>
             </div>
             <Footer />
+
+            {regForm?.enabled && (
+                <RegistrationModal
+                    eventId={id as Id<"events">}
+                    eventTitle={event.title}
+                    isOpen={regModalOpen}
+                    onClose={() => setRegModalOpen(false)}
+                />
+            )}
         </main>
     )
 }
