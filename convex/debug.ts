@@ -28,3 +28,17 @@ export const checkAuth = query({
         };
     },
 });
+
+export const testMutation = mutation({
+    args: {},
+    handler: async (ctx) => {
+        const identity = await ctx.auth.getUserIdentity();
+        return {
+            isAuthenticated: !!identity,
+            tokenIdentifier: identity?.tokenIdentifier,
+            email: identity?.email,
+            issuer: identity?.issuer,
+            subject: identity?.subject,
+        };
+    },
+});
