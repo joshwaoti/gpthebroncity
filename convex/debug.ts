@@ -42,3 +42,14 @@ export const testMutation = mutation({
         };
     },
 });
+
+// Diagnostic: check what env vars Convex runtime actually sees
+export const envCheck = query({
+    args: {},
+    handler: async () => {
+        return {
+            CLERK_JWT_ISSUER_DOMAIN: process.env.CLERK_JWT_ISSUER_DOMAIN ?? "NOT SET",
+            CLERK_ISSUER_URL: process.env.CLERK_ISSUER_URL ?? "NOT SET",
+        };
+    },
+});
