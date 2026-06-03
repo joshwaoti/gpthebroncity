@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { aboutData } from "@/data"
@@ -14,41 +14,58 @@ export function AboutHero() {
     useEffect(() => {
         const ctx = gsap.context(() => {
             gsap.from(titleRef.current, {
-                y: 50, opacity: 0, duration: 1, ease: "power3.out", delay: 0.2
+                y: 40,
+                opacity: 0,
+                duration: 0.9,
+                ease: "power3.out",
+                delay: 0.15,
             })
             gsap.from(".about-hero-content", {
-                y: 30, opacity: 0, duration: 1, stagger: 0.1, delay: 0.4, ease: "power3.out"
+                y: 24,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.08,
+                delay: 0.35,
+                ease: "power3.out",
             })
         }, containerRef)
+
         return () => ctx.revert()
     }, [])
 
     return (
-        <section ref={containerRef} className="relative h-[65vh] min-h-[520px] flex items-center justify-center overflow-hidden">
+        <section
+            ref={containerRef}
+            className="relative flex min-h-[560px] items-center overflow-hidden py-28 md:min-h-[640px]"
+        >
             <div className="absolute inset-0 z-0">
                 <div
                     className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: "url('/assets/img/bg_full_1.jpg')" }}
+                    style={{ backgroundImage: `url('${aboutData.hero.bgImage}')` }}
                 />
-                <div className="absolute inset-0 bg-black/65" />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-black/40 to-black/20" />
+                <div className="absolute inset-0 bg-black/60" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-black/35 to-black/20" />
             </div>
 
-            <div className="container mx-auto px-4 relative z-10 text-center max-w-4xl">
-                <span className="about-hero-content inline-block text-primary font-bold tracking-widest uppercase text-sm mb-4 border border-primary/20 bg-primary/5 px-4 py-1.5 rounded-full">
-                    Who We Are
-                </span>
+            <div className="container relative z-10 mx-auto px-4">
+                <div className="max-w-3xl">
+                    <span className="about-hero-content inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-gold backdrop-blur-sm">
+                        {aboutData.hero.badge}
+                    </span>
 
-                <h1 ref={titleRef} className="text-5xl md:text-7xl font-display font-bold text-white mb-6 leading-tight">
-                    About GPT Hebron City
-                </h1>
+                    <h1 ref={titleRef} className="mt-5 text-4xl font-bold leading-tight text-white sm:text-5xl md:text-7xl">
+                        {aboutData.hero.title}
+                    </h1>
 
-                <p className="about-hero-content text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed mb-8">
-                    {aboutData.mission.content}
-                </p>
+                    <p className="about-hero-content mt-6 max-w-2xl text-base leading-8 text-gray-100 sm:text-lg">
+                        {aboutData.mission.content}
+                    </p>
 
-                <div className="about-hero-content inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 px-6 py-3 rounded-full">
-                    <span className="text-[#B2CB20] font-semibold text-sm tracking-widest uppercase">&ldquo;{aboutData.slogan}&rdquo;</span>
+                    <div className="about-hero-content mt-8 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-3 backdrop-blur-sm">
+                        <span className="text-xs font-semibold uppercase tracking-widest text-gold sm:text-sm">
+                            &ldquo;{aboutData.slogan}&rdquo;
+                        </span>
+                    </div>
                 </div>
             </div>
         </section>

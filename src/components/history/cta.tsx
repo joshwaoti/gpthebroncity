@@ -1,29 +1,34 @@
 "use client"
 
 import Link from "next/link"
+import { ArrowRight, HeartHandshake } from "lucide-react"
+import { historyData } from "@/data"
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
 
 export function HistoryCTA() {
     return (
-        <section className="py-24 bg-background relative overflow-hidden text-center transition-colors duration-300">
-            {/* Background Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#257300] rounded-full blur-[120px] opacity-20 pointer-events-none"></div>
-
-            <div className="relative z-10 container mx-auto px-4">
-                <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-6">Be Part of the Next Chapter</h2>
-                <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
-                    The journey continues, and there is a place for you here. Join us this Sunday and experience the Hebron City difference.
+        <section className="border-y border-border bg-muted/30 py-16 text-center md:py-20">
+            <div className="container relative z-10 mx-auto max-w-4xl px-4">
+                <span className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-primary">
+                    Next Step
+                </span>
+                <h2 className="mt-4 text-3xl font-bold text-foreground sm:text-4xl md:text-5xl">
+                    {historyData.cta.title}
+                </h2>
+                <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-muted-foreground md:text-lg">
+                    {historyData.cta.description}
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
                     <Link href="/visit">
-                        <Button size="xl" className="text-lg px-8">
-                            Plan Your Visit <ArrowRight className="ml-2 w-5 h-5" />
+                        <Button size="lg" className="w-full gap-2 sm:w-auto">
+                            {historyData.cta.primaryAction}
+                            <ArrowRight className="h-5 w-5" />
                         </Button>
                     </Link>
                     <Link href="/connect">
-                        <Button variant="secondary" size="xl" className="text-lg px-8">
-                            Join a Ministry
+                        <Button variant="secondary" size="lg" className="w-full gap-2 sm:w-auto">
+                            <HeartHandshake className="h-5 w-5" />
+                            {historyData.cta.secondaryAction}
                         </Button>
                     </Link>
                 </div>

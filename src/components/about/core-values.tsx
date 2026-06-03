@@ -1,70 +1,74 @@
 "use client"
 
 import { aboutData } from "@/data"
-import { BookOpen } from "lucide-react"
+import { BookOpen, Sparkles } from "lucide-react"
 
 export function CoreValues() {
     return (
-        <section className="py-24 bg-background border-b border-border">
-            <div className="container mx-auto px-4 max-w-6xl">
-                <div className="text-center mb-16">
-                    <span className="inline-block text-primary font-bold tracking-widest uppercase text-sm mb-4 border border-primary/20 bg-primary/5 px-4 py-1.5 rounded-full">
+        <section className="border-b border-border bg-muted/30 py-16 md:py-20">
+            <div className="container mx-auto max-w-6xl px-4">
+                <div className="mb-10 max-w-2xl md:mb-12">
+                    <span className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-primary">
                         What Drives Us
                     </span>
-                    <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground">
+                    <h2 className="mt-4 text-3xl font-bold text-foreground sm:text-4xl md:text-5xl">
                         Our Core Values
                     </h2>
-                    <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
-                        These values are the pillars upon which our ministry is built. They define how we live, serve, and grow together.
+                    <p className="mt-4 text-muted-foreground">
+                        These values define how we live, serve, and grow together as a church family.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
-                    {aboutData.coreValues.map((value, i) => (
-                        <div
-                            key={i}
-                            className="group bg-card border border-border rounded-2xl p-8 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                    {aboutData.coreValues.map((value, index) => (
+                        <article
+                            key={value.title}
+                            className="rounded-lg border border-border bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
                         >
-                            <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full blur-2xl -mt-6 -mr-6 group-hover:bg-primary/10 transition-colors duration-500" />
-                            <div className="relative z-10">
-                                <div className="flex items-start gap-4 mb-4">
-                                    <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
-                                        <span className="text-primary font-bold text-lg">{i + 1}</span>
+                            <div className="mb-5 flex items-center justify-between gap-3">
+                                <span className="flex h-9 w-9 items-center justify-center rounded-md bg-primary/10 text-sm font-bold text-primary">
+                                    {index + 1}
+                                </span>
+                                <Sparkles className="h-4 w-4 text-gold" />
+                            </div>
+                            <h3 className="text-xl font-bold text-foreground">{value.title}</h3>
+                            <p className="mt-1 text-xs font-semibold italic text-primary/80">{value.scripture}</p>
+                            <p className="mt-3 text-sm leading-7 text-muted-foreground">{value.description}</p>
+                        </article>
+                    ))}
+                </div>
+
+                <div className="mt-16 grid gap-8 lg:grid-cols-[0.7fr_1.3fr] lg:items-start">
+                    <div>
+                        <span className="inline-flex rounded-full border border-gold/30 bg-gold/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-gold">
+                            How We Function
+                        </span>
+                        <h2 className="mt-4 text-3xl font-bold text-foreground sm:text-4xl">
+                            Core Functions
+                        </h2>
+                        <p className="mt-4 text-muted-foreground">
+                            These rhythms help the church remain prayerful, biblical, accountable, and relational.
+                        </p>
+                    </div>
+
+                    <div className="grid gap-3 sm:grid-cols-2">
+                        {aboutData.coreFunctions.map((fn) => (
+                            <article
+                                key={fn.title}
+                                className="rounded-lg border border-border bg-card p-5 shadow-sm transition-all duration-300 hover:border-gold/40 hover:shadow-md"
+                            >
+                                <div className="flex items-start gap-4">
+                                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-gold/10 text-gold">
+                                        <BookOpen className="h-5 w-5" />
+                                    </span>
+                                    <div>
+                                        <h3 className="font-bold text-foreground">{fn.title}</h3>
+                                        <p className="mt-2 text-sm leading-7 text-muted-foreground">{fn.description}</p>
                                     </div>
                                 </div>
-                                <h3 className="text-xl font-display font-bold text-foreground mb-1">{value.title}</h3>
-                                <p className="text-xs text-primary/80 font-medium mb-3 italic">{value.scripture}</p>
-                                <p className="text-muted-foreground leading-relaxed">{value.description}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                {/* Core Functions */}
-                <div className="text-center mb-12">
-                    <span className="inline-block text-[#C8A229] font-bold tracking-widest uppercase text-sm mb-4 border border-[#C8A229]/20 bg-[#C8A229]/5 px-4 py-1.5 rounded-full">
-                        How We Function
-                    </span>
-                    <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground">
-                        Core Functions
-                    </h2>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    {aboutData.coreFunctions.map((fn, i) => (
-                        <div
-                            key={i}
-                            className="flex gap-5 items-start bg-card border border-border rounded-2xl p-6 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
-                        >
-                            <div className="shrink-0 w-10 h-10 bg-[#C8A229]/10 rounded-xl flex items-center justify-center">
-                                <BookOpen className="w-5 h-5 text-[#C8A229]" />
-                            </div>
-                            <div>
-                                <h4 className="font-display font-bold text-foreground mb-2">{fn.title}</h4>
-                                <p className="text-muted-foreground text-sm leading-relaxed">{fn.description}</p>
-                            </div>
-                        </div>
-                    ))}
+                            </article>
+                        ))}
+                    </div>
                 </div>
             </div>
         </section>

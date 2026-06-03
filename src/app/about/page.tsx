@@ -5,6 +5,7 @@ import { AboutHero } from "@/components/about/about-hero"
 import { VisionMission } from "@/components/about/vision-mission"
 import { CoreValues } from "@/components/about/core-values"
 import { OurIdentity } from "@/components/about/our-identity"
+import { GrowthTrack } from "@/components/about/growth-track"
 import { HistoryCTA } from "@/components/history/cta"
 import { BeliefsAccordion } from "@/components/beliefs/beliefs-accordion"
 
@@ -20,6 +21,7 @@ export default function AboutPage() {
             <AboutHero />
             <VisionMission />
             <OurIdentity />
+            <GrowthTrack />
             <CoreValues />
             <BeliefsAccordion />
             <HistoryCTA />

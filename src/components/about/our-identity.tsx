@@ -5,32 +5,34 @@ import { CheckCircle2 } from "lucide-react"
 
 export function OurIdentity() {
     return (
-        <section className="py-24 bg-muted/30 border-b border-border">
-            <div className="container mx-auto px-4 max-w-6xl">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    {/* Left: Text */}
-                    <div>
-                        <span className="inline-block text-primary font-bold tracking-widest uppercase text-sm mb-4 border border-primary/20 bg-primary/5 px-4 py-1.5 rounded-full">
+        <section className="border-b border-border bg-muted/30 py-16 md:py-20">
+            <div className="container mx-auto max-w-6xl px-4">
+                <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+                    <div className="lg:sticky lg:top-28">
+                        <span className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-primary">
                             {aboutData.identity.intro}
                         </span>
-                        <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mt-4 mb-6">
+                        <h2 className="mt-4 text-3xl font-bold text-foreground sm:text-4xl md:text-5xl">
                             {aboutData.identity.title}
                         </h2>
-                        <p className="text-muted-foreground text-lg leading-relaxed">
-                            Green Pastures Tabernacle – Hebron City is a vibrant, Christ-centred community committed to raising
-                            Kingdom Ambassadors who impact their world for God.
+                        <p className="mt-5 text-base leading-8 text-muted-foreground md:text-lg">
+                            {aboutData.identity.statement}
                         </p>
                     </div>
 
-                    {/* Right: Identity Points */}
-                    <div className="space-y-5">
-                        {aboutData.identity.points.map((point, i) => (
-                            <div key={i} className="flex gap-4 items-start group bg-card border border-border rounded-2xl p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
-                                <div className="shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
-                                    <CheckCircle2 className="w-5 h-5 text-primary" />
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        {aboutData.identity.points.map((point) => (
+                            <article
+                                key={point}
+                                className="rounded-lg border border-border bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
+                            >
+                                <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-md bg-primary/10 text-primary">
+                                    <CheckCircle2 className="h-5 w-5" />
                                 </div>
-                                <p className="text-foreground leading-relaxed">{point}</p>
-                            </div>
+                                <p className="text-sm leading-7 text-foreground/80 md:text-base">
+                                    {point}
+                                </p>
+                            </article>
                         ))}
                     </div>
                 </div>

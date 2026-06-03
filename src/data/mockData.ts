@@ -111,6 +111,11 @@ export const beliefsData = [
 ]
 
 export const aboutData = {
+    hero: {
+        badge: "Who We Are",
+        title: "About GPT Hebron City",
+        bgImage: "/assets/img/bg_full_1.jpg"
+    },
     vision: {
         title: "Our Vision",
         content: "We see a true growing spiritual church of Jesus Christ with an earthly relevance and heavenly focus."
@@ -123,11 +128,25 @@ export const aboutData = {
     identity: {
         title: "Our Identity",
         intro: "GPT is:",
+        statement: "Green Pastures Tabernacle - Hebron City is a vibrant, Christ-centred community committed to raising Kingdom Ambassadors who impact their world for God.",
         points: [
             "A Biblically based church submitted to the supremacy of God the Father, the leading of the Blessed Holy Spirit and the Headship of our Lord and Savior Jesus Christ.",
             "A church with a target audience among the urban populace.",
             "A community of believers open to people of all tribes, races and social stratum.",
             "A church with a relevant and practical approach to ministry targeting the whole person with the life changing word of God."
+        ]
+    },
+    growthTrack: {
+        badge: "Growth Track",
+        title: "A simple path for belonging, growth, and service",
+        description: "The Membership Manual frames spiritual formation as a practical journey: encounter God in worship, connect in fellowship, grow through discipleship, and serve through the gifts God has entrusted to each member.",
+        image: "/assets/img/about/growth-track-manual.png",
+        alt: "Growth Track diagram from the 2026 GPT Hebron City Membership Manual",
+        phases: [
+            { id: "encounter", label: "Encounter", detail: "Weekly services" },
+            { id: "connect", label: "Connect", detail: "Peer groups and zonal fellowships" },
+            { id: "grow", label: "Grow", detail: "Discipleship and leadership training" },
+            { id: "serve", label: "Serve", detail: "Service teams and ministry" }
         ]
     },
     coreValues: [
@@ -187,6 +206,85 @@ export const aboutData = {
             description: "We value fellowship with one another as both a means to growing in Christ and an end in building meaningful relationships with one another."
         }
     ]
+}
+
+export const historyData = {
+    hero: {
+        badge: "Our Journey",
+        title: "From City Center to Hebron City",
+        description: "Tracing a story of faith, movement, and God-given growth from a small city gathering to a permanent home in Utawala.",
+        bgImage: "/assets/img/utawala_vision.jpg",
+        imagePosition: "center center",
+        highlights: [
+            { label: "Started", value: "2007" },
+            { label: "First home", value: "City Center" },
+            { label: "Current home", value: "Utawala" }
+        ]
+    },
+    pastorMessage: {
+        badge: "Pastoral Note",
+        title: "A Message from Our Pastors",
+        highlightedText: "Christ Revealed, Christ Expressed.",
+        image: "/assets/img/history_cover_new.jpg",
+        imageAlt: "Pastor Albert and Mary Shitakwa",
+        paragraphs: [
+            "Welcome to Green Pastures Tabernacle Hebron City. We are humbled that you have chosen to connect with us. Our heart's desire is to see a generation rising that knows their God and does great exploits.",
+            "Since 2007, God has been faithful to this house. We have seen lives transformed, families restored, and hope rekindled. Hebron City is not just a building project; it is a city of refuge, a place where the weary find rest and the purposeful find their launching pad.",
+            "As we look toward the future, our vision remains clear: Christ Revealed, Christ Expressed. Every person has a unique part to play in this grand narrative of grace.",
+            "Whether you are joining us for the first time or have been with us since the tent days, you are family. Let us build together, grow together, and serve the Lord with gladness."
+        ],
+        signature: "Pst. Albert & Mary Shitakwa"
+    },
+    statsIntro: {
+        title: "Impact by the Numbers",
+        description: "Our growth is a testimony to the grace of God and the dedication of this community."
+    },
+    stats: [
+        { value: 500, label: "Weekly Attendance", suffix: "+" },
+        { value: 12, label: "Community Ministries", suffix: "+" },
+        { value: 150, label: "Youth Mentored", suffix: "+" },
+        { value: 1000, label: "Sanctuary Seats", suffix: "+" }
+    ],
+    timeline: {
+        badge: "Milestones",
+        title: "A faithful journey, one step at a time",
+        description: "Each move expanded the ministry's capacity to worship, disciple, and serve the community.",
+        milestones: [
+            {
+                year: "The Beginning",
+                title: "Bidco Towers - 5th Floor",
+                description: "It started with faith, 40 individuals, and a vision concerning the 5th floor. In a small rented hall, the seeds of a great movement were sown.",
+                image: "/assets/img/bidco_towers.jpg"
+            },
+            {
+                year: "Expansion",
+                title: "Moi Avenue Primary",
+                description: "As the family grew, the walls of Bidco could no longer contain the praise. The move to Moi Avenue Primary marked a season of numerical and spiritual growth.",
+                image: "/assets/img/moi_ave.jpg"
+            },
+            {
+                year: "Present Day",
+                title: "Hebron City Project",
+                description: "GPT Hebron City in Utawala became more than a building. It is a permanent sanctuary where generations will encounter God and be equipped for purpose.",
+                image: "/assets/img/utawala_vision.jpg"
+            }
+        ]
+    },
+    pastors: [
+        { id: "1", name: "Pst Albert Shitakwa", role: "Lead Pastor", image: "/pst/pst_albert.jpg" },
+        { id: "2", name: "Pst Erastus Munyao", role: "Associate Pastor", image: "/pst/pst_erastus.jpg" },
+        { id: "3", name: "Pst Sam Mbugua", role: "Zonal Fellowships", image: "/pst/pst_sam.jpg" },
+        { id: "4", name: "Pst Charles Mulama", role: "Worship & Media", image: "/pst/pst_mulama.jpg" },
+        { id: "5", name: "Pst Maurice Prosperity", role: "Discipleship & Outreach", image: "/pst/pst_maurice.jpg" },
+        { id: "6", name: "Pst Joseph Ngaara", role: "Children Ministry", image: "/pst/pst_ngara.jpg" },
+        { id: "7", name: "Pst Tony Shivega", role: "Youth and Teens", image: "/pst/pst_tony.jpg" }
+    ],
+    cta: {
+        title: "Be Part of the Next Chapter",
+        description: "The journey continues, and there is a place for you here. Join us this Sunday and experience the Hebron City difference.",
+        primaryAction: "Plan Your Visit",
+        secondaryAction: "Connect With Us"
+    }
 }
 
 export const mediaData = {

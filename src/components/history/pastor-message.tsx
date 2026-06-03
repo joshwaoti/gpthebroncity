@@ -1,10 +1,11 @@
 "use client"
 
-import { Quote } from "lucide-react"
+import { useEffect, useRef } from "react"
 import Image from "next/image"
-import { useRef, useEffect } from "react"
+import { Quote } from "lucide-react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { historyData } from "@/data"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -14,14 +15,14 @@ export function PastorMessage() {
     useEffect(() => {
         const ctx = gsap.context(() => {
             gsap.from(".pastor-content", {
-                y: 50,
+                y: 40,
                 opacity: 0,
-                duration: 1,
-                stagger: 0.2,
+                duration: 0.8,
+                stagger: 0.12,
                 scrollTrigger: {
                     trigger: containerRef.current,
-                    start: "top 80%"
-                }
+                    start: "top 80%",
+                },
             })
         }, containerRef)
 
@@ -29,89 +30,48 @@ export function PastorMessage() {
     }, [])
 
     return (
-        <section ref={containerRef} className="relative bg-background pt-0 pb-24">
-            {/* Hero Image Section - Increased desktop height and removed overlap to reveal faces */}
-            <div className="relative w-full h-[85vh] md:h-[110vh] lg:h-[120vh] min-h-[500px] md:min-h-[900px] overflow-hidden mb-[-120px] md:mb-0 z-0">
-                <div className="absolute inset-0 bg-gray-900">
-                    <Image
-                        src="/assets/img/history_cover_new.jpg"
-                        alt="Pastor Albert & Mary Shitakwa"
-                        fill
-                        className="object-cover"
-                        style={{ objectPosition: "center 15%" }}
-                        priority
-                    />
-                    {/* Gradient overlay - theme responsive using from-background */}
-                    <div className="absolute inset-0 bg-black/20" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+        <section ref={containerRef} className="border-b border-border bg-background py-16 md:py-24">
+            <div className="container mx-auto grid max-w-6xl gap-10 px-4 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+                <div className="pastor-content overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+                    <div className="relative aspect-[4/3] min-h-[320px]">
+                        <Image
+                            src={historyData.pastorMessage.image}
+                            alt={historyData.pastorMessage.imageAlt}
+                            fill
+                            sizes="(min-width: 1024px) 40vw, 100vw"
+                            className="object-cover"
+                            style={{ objectPosition: "center 18%" }}
+                        />
+                    </div>
                 </div>
-            </div>
 
-            <div className="container mx-auto px-4 relative z-10">
-                <div className="flex flex-col lg:flex-row gap-12 lg:gap-24 items-start">
-
-                    {/* Left Sidebar - Timeline Navigation */}
-                    <div className="hidden lg:block w-1/4 sticky top-32 pt-12">
-                        <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-8 pl-4 border-l-2 border-transparent">Our Journey</h3>
-                        <div className="space-y-8 border-l-2 border-border ml-1">
-                            <div className="pl-6 relative group cursor-pointer">
-                                <div className="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full border-2 border-[#B2CB20] bg-background group-hover:bg-[#B2CB20] transition-colors"></div>
-                                <span className="text-2xl font-display font-bold text-foreground block group-hover:text-[#B2CB20] transition-colors">2007</span>
-                                <span className="text-sm text-foreground/60 font-medium">Inception</span>
-                            </div>
-                            <div className="pl-6 relative group cursor-pointer opacity-60 hover:opacity-100 transition-opacity">
-                                <div className="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full border-2 border-muted-foreground bg-background"></div>
-                                <span className="text-2xl font-display font-bold text-foreground block">2013</span>
-                                <span className="text-sm text-foreground/60 font-medium">Expansion</span>
-                            </div>
-                            <div className="pl-6 relative group cursor-pointer opacity-60 hover:opacity-100 transition-opacity">
-                                <div className="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full border-2 border-muted-foreground bg-background"></div>
-                                <span className="text-2xl font-display font-bold text-foreground block">2018</span>
-                                <span className="text-sm text-foreground/60 font-medium">Hebron City Vision</span>
-                            </div>
-                            <div className="pl-6 relative group cursor-pointer opacity-60 hover:opacity-100 transition-opacity">
-                                <div className="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full border-2 border-muted-foreground bg-background"></div>
-                                <span className="text-2xl font-display font-bold text-[#B2CB20] block">Now</span>
-                                <span className="text-sm text-foreground/60 font-medium">Building the Future</span>
-                            </div>
-                        </div>
+                <div className="pastor-content">
+                    <span className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-primary">
+                        {historyData.pastorMessage.badge}
+                    </span>
+                    <div className="mt-4 flex items-start gap-4">
+                        <Quote className="mt-2 h-9 w-9 shrink-0 text-gold" />
+                        <h2 className="text-3xl font-bold text-foreground sm:text-4xl md:text-5xl">
+                            {historyData.pastorMessage.title}
+                        </h2>
                     </div>
 
-                    {/* Right Content - Message Card */}
-                    <div className="w-full lg:w-3/4">
-                        <div className="pastor-content bg-card border border-border/50 shadow-2xl rounded-3xl p-8 md:p-12 relative overflow-hidden">
-                            {/* Decorative Quote Icon */}
-                            <Quote className="absolute top-8 right-8 w-24 h-24 text-primary/5 -scale-x-100" />
-
-                            <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-2">
-                                A Message from <br />
-                                <span className="text-[#B2CB20]">Our Pastors</span>
-                            </h2>
-
-                            <div className="prose prose-lg dark:prose-invert mt-8 text-muted-foreground leading-relaxed">
-                                <p>
-                                    Welcome to Green Pastures Tabernacle Hebron City. We are humbled that you have chosen to connect with us. Our heart's desire is to see a generation rising that knows their God and does great exploits.
-                                </p>
-                                <p>
-                                    Since 2007, God has been faithful to this house. We have seen lives transformed, families restored, and hope rekindled. Hebron City is not just a building project; it is a city of refuge, a place where the weary find rest and the purposeful find their launching pad.
-                                </p>
-                                <p>
-                                    As we look toward the future, our vision remains clear: <span className="font-bold text-[#B2CB20]">Christ Revealed, Christ Expressed.</span> We believe that every individual has a unique part to play in this grand narrative of grace. Whether you are joining us for the first time or have been with us since the tent days, you are family.
-                                </p>
-                                <p>
-                                    Let us build together, grow together, and serve the Lord with gladness.
-                                </p>
-                            </div>
-
-                            <div className="mt-12 pt-8 border-t border-border flex items-center justify-end">
-                                <div className="text-right">
-                                    {/* Signature / Name */}
-                                    <p className="font-handwriting text-2xl text-foreground font-bold">Pst. Albert & Mary Shitakwa</p>
-                                </div>
-                            </div>
-                        </div>
+                    <div className="mt-7 space-y-5">
+                        {historyData.pastorMessage.paragraphs.map((paragraph) => (
+                            <p key={paragraph} className="text-base leading-8 text-muted-foreground md:text-lg">
+                                {paragraph}
+                            </p>
+                        ))}
                     </div>
 
+                    <div className="mt-8 rounded-lg border border-gold/30 bg-gold/10 p-5">
+                        <p className="font-display text-xl font-bold text-foreground">
+                            {historyData.pastorMessage.highlightedText}
+                        </p>
+                        <p className="mt-3 font-handwriting text-3xl font-bold text-primary">
+                            {historyData.pastorMessage.signature}
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>

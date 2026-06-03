@@ -3,51 +3,56 @@
 import { aboutData } from "@/data"
 import { Eye, Target } from "lucide-react"
 
+const directionItems = [
+    {
+        key: "vision",
+        icon: Eye,
+        tone: "primary",
+    },
+    {
+        key: "mission",
+        icon: Target,
+        tone: "gold",
+    },
+] as const
+
 export function VisionMission() {
     return (
-        <section className="py-24 bg-background border-b border-border">
-            <div className="container mx-auto px-4 max-w-6xl">
-                <div className="text-center mb-16">
-                    <span className="inline-block text-primary font-bold tracking-widest uppercase text-sm mb-4 border border-primary/20 bg-primary/5 px-4 py-1.5 rounded-full">
+        <section className="border-b border-border bg-background py-16 md:py-20">
+            <div className="container mx-auto max-w-6xl px-4">
+                <div className="mb-10 max-w-2xl md:mb-12">
+                    <span className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-primary">
                         Our Direction
                     </span>
-                    <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground">
+                    <h2 className="mt-4 text-3xl font-bold text-foreground sm:text-4xl md:text-5xl">
                         Vision & Mission
                     </h2>
+                    <p className="mt-4 text-muted-foreground">
+                        The heartbeat of Hebron City is clear: a spiritually growing church with a practical witness in everyday life.
+                    </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    {/* Vision */}
-                    <div className="group relative bg-card border border-border rounded-3xl p-10 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-                        <div className="absolute top-0 right-0 w-40 h-40 bg-primary/5 rounded-full blur-3xl -mt-10 -mr-10 group-hover:bg-primary/10 transition-colors duration-500" />
-                        <div className="relative z-10">
-                            <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors duration-300">
-                                <Eye className="w-7 h-7 text-primary" />
-                            </div>
-                            <h3 className="text-2xl font-display font-bold text-foreground mb-4">
-                                {aboutData.vision.title}
-                            </h3>
-                            <p className="text-muted-foreground text-lg leading-relaxed">
-                                {aboutData.vision.content}
-                            </p>
-                        </div>
-                    </div>
+                <div className="grid gap-4 md:grid-cols-2 md:gap-6">
+                    {directionItems.map((item) => {
+                        const content = aboutData[item.key]
+                        const Icon = item.icon
+                        const isGold = item.tone === "gold"
 
-                    {/* Mission */}
-                    <div className="group relative bg-card border border-border rounded-3xl p-10 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-                        <div className="absolute top-0 right-0 w-40 h-40 bg-[#C8A229]/5 rounded-full blur-3xl -mt-10 -mr-10 group-hover:bg-[#C8A229]/10 transition-colors duration-500" />
-                        <div className="relative z-10">
-                            <div className="w-14 h-14 bg-[#C8A229]/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#C8A229]/20 transition-colors duration-300">
-                                <Target className="w-7 h-7 text-[#C8A229]" />
-                            </div>
-                            <h3 className="text-2xl font-display font-bold text-foreground mb-4">
-                                {aboutData.mission.title}
-                            </h3>
-                            <p className="text-muted-foreground text-lg leading-relaxed">
-                                {aboutData.mission.content}
-                            </p>
-                        </div>
-                    </div>
+                        return (
+                            <article
+                                key={content.title}
+                                className="group rounded-lg border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md md:p-8"
+                            >
+                                <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-md border border-border bg-muted">
+                                    <Icon className={isGold ? "h-6 w-6 text-gold" : "h-6 w-6 text-primary"} />
+                                </div>
+                                <h3 className="text-2xl font-bold text-foreground">{content.title}</h3>
+                                <p className="mt-4 text-base leading-8 text-muted-foreground md:text-lg">
+                                    {content.content}
+                                </p>
+                            </article>
+                        )
+                    })}
                 </div>
             </div>
         </section>
