@@ -174,7 +174,7 @@ export function Footer() {
                         © {new Date().getFullYear()} GPT Hebron City. All rights reserved.
                     </p>
                     <a
-                        href="https://otieno.vercel.app"
+                        href="https://zitrion.tech"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-xs text-white/30 flex items-center gap-1 hover:text-white transition-colors"
