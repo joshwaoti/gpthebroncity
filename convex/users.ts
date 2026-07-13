@@ -51,7 +51,9 @@ export const getCurrent = query({
 /**
  * One-time migration for the original pre-RBAC owner record. New accounts are
  * always created with the regular-user role, so only the oldest legacy record
- * with no role can use this path, and only while no super admin exists.
+ * with no role can use this path. A later super admin may already exist if the
+ * RBAC migration was partially completed; that must not lock out the original
+ * owner.
  */
 export const bootstrapLegacyOwner = mutation({
     args: {},
@@ -64,9 +66,6 @@ export const bootstrapLegacyOwner = mutation({
         if (!user || user.role !== undefined) return false;
 
         const users = await ctx.db.query("users").collect();
-        if (users.some((candidate) => candidate.role === "super_admin")) {
-            throw new Error("A super administrator already exists.");
-        }
         const oldestUser = users.sort((a, b) => a._creationTime - b._creationTime)[0];
         if (!oldestUser || oldestUser._id !== user._id) {
             throw new Error("Only the original legacy owner can initialize the super admin role.");
