@@ -21,8 +21,12 @@ const clerkAppearance = {
         cardBox: "w-full shadow-none",
         card: "w-full bg-transparent p-0 shadow-none",
         header: "hidden",
-        socialButtonsRoot: "hidden",
-        dividerRow: "hidden",
+        socialButtonsRoot: "gap-3",
+        socialButtonsBlockButton:
+            "min-h-11 rounded-lg border-[#d9ddcf] bg-white text-sm font-semibold text-[#293322] shadow-sm hover:bg-[#f7f7f3]",
+        dividerRow: "my-4",
+        dividerLine: "bg-[#d9ddcf]",
+        dividerText: "text-[#6B6B6B]",
         form: "gap-5",
         formFieldRow: "gap-2",
         formFieldLabel: "text-sm font-semibold text-[#293322]",
@@ -134,12 +138,6 @@ export default function AdminLoginPage() {
             </section>
 
             <style jsx global>{`
-                .admin-login-clerk .cl-socialButtonsRoot,
-                .admin-login-clerk .cl-socialButtonsBlockButton,
-                .admin-login-clerk .cl-dividerRow {
-                    display: none !important;
-                }
-
                 .admin-login-clerk .cl-rootBox,
                 .admin-login-clerk .cl-cardBox,
                 .admin-login-clerk .cl-card {
