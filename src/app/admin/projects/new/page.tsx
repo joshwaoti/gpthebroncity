@@ -38,8 +38,8 @@ export default function NewProjectPage() {
                 name: form.name,
                 description: form.description,
                 status: form.status,
-                value: form.value, // Used as current raised amount wrapper 
-                // goalAmount is not in base schema natively, requires migration if needed, but keeping UX placeholder 
+                value: form.value,
+                goalAmount: form.goalAmount,
                 date: form.date,
             });
             router.push("/admin/projects");

@@ -1,45 +1,60 @@
 "use client";
 
-import { useState } from "react";
-import { useMutation } from "convex/react";
+import { useState, useEffect } from "react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/../convex/_generated/api";
+import { Id } from "@/../convex/_generated/dataModel";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { MediaUploader } from "@/components/admin/media-uploader";
+import { ConfirmDialog } from "@/components/admin/confirm-dialog";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { Save, ArrowLeft, Eye } from "lucide-react";
+import { useRouter, useParams } from "next/navigation";
+import { Save, ArrowLeft, Eye, Trash2, ExternalLink } from "lucide-react";
+import Link from "next/link";
 
-import { useUser } from "@clerk/nextjs";
+const categories = ["Theology", "Leadership", "Vision", "Doctrine", "Family", "Growth", "Community", "Worship"] as const;
 
-const categories = ["Theology", "Leadership", "Vision", "Doctrine", "Family"] as const;
-
-export default function NewBlogPostPage() {
-    const { user } = useUser();
+export default function EditBlogPostPage() {
+    const params = useParams();
+    const id = params.id as Id<"blogPosts">;
     const router = useRouter();
-    const createPost = useMutation(api.blog.create);
+
+    const post = useQuery(api.blog.getById, { id });
+    const updatePost = useMutation(api.blog.update);
+    const removePost = useMutation(api.blog.remove);
+
     const [isLoading, setIsLoading] = useState(false);
     const [preview, setPreview] = useState(false);
+    const [showDelete, setShowDelete] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [form, setForm] = useState({
         title: "",
         content: "",
         excerpt: "",
         author: "",
-        category: "Theology" as (typeof categories)[number],
+        category: "Theology",
         image: "",
         slug: "",
-        readTime: "5 min read",
-        featured: false,
         status: "draft" as "draft" | "published",
-        metaTitle: "",
-        metaDescription: "",
     });
 
-    const generateSlug = (title: string) =>
-        title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    useEffect(() => {
+        if (post) {
+            setForm({
+                title: post.title ?? "",
+                content: post.content ?? "",
+                excerpt: post.excerpt ?? "",
+                author: post.author ?? "",
+                category: post.category ?? "Theology",
+                image: post.imageUrl ?? "",
+                slug: post.slug ?? "",
+                status: post.status ?? "draft",
+            });
+        }
+    }, [post]);
 
     const set = (key: string, value: any) => setForm(f => ({ ...f, [key]: value }));
-
-    const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = async (status: "draft" | "published") => {
         if (!form.title.trim()) { setError("Title is required."); return; }
@@ -47,35 +62,71 @@ export default function NewBlogPostPage() {
         setError(null);
         setIsLoading(true);
         try {
-            const finalSlug = form.slug || generateSlug(form.title);
-            await createPost({
+            await updatePost({
+                id,
                 title: form.title,
                 content: form.content,
                 excerpt: form.excerpt || undefined,
                 author: form.author || undefined,
                 category: form.category,
                 imageUrl: form.image || undefined,
-                publishDate: new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }),
-                slug: finalSlug,
+                slug: form.slug || undefined,
                 status,
             });
             router.push("/admin/content/blog");
         } catch (err: any) {
             console.error(err);
-            setError(err?.message?.includes("slug") ? "That slug is already in use — pick a different one." : "Failed to save the post. Please try again.");
+            setError(err?.message?.includes("slug") ? "That slug is already in use by another post." : "Failed to save changes. Please try again.");
         } finally {
             setIsLoading(false);
         }
     };
 
+    const handleDelete = async () => {
+        setIsDeleting(true);
+        try {
+            await removePost({ id });
+            router.push("/admin/content/blog");
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    if (post === undefined) {
+        return (
+            <div>
+                <AdminHeader title="Edit Post" breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Blog", href: "/admin/content/blog" }, { label: "Edit" }]} />
+                <div className="p-6 max-w-5xl mx-auto">
+                    <div className="animate-pulse space-y-4">
+                        {Array(6).fill(null).map((_, i) => <div key={i} className="h-12 bg-card rounded-xl border border-border" />)}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (post === null) {
+        return (
+            <div>
+                <AdminHeader title="Post Not Found" breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Blog", href: "/admin/content/blog" }]} />
+                <div className="p-10 text-center">
+                    <p className="text-muted-foreground mb-4">This blog post doesn&rsquo;t exist or may have been deleted.</p>
+                    <Button onClick={() => router.push("/admin/content/blog")}>Back to Blog Posts</Button>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div>
             <AdminHeader
-                title="New Blog Post"
+                title="Edit Blog Post"
                 breadcrumbs={[
                     { label: "Admin", href: "/admin" },
                     { label: "Blog", href: "/admin/content/blog" },
-                    { label: "New Post" }
+                    { label: post.title }
                 ]}
             />
             <div className="p-6 max-w-5xl mx-auto">
@@ -91,14 +142,14 @@ export default function NewBlogPostPage() {
                             <label className="block text-sm font-medium text-foreground mb-1.5">Title *</label>
                             <input
                                 value={form.title}
-                                onChange={e => { set("title", e.target.value); set("slug", generateSlug(e.target.value)); }}
+                                onChange={e => set("title", e.target.value)}
                                 placeholder="Enter post title..."
                                 className="w-full border border-border rounded-lg px-4 py-2.5 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] text-xl font-semibold"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-foreground mb-1.5">Excerpt *</label>
+                            <label className="block text-sm font-medium text-foreground mb-1.5">Excerpt</label>
                             <textarea
                                 value={form.excerpt}
                                 onChange={e => set("excerpt", e.target.value)}
@@ -127,7 +178,6 @@ export default function NewBlogPostPage() {
                                 <textarea
                                     value={form.content}
                                     onChange={e => set("content", e.target.value)}
-                                    placeholder={`# ${form.title || "Post Title"}\n\nStart writing your post in Markdown...\n\n## Section Heading\n\nYour content here...`}
                                     rows={20}
                                     className="w-full border border-border rounded-lg px-4 py-3 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] font-mono resize-none"
                                 />
@@ -139,13 +189,18 @@ export default function NewBlogPostPage() {
                     <div className="space-y-4">
                         {/* Publish actions */}
                         <div className="rounded-xl border border-border bg-card p-4 space-y-3">
-                            <h3 className="font-semibold text-foreground text-sm">Publish</h3>
+                            <div className="flex items-center justify-between">
+                                <h3 className="font-semibold text-foreground text-sm">Publish</h3>
+                                <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${post.status === "published" ? "bg-green-500/10 text-green-600" : "bg-orange-500/10 text-orange-600"}`}>
+                                    {post.status}
+                                </span>
+                            </div>
                             <Button
                                 onClick={() => handleSubmit("published")}
                                 isLoading={isLoading}
                                 className="w-full"
                             >
-                                <Save className="w-4 h-4 mr-2" /> Publish Now
+                                <Save className="w-4 h-4 mr-2" /> {post.status === "published" ? "Update Post" : "Publish Now"}
                             </Button>
                             <Button
                                 variant="outline"
@@ -153,22 +208,40 @@ export default function NewBlogPostPage() {
                                 isLoading={isLoading}
                                 className="w-full"
                             >
-                                Save as Draft
+                                {post.status === "published" ? "Unpublish to Draft" : "Save as Draft"}
                             </Button>
-                            <Button
-                                variant="ghost"
-                                onClick={() => router.back()}
-                                className="w-full"
-                            >
-                                <ArrowLeft className="w-4 h-4 mr-2" /> Cancel
-                            </Button>
+                            <div className="flex gap-2">
+                                <Button
+                                    variant="ghost"
+                                    onClick={() => router.push("/admin/content/blog")}
+                                    className="flex-1"
+                                >
+                                    <ArrowLeft className="w-4 h-4 mr-2" /> Back
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    onClick={() => setShowDelete(true)}
+                                    className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </Button>
+                            </div>
+                            {post.status === "published" && (
+                                <Link
+                                    href={`/read/${post.slug}`}
+                                    target="_blank"
+                                    className="flex items-center justify-center gap-1.5 text-xs text-[#257300] hover:underline pt-1"
+                                >
+                                    <ExternalLink className="w-3 h-3" /> View live post
+                                </Link>
+                            )}
                         </div>
 
                         {/* Metadata */}
                         <div className="rounded-xl border border-border bg-card p-4 space-y-3">
                             <h3 className="font-semibold text-foreground text-sm">Post Details</h3>
                             <div>
-                                <label className="text-xs text-muted-foreground">Author *</label>
+                                <label className="text-xs text-muted-foreground">Author</label>
                                 <input
                                     value={form.author}
                                     onChange={e => set("author", e.target.value)}
@@ -183,7 +256,10 @@ export default function NewBlogPostPage() {
                                     onChange={e => set("category", e.target.value)}
                                     className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
                                 >
-                                    {categories.map(c => <option key={c}>{c}</option>)}
+                                    {!categories.includes(form.category as any) && (
+                                        <option value={form.category}>{form.category}</option>
+                                    )}
+                                    {categories.map(c => <option key={c} value={c}>{c}</option>)}
                                 </select>
                             </div>
                             <div>
@@ -194,25 +270,8 @@ export default function NewBlogPostPage() {
                                     placeholder="post-url-slug"
                                     className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1 font-mono"
                                 />
+                                <p className="text-[10px] text-muted-foreground mt-1">Changing the slug changes the public URL of this post.</p>
                             </div>
-                            <div>
-                                <label className="text-xs text-muted-foreground">Read Time</label>
-                                <input
-                                    value={form.readTime}
-                                    onChange={e => set("readTime", e.target.value)}
-                                    placeholder="5 min read"
-                                    className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
-                                />
-                            </div>
-                            <label className="flex items-center gap-2 cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    checked={form.featured}
-                                    onChange={e => set("featured", e.target.checked)}
-                                    className="w-4 h-4 accent-[#257300]"
-                                />
-                                <span className="text-sm text-foreground">Featured post</span>
-                            </label>
                         </div>
 
                         {/* Cover image */}
@@ -230,33 +289,20 @@ export default function NewBlogPostPage() {
                                 className="w-full border border-border rounded-lg px-3 py-2 text-xs bg-background focus:outline-none focus:ring-1 focus:ring-[#257300]"
                             />
                         </div>
-
-                        {/* SEO */}
-                        <div className="rounded-xl border border-border bg-card p-4 space-y-3">
-                            <h3 className="font-semibold text-foreground text-sm">SEO</h3>
-                            <div>
-                                <label className="text-xs text-muted-foreground">Meta Title</label>
-                                <input
-                                    value={form.metaTitle}
-                                    onChange={e => set("metaTitle", e.target.value)}
-                                    placeholder={form.title}
-                                    className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
-                                />
-                            </div>
-                            <div>
-                                <label className="text-xs text-muted-foreground">Meta Description</label>
-                                <textarea
-                                    value={form.metaDescription}
-                                    onChange={e => set("metaDescription", e.target.value)}
-                                    placeholder={form.excerpt}
-                                    rows={2}
-                                    className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1 resize-none"
-                                />
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
+
+            <ConfirmDialog
+                isOpen={showDelete}
+                onClose={() => setShowDelete(false)}
+                onConfirm={handleDelete}
+                isLoading={isDeleting}
+                title="Delete Blog Post"
+                description={`"${post.title}" will be permanently deleted. This cannot be undone.`}
+                confirmLabel="Delete Post"
+                variant="danger"
+            />
         </div>
     );
 }

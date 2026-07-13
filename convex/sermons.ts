@@ -1,6 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
+import { logAction, requireAdmin, requirePermission } from "./lib";
 
 export const getLatest = query({
     args: {},
@@ -9,12 +10,21 @@ export const getLatest = query({
             .query("sermons")
             .withIndex("by_status", (q) => q.eq("status", "active"))
             .collect();
-        
+
         // Sort by date field (most recent first)
         return sermons
             .filter(s => s.date)
             .sort((a, b) => new Date(b.date!).getTime() - new Date(a.date!).getTime())
             .slice(0, 5);
+    },
+});
+
+export const count = query({
+    args: {},
+    handler: async (ctx) => {
+        await requireAdmin(ctx);
+        const sermons = await ctx.db.query("sermons").collect();
+        return sermons.length;
     },
 });
 
@@ -25,12 +35,12 @@ export const listPaginated = query({
             .withIndex("by_status", (q) => q.eq("status", "active"))
             .order("desc")
             .paginate(args.paginationOpts);
-        
+
         // Re-sort the page results by date (most recent first)
-        const sortedPage = result.page.sort((a, b) => 
+        const sortedPage = result.page.sort((a, b) =>
             new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime()
         );
-        
+
         return {
             ...result,
             page: sortedPage,
@@ -39,19 +49,23 @@ export const listPaginated = query({
 });
 
 export const list = query({
-    args: { status: v.optional(v.string()) },
+    args: {
+        status: v.optional(v.union(v.literal("active"), v.literal("draft"), v.literal("archived"))),
+    },
     handler: async (ctx, args) => {
+        await requirePermission(ctx, "media:manage");
         let sermons;
-        if (args.status) {
+        const status = args.status;
+        if (status) {
             sermons = await ctx.db.query("sermons")
-                .withIndex("by_status", (sq) => sq.eq("status", args.status as any))
+                .withIndex("by_status", (sq) => sq.eq("status", status))
                 .order("desc")
                 .collect();
         } else {
             sermons = await ctx.db.query("sermons").order("desc").collect();
         }
         // Sort by date (most recent first)
-        return sermons.sort((a, b) => 
+        return sermons.sort((a, b) =>
             new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime()
         );
     },
@@ -69,20 +83,23 @@ export const create = mutation({
         isFeatured: v.optional(v.boolean()),
     },
     handler: async (ctx, args) => {
-        const identity = await ctx.auth.getUserIdentity();
-        if (!identity) throw new Error("Unauthenticated call to create sermon");
+        const { identity } = await requirePermission(ctx, "media:manage");
 
-        return await ctx.db.insert("sermons", {
+        if (!args.title.trim()) throw new Error("Title is required.");
+
+        const id = await ctx.db.insert("sermons", {
             ...args,
             createdBy: identity.subject,
             status: "active",
         });
+        await logAction(ctx, { action: "create", entityType: "Sermon", entityId: id, details: args.title });
+        return id;
     },
 });
 
 export const getAllSeries = query({
     args: {},
-    handler: async (ctx) => {
+    handler: async () => {
         return [];
     },
 });
@@ -90,16 +107,18 @@ export const getAllSeries = query({
 export const remove = mutation({
     args: { id: v.id("sermons") },
     handler: async (ctx, args) => {
-        const identity = await ctx.auth.getUserIdentity();
-        if (!identity) throw new Error("Unauthenticated call to remove sermon");
-
+        await requirePermission(ctx, "media:manage");
+        const existing = await ctx.db.get(args.id);
+        if (!existing) return;
         await ctx.db.delete(args.id);
+        await logAction(ctx, { action: "delete", entityType: "Sermon", entityId: args.id, details: existing.title });
     },
 });
 
 export const get = query({
     args: { id: v.id("sermons") },
     handler: async (ctx, args) => {
+        await requirePermission(ctx, "media:manage");
         return await ctx.db.get(args.id);
     },
 });
@@ -117,10 +136,12 @@ export const update = mutation({
         isFeatured: v.optional(v.boolean()),
     },
     handler: async (ctx, args) => {
-        const identity = await ctx.auth.getUserIdentity();
-        if (!identity) throw new Error("Unauthenticated call to update sermon");
+        await requirePermission(ctx, "media:manage");
 
         const { id, ...updates } = args;
+        const existing = await ctx.db.get(id);
+        if (!existing) throw new Error("Sermon not found.");
         await ctx.db.patch(id, updates);
+        await logAction(ctx, { action: "update", entityType: "Sermon", entityId: id, details: updates.title ?? existing.title });
     },
 });

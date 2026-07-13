@@ -7,7 +7,15 @@ export default defineSchema({
     name: v.optional(v.string()),
     email: v.optional(v.string()),
     imageUrl: v.optional(v.string()),
-    role: v.optional(v.string()),
+    role: v.optional(
+      v.union(
+        v.literal("super_admin"),
+        v.literal("editor"),
+        v.literal("ministry_leader"),
+        v.literal("finance_admin"),
+        v.literal("user"),
+      ),
+    ),
     lastLogin: v.optional(v.number()),
   }).index("by_clerkId", ["clerkId"]),
 
@@ -112,9 +120,18 @@ export default defineSchema({
       v.literal("on_hold"),
     ),
     value: v.optional(v.number()),
+    goalAmount: v.optional(v.number()),
     date: v.optional(v.string()),
     createdBy: v.string(),
   }).index("by_status", ["status"]),
+
+  mediaAssets: defineTable({
+    storageId: v.id("_storage"),
+    name: v.string(),
+    contentType: v.optional(v.string()),
+    size: v.optional(v.number()),
+    uploadedBy: v.string(),
+  }).index("by_storageId", ["storageId"]),
 
   siteSettings: defineTable({
     key: v.string(),
@@ -130,9 +147,13 @@ export default defineSchema({
     userId: v.string(),
     userName: v.optional(v.string()),
     userEmail: v.optional(v.string()),
+    actorRole: v.optional(v.string()),
     details: v.optional(v.string()),
     timestamp: v.number(),
-  }).index("by_timestamp", ["timestamp"]),
+  })
+    .index("by_timestamp", ["timestamp"])
+    .index("by_user_timestamp", ["userId", "timestamp"])
+    .index("by_entity", ["entityType", "entityId"]),
 
   contacts: defineTable({
     firstName: v.optional(v.string()),

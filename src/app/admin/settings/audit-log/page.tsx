@@ -3,46 +3,47 @@
 import { useQuery } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { AdminHeader } from "@/components/admin/admin-header";
-import { Clock, MousePointerClick, ShieldAlert, FileText, Settings, UserPlus } from "lucide-react";
+import { Clock, MousePointerClick, ShieldAlert, FileText, Settings, UserPlus, ScrollText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { AdminPagination } from "@/components/admin/pagination";
+import { EmptyState } from "@/components/admin/empty-state";
+import type { LucideIcon } from "lucide-react";
 
 export default function AuditLogPage() {
-    const rawLogs = useQuery(api.auditLog.getAll as any); // Type override to silence error on partial schema
-    const logs = (rawLogs as any[]) || [];
-
-    // Fallback UI if there's no logs or loading
-    const displayedLogs = logs.length > 0 ? logs : [
-        {
-            _id: "dummy1",
-            action: "update",
-            entityType: "System Settings",
-            userName: "System",
-            details: "Initialized Audit Log",
-            timestamp: Date.now(),
-        }
-    ];
+    const rawLogs = useQuery(api.auditLog.getAll, { limit: 200 });
+    const isLoading = rawLogs === undefined;
+    const logs = rawLogs ?? [];
 
     const ITEMS_PER_PAGE = 15;
     const [currentPage, setCurrentPage] = useState(1);
-    const totalPages = Math.ceil(displayedLogs.length / ITEMS_PER_PAGE);
-    const paginatedItems = displayedLogs.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(logs.length / ITEMS_PER_PAGE);
+    const paginatedItems = logs.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
     const actionColors: Record<string, string> = {
         create: "text-green-600 bg-green-500/10 border-green-500/20",
         update: "text-blue-600 bg-blue-500/10 border-blue-500/20",
         delete: "text-red-600 bg-red-500/10 border-red-500/20",
         login: "text-purple-600 bg-purple-500/10 border-purple-500/20",
+        logout: "text-purple-600 bg-purple-500/10 border-purple-500/20",
+        view: "text-zinc-600 bg-zinc-500/10 border-zinc-500/20",
+        invite: "text-cyan-600 bg-cyan-500/10 border-cyan-500/20",
+        sync: "text-indigo-600 bg-indigo-500/10 border-indigo-500/20",
+        status_change: "text-amber-600 bg-amber-500/10 border-amber-500/20",
         publish: "text-[#257300] bg-[#257300]/10 border-[#257300]/20",
         default: "text-zinc-600 bg-zinc-500/10 border-zinc-500/20"
     };
 
-    const actionIcons: Record<string, any> = {
+    const actionIcons: Record<string, LucideIcon> = {
         create: FileText,
         update: Settings,
         delete: ShieldAlert,
         login: UserPlus,
+        logout: UserPlus,
+        invite: UserPlus,
+        sync: Settings,
+        status_change: Settings,
+        view: MousePointerClick,
         default: MousePointerClick
     };
 
@@ -62,6 +63,17 @@ export default function AuditLogPage() {
                         </div>
                     </div>
 
+                    {isLoading ? (
+                        <div className="animate-pulse space-y-3">
+                            {Array(5).fill(null).map((_, i) => <div key={i} className="h-16 bg-accent/40 rounded-xl" />)}
+                        </div>
+                    ) : logs.length === 0 ? (
+                        <EmptyState
+                            icon={ScrollText}
+                            title="No activity recorded yet"
+                            description="Every create, update, and delete performed in the admin portal will be logged here automatically."
+                        />
+                    ) : (
                     <div className="space-y-4">
                         {paginatedItems.map((log) => {
                             const Icon = actionIcons[log.action] || actionIcons.default;
@@ -87,6 +99,11 @@ export default function AuditLogPage() {
                                                 {new Date(log.timestamp).toLocaleString()}
                                             </div>
                                         </div>
+                                        <p className="text-xs text-muted-foreground">
+                                            {[log.actorRole?.replaceAll("_", " "), log.userEmail, log.entityId && `ID: ${log.entityId}`]
+                                                .filter(Boolean)
+                                                .join(" · ")}
+                                        </p>
                                         {log.details && (
                                             <p className="text-sm text-foreground/80 bg-accent/30 p-2.5 rounded-lg border border-border/50 mt-2">
                                                 {log.details}
@@ -97,6 +114,7 @@ export default function AuditLogPage() {
                             );
                         })}
                     </div>
+                    )}
                 </div>
 
                 <AdminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />

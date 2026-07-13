@@ -6,9 +6,10 @@ import { api } from "@/../convex/_generated/api";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
 import { Button } from "@/components/ui/button";
-import { Plus, Edit2, Trash2, Users } from "lucide-react";
+import { Plus, Edit2, Trash2, Users, Church } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AdminPagination } from "@/components/admin/pagination";
+import { EmptyState } from "@/components/admin/empty-state";
 
 export default function MinistriesPage() {
     const ministries = useQuery((api as any).content.getAllMinistries) as any[];
@@ -33,10 +34,17 @@ export default function MinistriesPage() {
     };
 
     const handleSave = async () => {
+        if (!form.title.trim()) {
+            alert("Ministry name is required.");
+            return;
+        }
         setIsSaving(true);
         try {
             await upsertMinistry(editing ? { id: editing, ...form } : form);
             setEditing(undefined);
+        } catch (err) {
+            console.error("Failed to save ministry:", err);
+            alert("Failed to save ministry. Please try again.");
         } finally {
             setIsSaving(false);
         }
@@ -116,9 +124,19 @@ export default function MinistriesPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {!ministries ? (
-                        <p className="text-muted-foreground col-span-3 text-center py-8">Loading...</p>
+                        Array(3).fill(null).map((_, i) => (
+                            <div key={i} className="animate-pulse h-48 bg-card border border-border rounded-xl" />
+                        ))
                     ) : ministries.length === 0 && !showForm ? (
-                        <p className="text-muted-foreground col-span-3 text-center py-8">No ministries yet. Click &ldquo;New Ministry&rdquo; to add one.</p>
+                        <div className="col-span-full bg-card border border-dashed border-border rounded-xl">
+                            <EmptyState
+                                icon={Church}
+                                title="No ministries yet"
+                                description="Add your church's ministries — youth, worship, children, outreach — so members know how to get involved."
+                                actionLabel="Add your first ministry"
+                                onAction={openNew}
+                            />
+                        </div>
                     ) : (
                         paginatedItems.map((ministry: any) => (
                             <div key={ministry?._id} className={cn("bg-card border rounded-xl p-4 transition-all", ministry?.isActive ? "border-border" : "border-border opacity-60")}>

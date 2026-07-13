@@ -29,6 +29,7 @@ http.route({
                         name: `${payload.data.first_name || ""} ${payload.data.last_name || ""}`.trim() || undefined,
                         email: payload.data.email_addresses?.[0]?.email_address,
                         imageUrl: payload.data.image_url,
+                        role: (payload.data.public_metadata?.role as string) || undefined,
                     });
                     break;
                 case "user.deleted":

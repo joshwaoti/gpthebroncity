@@ -1,10 +1,80 @@
-import { action, internalMutation } from "./_generated/server";
+import { action, internalAction, internalMutation, ActionCtx } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { v } from "convex/values";
 
+type YouTubePlaylistResponse = {
+    nextPageToken?: string;
+    items?: Array<{
+        contentDetails?: { videoId?: string };
+        status?: { privacyStatus?: string };
+        snippet?: {
+            title?: string;
+            description?: string;
+            publishedAt?: string;
+            thumbnails?: Record<string, { url?: string }>;
+        };
+    }>;
+};
+
+/** Admin-triggered sync (requires a signed-in identity). */
 export const syncSermons = action({
     args: {},
     handler: async (ctx) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) throw new Error("Unauthenticated: admin sign-in required to sync sermons.");
+        const actor = await ctx.runQuery(internal.users.authorizeMediaAction, {
+            clerkId: identity.subject,
+        });
+
+        try {
+            const result = await runSync(ctx);
+            await ctx.runMutation(internal.auditLog.writeFromAction, {
+                action: "sync",
+                entityType: "YouTube Sermons",
+                userId: identity.subject,
+                userName: actor.name,
+                userEmail: actor.email,
+                actorRole: actor.role,
+                details: result.success
+                    ? `Synchronized ${result.count ?? 0} sermon records`
+                    : `Synchronization failed: ${result.error ?? "unknown error"}`,
+            });
+            return result;
+        } catch (error) {
+            await ctx.runMutation(internal.auditLog.writeFromAction, {
+                action: "sync",
+                entityType: "YouTube Sermons",
+                userId: identity.subject,
+                userName: actor.name,
+                userEmail: actor.email,
+                actorRole: actor.role,
+                details: `Synchronization failed: ${error instanceof Error ? error.message : "unknown error"}`,
+            });
+            throw error;
+        }
+    },
+});
+
+/** Cron-triggered sync (not callable from outside). */
+export const syncSermonsCron = internalAction({
+    args: {},
+    handler: async (ctx) => {
+        const result = await runSync(ctx);
+        await ctx.runMutation(internal.auditLog.writeFromAction, {
+            action: "sync",
+            entityType: "YouTube Sermons",
+            userId: "system",
+            userName: "System",
+            actorRole: "system",
+            details: result.success
+                ? `Scheduled synchronization processed ${result.count ?? 0} sermon records`
+                : `Scheduled synchronization failed: ${result.error ?? "unknown error"}`,
+        });
+        return result;
+    },
+});
+
+async function runSync(ctx: ActionCtx) {
         const apiKey = process.env.YOUTUBE_API_KEY;
         const playlistId = process.env.YOUTUBE_PLAYLIST_ID;
 
@@ -25,7 +95,7 @@ export const syncSermons = action({
                 return { success: false, error: "YouTube API request failed" };
             }
 
-            const data = await response.json() as any;
+            const data = await response.json() as YouTubePlaylistResponse;
             const items = data.items || [];
             nextPageToken = data.nextPageToken || "";
 
@@ -57,8 +127,7 @@ export const syncSermons = action({
         } while (nextPageToken);
 
         return { success: true, count: fetchedCount };
-    },
-});
+}
 
 export const upsertSermon = internalMutation({
     args: {

@@ -80,9 +80,14 @@ export function RegistrationModal({ eventId, eventTitle, isOpen, onClose }: Prop
             const result = await submitReg({ eventId, data: values });
             if (result.status === "full") { setStep("full"); return; }
             if (result.status === "duplicate") { setStep("duplicate"); return; }
+            if (result.status !== "ok") {
+                setErrors({ _form: "Registration is not available for this event right now." });
+                return;
+            }
             setStep("success");
         } catch (err) {
             console.error(err);
+            setErrors({ _form: "Something went wrong submitting your registration. Please try again." });
         } finally {
             setIsSubmitting(false);
         }
@@ -215,6 +220,12 @@ export function RegistrationModal({ eventId, eventTitle, isOpen, onClose }: Prop
                             {form.maxCapacity && (
                                 <p className="text-xs text-muted-foreground text-right">
                                     {Math.max(0, form.maxCapacity - (regCount?.confirmed ?? 0))} spots remaining
+                                </p>
+                            )}
+
+                            {errors._form && (
+                                <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2">
+                                    {errors._form}
                                 </p>
                             )}
 

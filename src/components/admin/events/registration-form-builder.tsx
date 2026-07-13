@@ -5,7 +5,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { Id } from "@/../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, GripVertical, Save, Users, ChevronDown, ChevronUp } from "lucide-react";
+import { Plus, Trash2, GripVertical, Save, Users, ChevronDown, ChevronUp, Copy, Check, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -47,7 +47,13 @@ export function RegistrationFormBuilder({ eventId }: Props) {
     const [fields, setFields] = useState<FormField[]>([]);
     const [isSaving, setIsSaving] = useState(false);
     const [saved, setSaved] = useState(false);
+    const [isToggling, setIsToggling] = useState(false);
     const [expandedField, setExpandedField] = useState<string | null>(null);
+    const [linkCopied, setLinkCopied] = useState(false);
+
+    const registrationUrl = typeof window !== "undefined"
+        ? `${window.location.origin}/events/${eventId}?register=true`
+        : "";
 
     // Seed from existing form
     useEffect(() => {
@@ -82,6 +88,34 @@ export function RegistrationFormBuilder({ eventId }: Props) {
         if (swap < 0 || swap >= next.length) return;
         [next[idx], next[swap]] = [next[swap], next[idx]];
         setFields(next);
+    };
+
+    // Toggling applies immediately — no separate "Save" needed to turn
+    // registration on/off. Field edits still use the Save button below.
+    const handleToggle = async () => {
+        const next = !enabled;
+        setEnabled(next);
+        setIsToggling(true);
+        try {
+            await upsertForm({
+                eventId,
+                enabled: next,
+                fields,
+                maxCapacity: maxCapacity ? parseInt(maxCapacity, 10) : undefined,
+            });
+        } catch (err) {
+            console.error(err);
+            setEnabled(!next); // revert on failure
+            alert("Failed to update registration status. Please try again.");
+        } finally {
+            setIsToggling(false);
+        }
+    };
+
+    const handleCopyLink = async () => {
+        await navigator.clipboard.writeText(registrationUrl);
+        setLinkCopied(true);
+        setTimeout(() => setLinkCopied(false), 2000);
     };
 
     const handleSave = async () => {
@@ -130,10 +164,12 @@ export function RegistrationFormBuilder({ eventId }: Props) {
                 </div>
                 <button
                     type="button"
-                    onClick={() => setEnabled(!enabled)}
+                    onClick={handleToggle}
+                    disabled={isToggling}
                     className={cn(
                         "relative w-11 h-6 rounded-full transition-colors focus:outline-none",
-                        enabled ? "bg-[#257300]" : "bg-muted"
+                        enabled ? "bg-[#257300]" : "bg-muted",
+                        isToggling && "opacity-60"
                     )}
                 >
                     <span className={cn(
@@ -145,6 +181,28 @@ export function RegistrationFormBuilder({ eventId }: Props) {
 
             {enabled && (
                 <>
+                    {/* Shareable registration link */}
+                    <div className="rounded-xl border border-[#257300]/25 bg-[#257300]/5 p-4">
+                        <p className="text-sm font-medium text-foreground mb-1">Share the registration link</p>
+                        <p className="text-xs text-muted-foreground mb-3">
+                            Anyone with this link sees the event and the registration form opens automatically.
+                        </p>
+                        <div className="flex items-center gap-2">
+                            <code className="text-xs flex-1 truncate bg-background px-2 py-2 rounded-lg border border-border font-mono">
+                                {registrationUrl}
+                            </code>
+                            <Button type="button" variant="outline" size="sm" onClick={handleCopyLink} className="gap-1.5 h-8 flex-shrink-0">
+                                {linkCopied ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />}
+                                {linkCopied ? "Copied" : "Copy"}
+                            </Button>
+                            <Link href={`/events/${eventId}`} target="_blank" className="flex-shrink-0">
+                                <Button type="button" variant="ghost" size="sm" className="gap-1.5 h-8">
+                                    <ExternalLink className="w-3.5 h-3.5" /> View
+                                </Button>
+                            </Link>
+                        </div>
+                    </div>
+
                     {/* Capacity */}
                     <div className="rounded-xl border border-border bg-card p-4">
                         <label className="text-xs text-muted-foreground">Max Capacity (leave empty for unlimited)</label>

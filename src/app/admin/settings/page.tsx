@@ -16,30 +16,28 @@ export default function SettingsPage() {
     const [activeTab, setActiveTab] = useState<"general" | "contact" | "security" | "audit">("general");
 
     const [form, setForm] = useState<any>({});
+    const [saveError, setSaveError] = useState<string | null>(null);
     const set = (k: string, v: any) => setForm((f: any) => ({ ...f, [k]: v }));
 
-    // Populate form from settings when loaded
-    const effectiveForm = { ...settings, ...form };
+    // Saved values live in the settings document's `value` field;
+    // unsaved edits in `form` take precedence.
+    const savedConfig = (settings?.value as Record<string, any>) ?? {};
+    const effectiveForm = { ...savedConfig, ...form };
 
     const handleSave = async () => {
         setIsSaving(true);
+        setSaveError(null);
         try {
-            // Map our form keys to the Convex update args
-            const patch: any = {};
-            if (effectiveForm.sundayService) patch.sundayServiceTimes = effectiveForm.sundayService;
-            if (effectiveForm.wednesdayService) patch.wednesdayServiceTime = effectiveForm.wednesdayService;
-            if (effectiveForm.phone) patch.contactPhone = effectiveForm.phone;
-            if (effectiveForm.email) patch.contactEmail = effectiveForm.email;
-            if (effectiveForm.address) patch.contactAddress = effectiveForm.address;
-            if (effectiveForm.siteName) patch.yearlyTheme = effectiveForm.siteName;
-            if (effectiveForm.tagline) patch.themeScripture = effectiveForm.tagline;
-            if (effectiveForm.socialLinks?.facebook) patch.facebookUrl = effectiveForm.socialLinks.facebook;
-            if (effectiveForm.socialLinks?.instagram) patch.instagramUrl = effectiveForm.socialLinks.instagram;
-            if (effectiveForm.socialLinks?.youtube) patch.youtubeUrl = effectiveForm.socialLinks.youtube;
-            if (effectiveForm.socialLinks?.twitter) patch.xUrl = effectiveForm.socialLinks.twitter;
-            await saveSettings(patch);
+            await saveSettings({
+                key: "siteConfig",
+                value: effectiveForm,
+                description: "General site configuration (identity, service times, contact, social links)",
+            });
             setSaved(true);
             setTimeout(() => setSaved(false), 3000);
+        } catch (err) {
+            console.error("Failed to save settings:", err);
+            setSaveError("Failed to save settings. Please try again.");
         } finally {
             setIsSaving(false);
         }
@@ -223,6 +221,7 @@ export default function SettingsPage() {
                             <Save className="w-4 h-4" /> Save Changes
                         </Button>
                         {saved && <p className="text-sm text-[#6EA704] font-medium">✓ Settings saved!</p>}
+                        {saveError && <p className="text-sm text-red-500 font-medium">{saveError}</p>}
                     </div>
                 )}
             </div>

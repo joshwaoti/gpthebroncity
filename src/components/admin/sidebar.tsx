@@ -5,13 +5,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
-    LayoutDashboard, FileText, Video, Calendar, FolderOpen, Heart,
+    LayoutDashboard, Video, Calendar, FolderOpen, Heart,
     Church, Mail, Settings, ChevronLeft, ChevronRight,
-    BookOpen, Globe, ClipboardList, LogOut, Menu
+    Globe, LogOut, Menu
 } from "lucide-react";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/../convex/_generated/api";
-import { useClerk } from "@clerk/nextjs";
+import { useClerk, useSession } from "@clerk/nextjs";
 
 interface NavItem {
     label: string;
@@ -45,7 +45,7 @@ const navItems: NavItem[] = [
     { label: "Projects", href: "/admin/projects", icon: FolderOpen, roles: ["super_admin", "finance_admin"] },
     { label: "Giving", href: "/admin/giving", icon: Heart, roles: ["super_admin", "finance_admin"] },
     { label: "Ministries", href: "/admin/ministries", icon: Church, roles: ["super_admin", "ministry_leader"] },
-    { label: "Connect", href: "/admin/connect", icon: Mail },
+    { label: "Connect", href: "/admin/connect", icon: Mail, roles: ["super_admin", "ministry_leader"] },
     {
         label: "Settings", href: "/admin/settings", icon: Settings,
         roles: ["super_admin"],
@@ -69,7 +69,22 @@ export function AdminSidebar({ userRole, userName, userEmail }: AdminSidebarProp
     const [mobileOpen, setMobileOpen] = useState(false);
     const [expandedItems, setExpandedItems] = useState<string[]>([]); // Default collapsed
     const { signOut } = useClerk();
-    const contactCount = useQuery(api.contact.getNewCount);
+    const { session } = useSession();
+    const recordClientEvent = useMutation(api.auditLog.recordClientEvent);
+    const canSeeContacts = userRole === "super_admin" || userRole === "ministry_leader";
+    const contactCount = useQuery(api.contact.getNewCount, canSeeContacts ? {} : "skip");
+
+    const handleSignOut = async () => {
+        try {
+            if (session?.id) {
+                await recordClientEvent({ action: "logout", sessionId: session.id });
+            }
+        } catch (error) {
+            console.error("Failed to record admin sign-out", error);
+        } finally {
+            await signOut();
+        }
+    };
 
     const filteredNav = navItems.filter(item =>
         !item.roles || item.roles.includes(userRole)
@@ -240,10 +255,11 @@ export function AdminSidebar({ userRole, userName, userEmail }: AdminSidebarProp
                         <div className="px-1 mb-2">
                             <p className="text-zinc-900 dark:text-white text-xs font-semibold truncate">{userName}</p>
                             <p className="text-zinc-500 dark:text-white/30 text-[10px] truncate">{roleLabels[userRole] ?? userRole}</p>
+                            <p className="text-zinc-500 dark:text-white/25 text-[10px] truncate">{userEmail}</p>
                         </div>
                     )}
                     <button
-                        onClick={() => signOut()}
+                        onClick={handleSignOut}
                         className={cn(
                             "flex items-center gap-3 text-zinc-600 dark:text-white/40 hover:text-red-600 dark:hover:text-red-400 transition-colors text-sm py-2 px-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-500/10 w-full",
                             collapsed && "justify-center"

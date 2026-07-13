@@ -6,10 +6,11 @@ import { api } from "@/../convex/_generated/api";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
 import { Button } from "@/components/ui/button";
-import { Plus, Edit2, Trash2, Play, Search, RefreshCw } from "lucide-react";
+import { Plus, Edit2, Trash2, Play, Search, RefreshCw, Video } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { AdminPagination } from "@/components/admin/pagination";
+import { EmptyState } from "@/components/admin/empty-state";
 
 export default function SermonsPage() {
     const sermons = useQuery(api.sermons.list, {});
@@ -38,7 +39,7 @@ export default function SermonsPage() {
     };
 
     const filtered = sermons?.filter((s: any) => {
-        const matchSearch = s.title.toLowerCase().includes(search.toLowerCase()) || (s.pastor || "").toLowerCase().includes(search.toLowerCase());
+        const matchSearch = s.title.toLowerCase().includes(search.toLowerCase()) || (s.speaker || "").toLowerCase().includes(search.toLowerCase());
         return matchSearch;
     }) || [];
 
@@ -102,28 +103,48 @@ export default function SermonsPage() {
                         <tbody>
                             {!sermons ? (
                                 <tr><td colSpan={5} className="text-center py-8 text-muted-foreground">Loading...</td></tr>
+                            ) : sermons.length === 0 ? (
+                                <tr>
+                                    <td colSpan={5}>
+                                        <EmptyState
+                                            icon={Video}
+                                            title="No sermons yet"
+                                            description="Add a sermon manually, or pull in your latest messages automatically with the Sync YouTube button above."
+                                            actionLabel="Add your first sermon"
+                                            actionHref="/admin/media/sermons/new"
+                                        />
+                                    </td>
+                                </tr>
                             ) : filtered.length === 0 ? (
-                                <tr><td colSpan={5} className="text-center py-8 text-muted-foreground">No sermons found</td></tr>
+                                <tr>
+                                    <td colSpan={5}>
+                                        <EmptyState
+                                            icon={Search}
+                                            title="No sermons match your search"
+                                            description={`Nothing found for "${search}". Try a different title or speaker name.`}
+                                        />
+                                    </td>
+                                </tr>
                             ) : (
                                 paginatedItems.map((sermon: any) => (
                                     <tr key={sermon?._id} className="border-b border-border last:border-0 hover:bg-accent/20 transition-colors">
                                         <td className="px-4 py-3">
                                             <div className="flex items-center gap-3">
-                                                {sermon?.thumbnail ? (
-                                                    <img src={sermon.thumbnail} alt={sermon.title} className="w-12 h-9 object-cover rounded" />
+                                                {sermon?.thumbnailUrl ? (
+                                                    <img src={sermon.thumbnailUrl} alt={sermon.title} className="w-12 h-9 object-cover rounded" />
                                                 ) : (
                                                     <div className="w-12 h-9 bg-[#257300]/10 rounded flex items-center justify-center flex-shrink-0"><Play className="w-3 h-3 text-[#6EA704]" /></div>
                                                 )}
                                                 <div>
                                                     <p className="font-medium text-foreground line-clamp-1">{sermon?.title}</p>
-                                                    <p className="text-xs text-muted-foreground">{sermon?.seriesName ?? sermon?.category}</p>
+                                                    <p className="text-xs text-muted-foreground">{sermon?.category ?? "Sermon"}</p>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-4 py-3 hidden sm:table-cell text-muted-foreground">{sermon.preacher}</td>
-                                        <td className="px-4 py-3 hidden md:table-cell text-muted-foreground">{new Date(sermon.date).toLocaleDateString("en", { month: "short", day: "numeric", year: "numeric" })}</td>
+                                        <td className="px-4 py-3 hidden sm:table-cell text-muted-foreground">{sermon.speaker || "—"}</td>
+                                        <td className="px-4 py-3 hidden md:table-cell text-muted-foreground">{sermon.date ? new Date(sermon.date).toLocaleDateString("en", { month: "short", day: "numeric", year: "numeric" }) : "—"}</td>
                                         <td className="px-4 py-3">
-                                            <span className={cn("text-xs px-2 py-0.5 rounded-full font-medium", typeColors[sermon.type] || "bg-zinc-100 text-zinc-600")}>{sermon.type || "Video"}</span>
+                                            <span className={cn("text-xs px-2 py-0.5 rounded-full font-medium", sermon.videoUrl ? typeColors.video : "bg-zinc-100 text-zinc-600")}>{sermon.videoUrl ? "Video" : "Text"}</span>
                                         </td>
                                         <td className="px-4 py-3">
                                             <div className="flex items-center justify-end gap-1">

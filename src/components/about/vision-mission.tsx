@@ -1,6 +1,8 @@
 "use client"
 
 import { aboutData } from "@/data"
+import { useQuery } from "convex/react"
+import { api } from "@/../convex/_generated/api"
 import { Eye, Target } from "lucide-react"
 
 const directionItems = [
@@ -17,6 +19,20 @@ const directionItems = [
 ] as const
 
 export function VisionMission() {
+    // Admin-editable content (Admin → Content → About Us); falls back to static defaults
+    const aboutSetting = useQuery(api.content.getSetting, { key: "aboutContent" })
+    const overrides = (aboutSetting?.value as Record<string, string>) ?? {}
+    const editable = {
+        vision: {
+            title: aboutData.vision.title,
+            content: overrides.visionContent || aboutData.vision.content,
+        },
+        mission: {
+            title: aboutData.mission.title,
+            content: overrides.missionContent || aboutData.mission.content,
+        },
+    }
+
     return (
         <section className="border-b border-border bg-background py-16 md:py-20">
             <div className="container mx-auto max-w-6xl px-4">
@@ -34,7 +50,7 @@ export function VisionMission() {
 
                 <div className="grid gap-4 md:grid-cols-2 md:gap-6">
                     {directionItems.map((item) => {
-                        const content = aboutData[item.key]
+                        const content = editable[item.key]
                         const Icon = item.icon
                         const isGold = item.tone === "gold"
 

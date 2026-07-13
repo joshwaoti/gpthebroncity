@@ -24,6 +24,11 @@ export default function AdminLoginPage() {
                     <SignIn
                         path="/admin/login"
                         routing="path"
+                        // Invitation links land here with a sign-up ticket
+                        // (__clerk_status=sign_up) — this lets invited users
+                        // complete account creation on this same page.
+                        withSignUp
+                        fallbackRedirectUrl="/admin"
                         appearance={{
                             elements: {
                                 rootBox: "w-full",

@@ -1,21 +1,24 @@
 "use client";
 
-import { useQuery, useMutation } from "convex/react";
+import { useQuery } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
-import { useUser } from "@clerk/nextjs";
-import { ShieldAlert, Shield, ShieldCheck, Mail, Loader2 } from "lucide-react";
+import { ShieldCheck, Mail, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { AdminPagination } from "@/components/admin/pagination";
-import { inviteAdminUser } from "@/actions/invite";
+import { EmptyState } from "@/components/admin/empty-state";
+import { changeAdminUserRole, inviteAdminUser } from "@/actions/invite";
+import { Users } from "lucide-react";
+import type { Id } from "@/../convex/_generated/dataModel";
 
 export default function UsersAdminPage() {
-    const { user } = useUser();
-    const allUsers = useQuery((api as any).users.list);
-    const updateRole = useMutation((api as any).users.updateRole); // Assume implemented in backend
+    const allUsers = useQuery(api.users.list);
+    const currentUser = useQuery(api.users.getCurrent);
     const [isUpdating, setIsUpdating] = useState<string | null>(null);
+    const ITEMS_PER_PAGE = 10;
+    const [currentPage, setCurrentPage] = useState(1);
 
     const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
     const [inviteEmail, setInviteEmail] = useState("");
@@ -42,21 +45,6 @@ export default function UsersAdminPage() {
         }
     };
 
-    const userRole = (user?.publicMetadata?.role as string) || "super_admin";
-
-    // Prevent non-super-admins from seeing the page
-    if (userRole !== "super_admin") {
-        return (
-            <div className="p-10 text-center flex flex-col items-center justify-center min-h-[50vh]">
-                <ShieldAlert className="w-12 h-12 text-red-500 mb-4" />
-                <h2 className="text-xl font-bold mb-2">Access Denied</h2>
-                <p className="text-muted-foreground">You do not have permission to view or manage users.</p>
-            </div>
-        );
-    }
-
-    const ITEMS_PER_PAGE = 10;
-    const [currentPage, setCurrentPage] = useState(1);
     const safeUsers = allUsers ? allUsers.filter(Boolean) : [];
     const totalPages = Math.ceil(safeUsers.length / ITEMS_PER_PAGE);
     const paginatedItems = safeUsers.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
@@ -77,13 +65,25 @@ export default function UsersAdminPage() {
         user: "Regular User",
     };
 
-    const handleRoleChange = async (userId: string, newRole: string) => {
+    const roleCapabilities: Record<string, string> = {
+        super_admin: "Full access, including settings, users, roles, and audit history.",
+        editor: "Content, blog, sermons, media library, and events.",
+        ministry_leader: "Events, registrations, ministries, and contact messages.",
+        finance_admin: "Projects, fundraising progress, and giving methods.",
+        user: "No admin-panel access.",
+    };
+
+    const handleRoleChange = async (userId: Id<"users">, targetClerkId: string, newRole: string) => {
         setIsUpdating(userId);
         try {
-            await updateRole({ id: userId, role: newRole });
-        } catch (error) {
+            const res = await changeAdminUserRole(userId, targetClerkId, newRole);
+            if (!res.success) throw new Error(res.error);
+        } catch (error: unknown) {
             console.error("Failed to update role:", error);
-            alert("Role update failed. Make sure the api.users.updateRole mutation exists in Convex.");
+            const message = error instanceof Error ? error.message : "Role update failed. Please try again.";
+            alert(message.includes("Forbidden") || message.includes("own role")
+                ? message
+                : "Role update failed. Please try again.");
         } finally {
             setIsUpdating(null);
         }
@@ -102,6 +102,17 @@ export default function UsersAdminPage() {
             />
 
             <div className="p-6 space-y-6">
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+                    {Object.entries(roleLabels).map(([role, label]) => (
+                        <div key={role} className="rounded-xl border border-border bg-card p-4">
+                            <span className={cn("inline-flex px-2.5 py-1 rounded-full text-xs font-semibold border", roleColors[role])}>
+                                {label}
+                            </span>
+                            <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{roleCapabilities[role]}</p>
+                        </div>
+                    ))}
+                </div>
+
                 <div className="bg-card border border-border rounded-xl overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left">
@@ -120,10 +131,18 @@ export default function UsersAdminPage() {
                                     </tr>
                                 ) : allUsers.length === 0 ? (
                                     <tr>
-                                        <td colSpan={4} className="px-6 py-8 text-center text-muted-foreground">No users found.</td>
+                                        <td colSpan={4}>
+                                            <EmptyState
+                                                icon={Users}
+                                                title="No team members yet"
+                                                description="Invite staff and volunteers to help manage the site. Each person gets their own role and access level."
+                                                actionLabel="Invite your first user"
+                                                onAction={() => setIsInviteModalOpen(true)}
+                                            />
+                                        </td>
                                     </tr>
                                 ) : (
-                                    paginatedItems.map((u: any) => (
+                                    paginatedItems.map((u) => (
                                         <tr key={u._id} className="hover:bg-accent/30 transition-colors">
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-3">
@@ -153,15 +172,15 @@ export default function UsersAdminPage() {
                                             </td>
                                             <td className="px-6 py-4 text-right">
                                                 <div className="flex flex-col items-end gap-2">
-                                                    {u.clerkId === user?.id ? (
-                                                        <span className={cn("px-2.5 py-1 rounded-full text-xs font-semibold border", roleColors[u.role || "super_admin"])}>
-                                                            {roleLabels[u.role || "super_admin"]} (You)
+                                                    {u.clerkId === currentUser?.clerkId ? (
+                                                        <span className={cn("px-2.5 py-1 rounded-full text-xs font-semibold border", roleColors[u.role || "user"])}>
+                                                            {roleLabels[u.role || "user"]} (You)
                                                         </span>
                                                     ) : (
                                                         <select
                                                             disabled={isUpdating === u._id}
                                                             value={u.role || "user"}
-                                                            onChange={(e) => handleRoleChange(u._id, e.target.value)}
+                                                            onChange={(e) => handleRoleChange(u._id, u.clerkId, e.target.value)}
                                                             className={cn(
                                                                 "text-xs font-semibold pl-3 pr-8 py-1.5 rounded-full border appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#257300]",
                                                                 roleColors[u.role || "user"] || roleColors["user"],

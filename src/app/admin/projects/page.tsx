@@ -7,12 +7,20 @@ import { AdminHeader } from "@/components/admin/admin-header";
 import { StatCard } from "@/components/admin/stat-card";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
 import { Button } from "@/components/ui/button";
-import { Plus, Edit2, Trash2, TrendingUp, Target, Heart } from "lucide-react";
+import { Plus, Edit2, Trash2, TrendingUp, Target, Heart, FolderOpen } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { AdminPagination } from "@/components/admin/pagination";
+import { EmptyState } from "@/components/admin/empty-state";
 
-function ProgressBar({ raised, goal }: { raised: number; goal: number }) {
+function ProgressBar({ raised, goal }: { raised: number; goal?: number }) {
+    if (!goal || goal <= 0) {
+        return (
+            <p className="text-xs text-muted-foreground">
+                KES {raised.toLocaleString()} raised · <span className="italic">no goal set</span>
+            </p>
+        );
+    }
     const pct = Math.min(100, Math.round((raised / goal) * 100));
     return (
         <div>
@@ -80,9 +88,19 @@ export default function ProjectsPage() {
 
                 <div className="grid gap-4">
                     {!projects ? (
-                        <p className="text-center py-8 text-muted-foreground">Loading...</p>
+                        Array(3).fill(null).map((_, i) => (
+                            <div key={i} className="animate-pulse h-28 bg-card border border-border rounded-xl" />
+                        ))
                     ) : projects.length === 0 ? (
-                        <p className="text-center py-8 text-muted-foreground">No projects yet</p>
+                        <div className="bg-card border border-dashed border-border rounded-xl">
+                            <EmptyState
+                                icon={FolderOpen}
+                                title="No projects yet"
+                                description="Track building funds, missions, and other fundraising initiatives — with goals and progress the whole church can see."
+                                actionLabel="Create your first project"
+                                actionHref="/admin/projects/new"
+                            />
+                        </div>
                     ) : (
                         paginatedItems.map((project: any) => (
                             <div key={project?._id} className="bg-card border border-border rounded-xl p-5 hover:border-[#257300]/30 transition-all">
@@ -102,7 +120,7 @@ export default function ProjectsPage() {
                                         <button onClick={() => setDeleteId(project?._id)} className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 text-muted-foreground hover:text-red-500 transition-all"><Trash2 className="w-3.5 h-3.5" /></button>
                                     </div>
                                 </div>
-                                <ProgressBar raised={project.raisedAmount ?? project.value ?? 0} goal={project.goalAmount ?? 100} />
+                                <ProgressBar raised={project.value ?? 0} goal={project.goalAmount} />
                             </div>
                         ))
                     )}

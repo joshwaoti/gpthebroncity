@@ -10,8 +10,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useUser } from "@clerk/nextjs";
 import { useState } from "react";
+import { canAccessAdminPath, canManageContacts, canManageProjects, canViewAudit, isAdminRole, ROLE_LABELS } from "@/lib/admin-permissions";
 
 function ProgressBar({ raised, goal }: { raised: number; goal: number }) {
     const pct = Math.min(100, Math.round((raised / goal) * 100));
@@ -29,24 +29,21 @@ function ProgressBar({ raised, goal }: { raised: number; goal: number }) {
 }
 
 export default function AdminDashboardPage() {
-    const { user } = useUser();
     const [eventsPage, setEventsPage] = useState(1);
     const eventsPerPage = 5;
-    
-    const latestSermons = useQuery(api.sermons.getLatest, {});
-    const upcomingEvents = useQuery(api.events.getUpcoming, {});
-    const activeProjects = useQuery((api as any).projects.getActive, { limit: 3 });
-    const latestPosts = useQuery(api.blog.getLatest, { limit: 3 });
-    const projectTotals = useQuery((api as any).projects.getTotals);
-    const contactCount = useQuery((api as any).contact.getNewCount);
-    const auditLog = useQuery(api.auditLog.getAll as any, { limit: 8 }) as any[];
+    const currentUser = useQuery(api.users.getCurrent);
+    const userRole = isAdminRole(currentUser?.role) ? currentUser.role : null;
+    const hasProjectAccess = userRole ? canManageProjects(userRole) : false;
+    const hasAuditAccess = userRole ? canViewAudit(userRole) : false;
+    const hasContactAccess = userRole ? canManageContacts(userRole) : false;
 
-    const roleLabel: Record<string, string> = {
-        super_admin: "Super Admin",
-        editor: "Editor",
-        ministry_leader: "Ministry Leader",
-        finance_admin: "Finance Admin",
-    };
+    const sermonCount = useQuery(api.sermons.count);
+    const blogCount = useQuery(api.blog.count);
+    const upcomingEvents = useQuery(api.events.getUpcoming, {});
+    const activeProjects = useQuery(api.projects.getActive, hasProjectAccess ? { limit: 3 } : "skip");
+    const projectTotals = useQuery(api.projects.getTotals, hasProjectAccess ? {} : "skip");
+    const contactCount = useQuery(api.contact.getNewCount, hasContactAccess ? {} : "skip");
+    const auditLog = useQuery(api.auditLog.getAll, hasAuditAccess ? { limit: 8 } : "skip");
 
     const actionColors: Record<string, string> = {
         create: "text-green-500 bg-green-500/10",
@@ -57,7 +54,12 @@ export default function AdminDashboardPage() {
         login: "text-purple-500 bg-purple-500/10",
     };
 
-    const userRole = (user?.publicMetadata?.role as string) || "super_admin";
+    const quickActions = [
+        { label: "New Blog Post", href: "/admin/content/blog/new", icon: FileText },
+        { label: "New Event", href: "/admin/events/new", icon: Calendar },
+        { label: "New Sermon", href: "/admin/media/sermons/new", icon: Video },
+        { label: "View Messages", href: "/admin/connect", icon: Mail },
+    ].filter(({ href }) => userRole && canAccessAdminPath(userRole, href));
 
     // Calculate paginated events
     const totalEvents = upcomingEvents?.length || 0;
@@ -79,8 +81,8 @@ export default function AdminDashboardPage() {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-[#257300] dark:text-[#6EA704] text-sm font-medium mb-1">Welcome back 👋</p>
-                            <h2 className="text-xl font-bold text-zinc-900 dark:text-white">{user?.fullName || "Admin"}</h2>
-                            <p className="text-zinc-600 dark:text-white/40 text-sm mt-1">{roleLabel[userRole] ?? "Admin"} · GPT Hebron City</p>
+                            <h2 className="text-xl font-bold text-zinc-900 dark:text-white">{currentUser?.name || "Admin"}</h2>
+                            <p className="text-zinc-600 dark:text-white/40 text-sm mt-1">{userRole ? ROLE_LABELS[userRole] : "Admin"} · GPT Hebron City</p>
                         </div>
                         <div className="hidden sm:block text-right">
                             <p className="text-zinc-500 dark:text-white/30 text-xs">Today</p>
@@ -93,7 +95,7 @@ export default function AdminDashboardPage() {
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     <StatCard
                         title="Sermons"
-                        value={latestSermons?.length ?? 0}
+                        value={sermonCount ?? 0}
                         subtitle="Total recordings"
                         icon={Video}
                         color="green"
@@ -107,18 +109,18 @@ export default function AdminDashboardPage() {
                     />
                     <StatCard
                         title="Blog Posts"
-                        value={latestPosts?.length ?? 0}
-                        subtitle="Published articles"
+                        value={blogCount ?? 0}
+                        subtitle="Total posts"
                         icon={FileText}
                         color="gold"
                     />
-                    <StatCard
+                    {hasContactAccess && <StatCard
                         title="New Messages"
                         value={contactCount ?? 0}
                         subtitle="Contact submissions"
                         icon={Mail}
                         color="orange"
-                    />
+                    />}
                 </div>
 
                 {/* Fundraising overview */}
@@ -146,27 +148,22 @@ export default function AdminDashboardPage() {
                                 <p className="text-xs text-muted-foreground">Projects</p>
                             </div>
                         </div>
-                        {activeProjects?.filter(Boolean).map((p: any) => (
+                        {activeProjects?.filter(Boolean).map((p) => (
                             <div key={p?._id} className="mb-3">
                                 <p className="text-sm font-medium text-foreground mb-1">{p?.name}</p>
-                                <ProgressBar raised={(p as any)?.raisedAmount ?? p?.value ?? 0} goal={(p as any)?.goalAmount ?? 100} />
+                                <ProgressBar raised={p?.value ?? 0} goal={p?.goalAmount || Math.max(p?.value ?? 0, 1)} />
                             </div>
                         ))}
                     </div>
                 )}
 
                 {/* Quick actions + Audit log */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className={`grid grid-cols-1 ${hasAuditAccess ? "lg:grid-cols-2" : ""} gap-6`}>
                     {/* Quick actions */}
                     <div className="rounded-xl border border-border bg-card p-5">
                         <h3 className="font-semibold text-foreground mb-4">Quick Actions</h3>
                         <div className="grid grid-cols-2 gap-3">
-                            {[
-                                { label: "New Blog Post", href: "/admin/content/blog/new", icon: FileText },
-                                { label: "New Event", href: "/admin/events/new", icon: Calendar },
-                                { label: "New Sermon", href: "/admin/media/sermons/new", icon: Video },
-                                { label: "View Messages", href: "/admin/connect", icon: Mail },
-                            ].map(({ label, href, icon: Icon }) => (
+                            {quickActions.map(({ label, href, icon: Icon }) => (
                                 <Link key={href} href={href} className="flex items-center gap-2 p-3 rounded-lg bg-accent hover:bg-accent/80 transition-all group">
                                     <Icon className="w-4 h-4 text-[#257300]" />
                                     <span className="text-sm font-medium text-foreground group-hover:text-[#257300] transition-colors">{label}</span>
@@ -176,7 +173,7 @@ export default function AdminDashboardPage() {
                     </div>
 
                     {/* Audit log */}
-                    <div className="rounded-xl border border-border bg-card p-5">
+                    {hasAuditAccess && <div className="rounded-xl border border-border bg-card p-5">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="font-semibold text-foreground">Recent Activity</h3>
                             <Link href="/admin/settings/audit-log">
@@ -191,7 +188,7 @@ export default function AdminDashboardPage() {
                             ) : (
                                 auditLog.filter(Boolean).slice(0, 6).map((entry) => (
                                     <div key={entry?._id} className="flex items-start gap-3">
-                                        <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-md flex-shrink-0 mt-0.5 ${actionColors[entry?.action as any] ?? "text-gray-500 bg-gray-500/10"}`}>
+                                        <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-md flex-shrink-0 mt-0.5 ${actionColors[entry?.action] ?? "text-gray-500 bg-gray-500/10"}`}>
                                             {entry?.action}
                                         </span>
                                         <div className="min-w-0">
@@ -202,18 +199,18 @@ export default function AdminDashboardPage() {
                                 ))
                             )}
                         </div>
-                    </div>
+                    </div>}
                 </div>
 
                 {/* Upcoming events */}
                 <div className="rounded-xl border border-border bg-card p-5">
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="font-semibold text-foreground">Upcoming Events</h3>
-                        <Link href="/admin/events">
+                            {userRole && canAccessAdminPath(userRole, "/admin/events") && <Link href="/admin/events">
                             <Button variant="ghost" size="sm" className="text-xs gap-1">
                                 Manage <ChevronRight className="w-3 h-3" />
                             </Button>
-                        </Link>
+                            </Link>}
                     </div>
                     <div className="space-y-3">
                         {!currentEvents || currentEvents.length === 0 ? (

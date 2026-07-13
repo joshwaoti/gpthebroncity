@@ -145,9 +145,10 @@ export default function EventsPage() {
                         </div>
                     ) : (
                         paginatedItems.map(event => (
-                            <div
+                            <Link
                                 key={event._id}
-                                className="flex items-center gap-4 bg-card border border-border rounded-xl p-4 hover:border-[#257300]/30 transition-all group"
+                                href={`/admin/events/${event._id}`}
+                                className="flex items-center gap-4 bg-card border border-border rounded-xl p-4 hover:border-[#257300]/40 active:bg-accent/40 transition-all group cursor-pointer"
                             >
                                 {/* Date block */}
                                 <div className="bg-[#257300]/10 rounded-lg p-2.5 text-center min-w-[52px] flex-shrink-0">
@@ -184,19 +185,22 @@ export default function EventsPage() {
                                     <span className={cn("text-[10px] px-2 py-0.5 rounded-full font-medium hidden sm:flex items-center gap-1", statusStyles[event.status])}>
                                         {statusIcons[event.status]}{event.status}
                                     </span>
-                                    <Link href={`/admin/events/${event._id}`}>
-                                        <button className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-all opacity-0 group-hover:opacity-100">
-                                            <Edit2 className="w-3.5 h-3.5" />
-                                        </button>
-                                    </Link>
+                                    {event.requiresRegistration && (
+                                        <span className="text-[10px] px-2 py-0.5 rounded-full font-medium bg-[#B2CB20]/15 text-[#6EA704] hidden md:inline">
+                                            Registration on
+                                        </span>
+                                    )}
+                                    <span className="p-1.5 rounded-md hover:bg-accent text-muted-foreground group-hover:text-foreground transition-all">
+                                        <Edit2 className="w-3.5 h-3.5" />
+                                    </span>
                                     <button
-                                        onClick={() => setDeleteId(event._id)}
-                                        className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 text-muted-foreground hover:text-red-500 transition-all opacity-0 group-hover:opacity-100"
+                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDeleteId(event._id); }}
+                                        className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 text-muted-foreground hover:text-red-500 transition-all"
                                     >
                                         <Trash2 className="w-3.5 h-3.5" />
                                     </button>
                                 </div>
-                            </div>
+                            </Link>
                         ))
                     )}
                 </div>

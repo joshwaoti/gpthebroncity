@@ -1,5 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { logAction, requirePermission } from "./lib";
 
 // ─── Form management (admin) ────────────────────────────────────────────────
 
@@ -39,8 +40,7 @@ export const upsertForm = mutation({
         maxCapacity: v.optional(v.number()),
     },
     handler: async (ctx, args) => {
-        const identity = await ctx.auth.getUserIdentity();
-        if (!identity) throw new Error("Unauthenticated");
+        await requirePermission(ctx, "events:manage");
 
         const existing = await ctx.db
             .query("eventRegistrationForms")
@@ -54,9 +54,22 @@ export const upsertForm = mutation({
 
         if (existing) {
             await ctx.db.patch(existing._id, data);
+            await logAction(ctx, {
+                action: "update",
+                entityType: "Event Registration Form",
+                entityId: existing._id,
+                details: `Registration ${args.enabled ? "enabled" : "disabled"}; ${args.fields.length} fields`,
+            });
             return existing._id;
         }
-        return await ctx.db.insert("eventRegistrationForms", { eventId, ...data });
+        const id = await ctx.db.insert("eventRegistrationForms", { eventId, ...data });
+        await logAction(ctx, {
+            action: "create",
+            entityType: "Event Registration Form",
+            entityId: id,
+            details: `Registration ${args.enabled ? "enabled" : "disabled"}; ${args.fields.length} fields`,
+        });
+        return id;
     },
 });
 
@@ -79,6 +92,25 @@ export const submit = mutation({
 
         if (!form || !form.enabled) {
             return { status: "disabled" as const };
+        }
+
+        // Validate submitted data against the form definition (public endpoint)
+        const data = args.data as Record<string, unknown>;
+        if (typeof data !== "object" || data === null || Array.isArray(data)) {
+            throw new Error("Invalid registration data.");
+        }
+        const allowedIds = new Set(form.fields.map((f) => f.id));
+        for (const key of Object.keys(data)) {
+            if (!allowedIds.has(key)) delete data[key];
+        }
+        for (const field of form.fields) {
+            const value = data[field.id];
+            if (field.required && (value === undefined || value === null || String(value).trim() === "")) {
+                return { status: "invalid" as const, field: field.label };
+            }
+            if (value !== undefined && String(value).length > 2000) {
+                throw new Error(`Value for "${field.label}" is too long.`);
+            }
         }
 
         // Capacity check
@@ -130,8 +162,7 @@ export const submit = mutation({
 export const getRegistrations = query({
     args: { eventId: v.id("events") },
     handler: async (ctx, args) => {
-        const identity = await ctx.auth.getUserIdentity();
-        if (!identity) throw new Error("Unauthenticated");
+        await requirePermission(ctx, "events:manage");
 
         return await ctx.db
             .query("eventRegistrations")
@@ -145,6 +176,7 @@ export const getRegistrations = query({
 export const getRegistrationCount = query({
     args: { eventId: v.id("events") },
     handler: async (ctx, args) => {
+        await requirePermission(ctx, "events:manage");
         const all = await ctx.db
             .query("eventRegistrations")
             .withIndex("by_eventId", (q) => q.eq("eventId", args.eventId))
@@ -161,9 +193,9 @@ export const getRegistrationCount = query({
 export const cancelRegistration = mutation({
     args: { registrationId: v.id("eventRegistrations") },
     handler: async (ctx, args) => {
-        const identity = await ctx.auth.getUserIdentity();
-        if (!identity) throw new Error("Unauthenticated");
+        await requirePermission(ctx, "events:manage");
         await ctx.db.patch(args.registrationId, { status: "cancelled" });
+        await logAction(ctx, { action: "update", entityType: "Event Registration", entityId: args.registrationId, details: "Cancelled registration" });
     },
 });
 
@@ -171,8 +203,8 @@ export const cancelRegistration = mutation({
 export const deleteRegistration = mutation({
     args: { registrationId: v.id("eventRegistrations") },
     handler: async (ctx, args) => {
-        const identity = await ctx.auth.getUserIdentity();
-        if (!identity) throw new Error("Unauthenticated");
+        await requirePermission(ctx, "events:manage");
         await ctx.db.delete(args.registrationId);
+        await logAction(ctx, { action: "delete", entityType: "Event Registration", entityId: args.registrationId });
     },
 });

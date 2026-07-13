@@ -7,6 +7,8 @@ import { GlassCard } from "@/components/ui/glass-card"
 import ShinyText from "@/components/ui/shiny-text"
 import { homeData } from "@/data"
 import { useCountdown } from "@/hooks/use-countdown"
+import { useQuery } from "convex/react"
+import { api } from "@/../convex/_generated/api"
 import { ArrowRight, Bell, Play } from "lucide-react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
@@ -19,6 +21,20 @@ export function Hero() {
     const titleRef = useRef<HTMLHeadingElement>(null)
     const [isLive, setIsLive] = useState(false)
     const timeLeft = useCountdown(getNextServiceDate())
+
+    // Admin-editable hero content (Admin → Content → Homepage); falls back to static defaults
+    const heroSetting = useQuery(api.content.getSetting, { key: "homepageHero" })
+    const heroOverrides = (heroSetting?.value as Record<string, string>) ?? {}
+    const hero = {
+        badge: heroOverrides.badge || homeData.hero.badge,
+        titleLine1: heroOverrides.titleLine1 || homeData.hero.title.line1,
+        titleLine2: heroOverrides.titleLine2 || homeData.hero.title.line2,
+        tagline: heroOverrides.tagline || homeData.hero.tagline,
+        description: heroOverrides.description || homeData.hero.description,
+        ctaPrimary: heroOverrides.ctaPrimary || homeData.hero.cta.primary,
+        ctaSecondary: heroOverrides.ctaSecondary || homeData.hero.cta.secondary,
+        bgImage: heroOverrides.bgImage || homeData.hero.bgImage,
+    }
 
     useEffect(() => {
         // Check if service is live
@@ -68,7 +84,7 @@ export function Hero() {
             <div className="absolute inset-0 z-0">
                 <div
                     className="hero-bg w-full h-[120%] bg-cover bg-center"
-                    style={{ backgroundImage: `url(${homeData.hero.bgImage})` }}
+                    style={{ backgroundImage: `url(${hero.bgImage})` }}
                 />
                 <div className="absolute inset-0 bg-black/60 z-10" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
@@ -81,19 +97,19 @@ export function Hero() {
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#B2CB20] opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-[#B2CB20]"></span>
                     </span>
-                    <span className="text-xs font-bold text-[#B2CB20] tracking-widest uppercase">{homeData.hero.badge}</span>
+                    <span className="text-xs font-bold text-[#B2CB20] tracking-widest uppercase">{hero.badge}</span>
                 </div>
 
                 <h1 ref={titleRef} className="invisible text-5xl md:text-7xl lg:text-8xl font-display font-bold text-white mb-4 md:mb-6 tracking-tighter leading-[1.1] pb-2">
-                    {homeData.hero.title.line1} <br />
+                    {hero.titleLine1} <br />
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-500 italic pr-2">
-                        {homeData.hero.title.line2}
+                        {hero.titleLine2}
                     </span>
                 </h1>
 
                 <p className="hero-element invisible text-[#B2CB20] font-bold text-sm md:text-base tracking-[0.2em] uppercase mb-4 max-w-2xl mx-auto">
                     <ShinyText
-                        text={homeData.hero.tagline}
+                        text={hero.tagline}
                         speed={3}
                         delay={0}
                         color="#b2cb20"
@@ -106,19 +122,19 @@ export function Hero() {
                 </p>
 
                 <p className="hero-element invisible text-base md:text-lg text-gray-300 max-w-2xl mx-auto mb-12 md:mb-16 font-light leading-relaxed px-4 italic opacity-80 border-t border-white/10 pt-4">
-                    {homeData.hero.description}
+                    {hero.description}
                 </p>
 
                 <div className="hero-element invisible flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-5 w-full px-4 mb-20 md:mb-24">
                     <Link href="/visit">
                         <Button variant="default" size="lg" className="group text-sm md:text-base px-6 md:px-7 py-4 md:py-4 h-auto rounded-xl shadow-xl transition-all duration-500 w-full sm:w-auto">
-                            {homeData.hero.cta.primary}
+                            {hero.ctaPrimary}
                             <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </Button>
                     </Link>
                     <Link href="/media">
                         <Button variant="secondary" size="lg" className="text-sm md:text-base px-6 md:px-7 py-4 md:py-4 h-auto rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 text-white w-full sm:w-auto">
-                            {homeData.hero.cta.secondary}
+                            {hero.ctaSecondary}
                         </Button>
                     </Link>
                 </div>

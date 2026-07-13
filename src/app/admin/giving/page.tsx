@@ -5,7 +5,9 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
-import { Save, CreditCard, Smartphone, Building2, Globe, Plus, Trash2, Edit2, X } from "lucide-react";
+import { ConfirmDialog } from "@/components/admin/confirm-dialog";
+import { EmptyState } from "@/components/admin/empty-state";
+import { Save, CreditCard, Smartphone, Building2, Globe, Plus, Trash2, Edit2, X, Heart } from "lucide-react";
 
 type MethodType = "mobile" | "bank" | "online" | "international";
 
@@ -28,8 +30,11 @@ interface DetailRow { label: string; value: string; }
 export default function GivingPage() {
     const methods = useQuery((api as any).content.getAllGivingMethods) as any[];
     const upsertMethod = useMutation((api as any).content.upsertGivingMethod);
+    const removeMethod = useMutation((api as any).content.deleteGivingMethod);
     const [editing, setEditing] = useState<any>(undefined);
     const [isSaving, setIsSaving] = useState(false);
+    const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [form, setForm] = useState<{
         title: string;
         type: MethodType;
@@ -69,12 +74,30 @@ export default function GivingPage() {
     };
 
     const handleSave = async () => {
+        if (!form.title.trim()) {
+            alert("Title is required.");
+            return;
+        }
         setIsSaving(true);
         try {
             await upsertMethod(editing ? { id: editing, ...form } : form);
             setEditing(undefined);
+        } catch (err) {
+            console.error("Failed to save giving method:", err);
+            alert("Failed to save giving method. Please try again.");
         } finally {
             setIsSaving(false);
+        }
+    };
+
+    const handleDelete = async () => {
+        if (!deleteId) return;
+        setIsDeleting(true);
+        try {
+            await removeMethod({ id: deleteId });
+        } finally {
+            setIsDeleting(false);
+            setDeleteId(null);
         }
     };
 
@@ -152,9 +175,19 @@ export default function GivingPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {!methods ? (
-                        <p className="text-muted-foreground col-span-3 text-center py-8">Loading...</p>
+                        Array(3).fill(null).map((_, i) => (
+                            <div key={i} className="animate-pulse h-40 bg-card border border-border rounded-xl" />
+                        ))
                     ) : methods.length === 0 && !showForm ? (
-                        <p className="text-muted-foreground col-span-3 text-center py-8">No giving methods configured yet.</p>
+                        <div className="col-span-full bg-card border border-dashed border-border rounded-xl">
+                            <EmptyState
+                                icon={Heart}
+                                title="No giving methods configured"
+                                description="Add M-Pesa, bank transfer, or online giving details so members know exactly how to give."
+                                actionLabel="Add a giving method"
+                                onAction={openNew}
+                            />
+                        </div>
                     ) : (
                         methods.map((method: any) => {
                             const Icon = typeIcons[method.type as MethodType] ?? CreditCard;
@@ -186,6 +219,7 @@ export default function GivingPage() {
                                     )}
                                     <div className="flex gap-2">
                                         <button onClick={() => openEdit(method)} className="flex-1 py-1.5 rounded-lg bg-accent hover:bg-accent/80 text-xs font-medium text-foreground transition-all flex items-center justify-center gap-1.5"><Edit2 className="w-3 h-3" /> Edit</button>
+                                        <button onClick={() => setDeleteId(method?._id)} className="py-1.5 px-3 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-muted-foreground hover:text-red-500 transition-all"><Trash2 className="w-3 h-3" /></button>
                                     </div>
                                 </div>
                             );
@@ -193,6 +227,16 @@ export default function GivingPage() {
                     )}
                 </div>
             </div>
+            <ConfirmDialog
+                isOpen={!!deleteId}
+                onClose={() => setDeleteId(null)}
+                onConfirm={handleDelete}
+                isLoading={isDeleting}
+                title="Delete Giving Method"
+                description="This giving method will be removed from the site."
+                confirmLabel="Delete Method"
+                variant="danger"
+            />
         </div>
     );
 }

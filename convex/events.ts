@@ -1,6 +1,7 @@
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { paginationOptsValidator } from "convex/server";
+import { logAction, requirePermission } from "./lib";
 
 const TODAY = () => new Date().toISOString().split("T")[0]; // "YYYY-MM-DD"
 
@@ -26,7 +27,7 @@ export const getForCalendar = query({
     handler: async (ctx, args) => {
         const today = TODAY();
         const currentMonthStart = today.slice(0, 7) + "-01";
-        let q = ctx.db
+        const q = ctx.db
             .query("events")
             .withIndex("by_status_date", (q) =>
                 q.eq("status", "upcoming").gte("date", currentMonthStart)
@@ -51,11 +52,17 @@ export const getById = query({
 
 // List all events for admin (no date filter)
 export const list = query({
-    args: { status: v.optional(v.string()) },
+    args: {
+        status: v.optional(
+            v.union(v.literal("upcoming"), v.literal("completed"), v.literal("cancelled"), v.literal("all")),
+        ),
+    },
     handler: async (ctx, args) => {
-        if (args.status && args.status !== "all") {
+        await requirePermission(ctx, "events:manage");
+        const status = args.status;
+        if (status && status !== "all") {
             return await ctx.db.query("events")
-                .withIndex("by_status", (sq) => sq.eq("status", args.status as any))
+                .withIndex("by_status", (sq) => sq.eq("status", status))
                 .order("desc")
                 .collect();
         }
@@ -68,7 +75,7 @@ export const getPaginated = query({
     args: { paginationOpts: paginationOptsValidator, category: v.optional(v.string()) },
     handler: async (ctx, args) => {
         const today = TODAY();
-        let q = ctx.db.query("events")
+        const q = ctx.db.query("events")
             .withIndex("by_status_date", (q) =>
                 q.eq("status", "upcoming").gte("date", today)
             )
@@ -98,14 +105,18 @@ export const create = mutation({
         category: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
-        const identity = await ctx.auth.getUserIdentity();
-        if (!identity) throw new Error("Unauthenticated call to create event");
+        const { identity } = await requirePermission(ctx, "events:manage");
 
-        return await ctx.db.insert("events", {
+        if (!args.title.trim()) throw new Error("Title is required.");
+        if (!args.date) throw new Error("Date is required.");
+
+        const id = await ctx.db.insert("events", {
             ...args,
             createdBy: identity.subject,
             status: "upcoming",
         });
+        await logAction(ctx, { action: "create", entityType: "Event", entityId: id, details: args.title });
+        return id;
     },
 });
 
@@ -124,24 +135,46 @@ export const update = mutation({
         status: v.optional(v.union(v.literal("upcoming"), v.literal("completed"), v.literal("cancelled"))),
     },
     handler: async (ctx, args) => {
-        const identity = await ctx.auth.getUserIdentity();
-        if (!identity) throw new Error("Unauthenticated");
+        await requirePermission(ctx, "events:manage");
         const { id, ...fields } = args;
+        const existing = await ctx.db.get(id);
+        if (!existing) throw new Error("Event not found.");
         await ctx.db.patch(id, fields);
+        await logAction(ctx, { action: "update", entityType: "Event", entityId: id, details: fields.title ?? existing.title });
     },
 });
 
 export const remove = mutation({
     args: { id: v.id("events") },
     handler: async (ctx, args) => {
-        const identity = await ctx.auth.getUserIdentity();
-        if (!identity) throw new Error("Unauthenticated call to remove event");
+        await requirePermission(ctx, "events:manage");
+        const existing = await ctx.db.get(args.id);
+        if (!existing) return;
+
+        // Clean up registration forms + registrations tied to this event
+        const form = await ctx.db
+            .query("eventRegistrationForms")
+            .withIndex("by_eventId", (q) => q.eq("eventId", args.id))
+            .unique();
+        if (form) {
+            const regs = await ctx.db
+                .query("eventRegistrations")
+                .withIndex("by_eventId", (q) => q.eq("eventId", args.id))
+                .collect();
+            for (const reg of regs) {
+                await ctx.db.delete(reg._id);
+            }
+            await ctx.db.delete(form._id);
+        }
+
         await ctx.db.delete(args.id);
+        await logAction(ctx, { action: "delete", entityType: "Event", entityId: args.id, details: existing.title });
     },
 });
 
-// Migration: auto-update status of past events to "completed"
-export const markPastEventsCompleted = mutation({
+// Cron job: auto-update status of past events to "completed".
+// Internal so it cannot be triggered from outside.
+export const markPastEventsCompleted = internalMutation({
     args: {},
     handler: async (ctx) => {
         const today = TODAY();
@@ -154,6 +187,17 @@ export const markPastEventsCompleted = mutation({
                 await ctx.db.patch(event._id, { status: "completed" });
                 updated++;
             }
+        }
+        if (updated > 0) {
+            await ctx.db.insert("auditLog", {
+                action: "status_change",
+                entityType: "Event",
+                userId: "system",
+                userName: "System",
+                actorRole: "system",
+                details: `Automatically marked ${updated} past event${updated === 1 ? "" : "s"} completed`,
+                timestamp: Date.now(),
+            });
         }
         return `Marked ${updated} past events as completed.`;
     },
