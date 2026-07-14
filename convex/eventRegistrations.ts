@@ -172,19 +172,19 @@ export const getRegistrations = query({
     },
 });
 
-/** Lightweight count of confirmed registrations (used in the admin events list). */
+/**
+ * Public aggregate used to show capacity on the registration form.
+ * Individual registrations and internal status totals remain admin-only.
+ */
 export const getRegistrationCount = query({
     args: { eventId: v.id("events") },
     handler: async (ctx, args) => {
-        await requirePermission(ctx, "events:manage");
         const all = await ctx.db
             .query("eventRegistrations")
             .withIndex("by_eventId", (q) => q.eq("eventId", args.eventId))
             .collect();
         return {
-            total: all.length,
             confirmed: all.filter((r) => r.status === "confirmed").length,
-            cancelled: all.filter((r) => r.status === "cancelled").length,
         };
     },
 });
