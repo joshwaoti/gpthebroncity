@@ -345,3 +345,388 @@ html.lenis body {
     --sidebar-border: rgba(255, 255, 255, 0.08);
     --sidebar-ring: #B2CB20;
 }
+
+/* Rich blog editor and published article content */
+.rich-text-editor {
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    background: var(--background);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.rich-text-editor:focus-within {
+    border-color: var(--ring);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 14%, transparent);
+}
+
+.rich-text-editor--loading {
+    min-height: 32rem;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.rich-text-toolbar {
+    display: flex;
+    position: sticky;
+    z-index: 10;
+    top: 0;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.55rem;
+    border-bottom: 1px solid var(--border-color);
+    background: color-mix(in srgb, var(--card) 94%, transparent);
+    backdrop-filter: blur(10px);
+}
+
+.rich-text-toolbar__group {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding-right: 0.35rem;
+    border-right: 1px solid var(--border-color);
+}
+
+.rich-text-toolbar__group:last-child,
+.rich-text-toolbar__history {
+    border-right: 0;
+}
+
+.rich-text-toolbar__history {
+    margin-left: auto;
+}
+
+.rich-text-toolbar__button,
+.rich-text-toolbar__table-tools button {
+    display: inline-flex;
+    min-width: 2rem;
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.4rem;
+    color: var(--muted-foreground);
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.rich-text-toolbar__button:hover:not(:disabled),
+.rich-text-toolbar__button--active,
+.rich-text-toolbar__table-tools button:hover {
+    color: var(--foreground);
+    background: var(--accent);
+}
+
+.rich-text-toolbar__button--active {
+    color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+.rich-text-toolbar__button:disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+}
+
+.rich-text-toolbar__select {
+    height: 2rem;
+    max-width: 9.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.4rem;
+    padding: 0 1.6rem 0 0.5rem;
+    color: var(--foreground);
+    background: var(--background);
+    font-size: 0.72rem;
+}
+
+.rich-text-toolbar__select--block {
+    min-width: 6.7rem;
+}
+
+.rich-text-toolbar__select--compact {
+    max-width: 5.2rem;
+}
+
+.rich-text-toolbar__color {
+    position: relative;
+    display: inline-flex;
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.4rem;
+    color: var(--foreground);
+    font-family: Georgia, serif;
+    font-weight: 700;
+}
+
+.rich-text-toolbar__color:hover {
+    background: var(--accent);
+}
+
+.rich-text-toolbar__color input {
+    position: absolute;
+    right: 0.25rem;
+    bottom: 0.18rem;
+    width: 1.5rem;
+    height: 0.22rem;
+    cursor: pointer;
+    border: 0;
+    padding: 0;
+    background: transparent;
+}
+
+.rich-text-toolbar__color--highlight span {
+    padding: 0 0.2rem;
+    background: #fff2a8;
+}
+
+.rich-text-toolbar__table-tools button {
+    min-width: auto;
+    padding: 0 0.45rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.rich-text-editor__content {
+    min-height: 32rem;
+    padding: 1.25rem 1.4rem 3rem;
+    color: var(--foreground);
+    caret-color: var(--primary);
+    outline: none;
+}
+
+.rich-text-editor__content > *:first-child,
+.blog-rich-text > *:first-child {
+    margin-top: 0;
+}
+
+.rich-text-editor__content > *:last-child,
+.blog-rich-text > *:last-child {
+    margin-bottom: 0;
+}
+
+.rich-text-editor__content p.is-editor-empty:first-child::before {
+    height: 0;
+    float: left;
+    color: var(--muted-foreground);
+    content: attr(data-placeholder);
+    pointer-events: none;
+}
+
+.rich-text-editor__footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 0.75rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--muted-foreground);
+    background: var(--card);
+    font-size: 0.68rem;
+}
+
+.rich-text-editor__content,
+.blog-rich-text {
+    overflow-wrap: anywhere;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.8;
+}
+
+.blog-rich-text {
+    color: rgb(55 65 81);
+}
+
+.dark .blog-rich-text {
+    color: rgb(209 213 219);
+}
+
+.rich-text-editor__content p,
+.blog-rich-text p {
+    margin: 0.85rem 0;
+    color: inherit;
+}
+
+.rich-text-editor__content h1,
+.blog-rich-text h1 {
+    margin: 2rem 0 0.9rem;
+    font-size: 2.25rem;
+    line-height: 1.2;
+}
+
+.rich-text-editor__content h2,
+.blog-rich-text h2 {
+    margin: 1.8rem 0 0.8rem;
+    font-size: 1.8rem;
+    line-height: 1.25;
+}
+
+.rich-text-editor__content h3,
+.blog-rich-text h3 {
+    margin: 1.5rem 0 0.65rem;
+    font-size: 1.4rem;
+    line-height: 1.35;
+}
+
+.rich-text-editor__content h4,
+.blog-rich-text h4 {
+    margin: 1.35rem 0 0.55rem;
+    font-size: 1.15rem;
+    line-height: 1.4;
+}
+
+.rich-text-editor__content ul,
+.blog-rich-text ul {
+    margin: 1rem 0;
+    padding-left: 1.65rem;
+    list-style: disc;
+}
+
+.rich-text-editor__content ol,
+.blog-rich-text ol {
+    margin: 1rem 0;
+    padding-left: 1.65rem;
+    list-style: decimal;
+}
+
+.rich-text-editor__content li,
+.blog-rich-text li {
+    margin: 0.35rem 0;
+}
+
+.rich-text-editor__content li > p,
+.blog-rich-text li > p {
+    margin: 0;
+}
+
+.rich-text-editor__content blockquote,
+.blog-rich-text blockquote {
+    margin: 1.25rem 0;
+    padding: 0.25rem 0 0.25rem 1.1rem;
+    border-left: 4px solid var(--gold);
+    color: var(--muted-foreground);
+    font-family: var(--font-serif);
+    font-size: 1.05em;
+    font-style: italic;
+}
+
+.rich-text-editor__content a,
+.blog-rich-text a {
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.rich-text-editor__content code,
+.blog-rich-text code {
+    border-radius: 0.3rem;
+    padding: 0.12rem 0.3rem;
+    background: var(--muted);
+    font-family: "Courier New", monospace;
+    font-size: 0.9em;
+}
+
+.rich-text-editor__content pre,
+.blog-rich-text pre {
+    overflow-x: auto;
+    margin: 1.25rem 0;
+    border-radius: 0.65rem;
+    padding: 1rem;
+    color: #f4f4f5;
+    background: #18181b;
+}
+
+.rich-text-editor__content pre code,
+.blog-rich-text pre code {
+    padding: 0;
+    color: inherit;
+    background: transparent;
+}
+
+.rich-text-editor__content hr,
+.blog-rich-text hr {
+    margin: 2rem 0;
+    border: 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.rich-text-editor__content img,
+.blog-rich-text img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 1.4rem auto;
+    border-radius: 0.65rem;
+}
+
+.rich-text-editor__content .tableWrapper,
+.blog-rich-text .tableWrapper {
+    overflow-x: auto;
+}
+
+.rich-text-editor__content table,
+.blog-rich-text table {
+    width: 100%;
+    margin: 1.4rem 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.rich-text-editor__content th,
+.rich-text-editor__content td,
+.blog-rich-text th,
+.blog-rich-text td {
+    position: relative;
+    min-width: 5rem;
+    padding: 0.6rem 0.7rem;
+    border: 1px solid var(--border-color);
+    vertical-align: top;
+}
+
+.rich-text-editor__content th,
+.blog-rich-text th {
+    background: var(--muted);
+    font-weight: 700;
+    text-align: left;
+}
+
+.rich-text-editor__content .selectedCell::after {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    content: "";
+    pointer-events: none;
+    background: color-mix(in srgb, var(--primary) 14%, transparent);
+}
+
+.rich-text-editor__content .column-resize-handle {
+    position: absolute;
+    top: 0;
+    right: -2px;
+    bottom: -2px;
+    width: 4px;
+    background: var(--primary);
+    pointer-events: none;
+}
+
+.rich-text-editor__content .ProseMirror-selectednode {
+    outline: 3px solid color-mix(in srgb, var(--primary) 35%, transparent);
+}
+
+@media (max-width: 640px) {
+    .rich-text-toolbar {
+        position: static;
+    }
+
+    .rich-text-toolbar__history {
+        margin-left: 0;
+    }
+
+    .rich-text-editor__content {
+        min-height: 24rem;
+        padding: 1rem;
+    }
+
+    .rich-text-editor__footer {
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+}

@@ -11,6 +11,7 @@ import { useQuery } from "convex/react"
 import { api } from "@/../convex/_generated/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import { use } from "react"
+import { sanitizeBlogContent } from "@/lib/blog-content"
 
 export default function SingleArticlePage({ params }: { params: Promise<{ slug: string }> }) {
     const resolvedParams = use(params)
@@ -50,6 +51,8 @@ export default function SingleArticlePage({ params }: { params: Promise<{ slug: 
             </main>
         )
     }
+
+    const renderedContent = sanitizeBlogContent(post.content)
 
     return (
         <main className="min-h-screen bg-background">
@@ -98,15 +101,16 @@ export default function SingleArticlePage({ params }: { params: Promise<{ slug: 
                         />
                     </div>
 
-                    <div className="prose prose-lg dark:prose-invert mx-auto font-sans text-gray-700 dark:text-gray-300">
+                    <div className="mx-auto font-sans text-gray-700 dark:text-gray-300">
                         {post.excerpt && (
                             <p className="lead text-xl md:text-2xl font-serif text-gray-900 dark:text-white mb-8">
                                 {post.excerpt}
                             </p>
                         )}
-                        <div className="whitespace-pre-wrap">
-                            {post.content.replace(/\*/g, '')}
-                        </div>
+                        <div
+                            className="blog-rich-text"
+                            dangerouslySetInnerHTML={{ __html: renderedContent }}
+                        />
                     </div>
 
                     {/* Share Section */}

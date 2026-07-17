@@ -5,20 +5,18 @@ import { useMutation } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { MediaUploader } from "@/components/admin/media-uploader";
+import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { Button } from "@/components/ui/button";
+import { isBlogContentEmpty, sanitizeBlogContent } from "@/lib/blog-content";
 import { useRouter } from "next/navigation";
-import { Save, ArrowLeft, Eye } from "lucide-react";
+import { Save, ArrowLeft } from "lucide-react";
 
-import { useUser } from "@clerk/nextjs";
-
-const categories = ["Theology", "Leadership", "Vision", "Doctrine", "Family"] as const;
+const categories = ["Theology", "Leadership", "Vision", "Doctrine", "Family", "Growth", "Community", "Worship"] as const;
 
 export default function NewBlogPostPage() {
-    const { user } = useUser();
     const router = useRouter();
     const createPost = useMutation(api.blog.create);
     const [isLoading, setIsLoading] = useState(false);
-    const [preview, setPreview] = useState(false);
     const [form, setForm] = useState({
         title: "",
         content: "",
@@ -37,20 +35,22 @@ export default function NewBlogPostPage() {
     const generateSlug = (title: string) =>
         title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
-    const set = (key: string, value: any) => setForm(f => ({ ...f, [key]: value }));
+    const set = <Key extends keyof typeof form>(key: Key, value: (typeof form)[Key]) => {
+        setForm(current => ({ ...current, [key]: value }));
+    };
 
     const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = async (status: "draft" | "published") => {
         if (!form.title.trim()) { setError("Title is required."); return; }
-        if (!form.content.trim()) { setError("Content is required."); return; }
+        if (isBlogContentEmpty(form.content)) { setError("Content is required."); return; }
         setError(null);
         setIsLoading(true);
         try {
             const finalSlug = form.slug || generateSlug(form.title);
             await createPost({
                 title: form.title,
-                content: form.content,
+                content: sanitizeBlogContent(form.content),
                 excerpt: form.excerpt || undefined,
                 author: form.author || undefined,
                 category: form.category,
@@ -60,9 +60,10 @@ export default function NewBlogPostPage() {
                 status,
             });
             router.push("/admin/content/blog");
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err);
-            setError(err?.message?.includes("slug") ? "That slug is already in use — pick a different one." : "Failed to save the post. Please try again.");
+            const message = err instanceof Error ? err.message : "";
+            setError(message.includes("slug") ? "That slug is already in use — pick a different one." : "Failed to save the post. Please try again.");
         } finally {
             setIsLoading(false);
         }
@@ -78,7 +79,7 @@ export default function NewBlogPostPage() {
                     { label: "New Post" }
                 ]}
             />
-            <div className="p-6 max-w-5xl mx-auto">
+            <div className="p-4 sm:p-6 max-w-7xl mx-auto">
                 {error && (
                     <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-sm">
                         {error}
@@ -110,28 +111,14 @@ export default function NewBlogPostPage() {
 
                         <div>
                             <div className="flex items-center justify-between mb-1.5">
-                                <label className="text-sm font-medium text-foreground">Content * (Markdown)</label>
-                                <button
-                                    onClick={() => setPreview(!preview)}
-                                    className="text-xs text-[#257300] flex items-center gap-1"
-                                >
-                                    <Eye className="w-3 h-3" /> {preview ? "Edit" : "Preview"}
-                                </button>
+                                <label className="text-sm font-medium text-foreground">Content *</label>
+                                <span className="text-xs text-muted-foreground">Rich text editor</span>
                             </div>
-                            {preview ? (
-                                <div
-                                    className="border border-border rounded-lg p-4 min-h-[400px] prose prose-sm dark:prose-invert max-w-none bg-background"
-                                    dangerouslySetInnerHTML={{ __html: form.content.replace(/\n/g, "<br>").replace(/^# (.+)$/gm, "<h1>$1</h1>").replace(/^## (.+)$/gm, "<h2>$1</h2>") }}
-                                />
-                            ) : (
-                                <textarea
-                                    value={form.content}
-                                    onChange={e => set("content", e.target.value)}
-                                    placeholder={`# ${form.title || "Post Title"}\n\nStart writing your post in Markdown...\n\n## Section Heading\n\nYour content here...`}
-                                    rows={20}
-                                    className="w-full border border-border rounded-lg px-4 py-3 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] font-mono resize-none"
-                                />
-                            )}
+                            <RichTextEditor
+                                value={form.content}
+                                onChange={content => set("content", content)}
+                                placeholder="Write your post or paste formatted content here…"
+                            />
                         </div>
                     </div>
 
@@ -180,7 +167,7 @@ export default function NewBlogPostPage() {
                                 <label className="text-xs text-muted-foreground">Category</label>
                                 <select
                                     value={form.category}
-                                    onChange={e => set("category", e.target.value)}
+                                    onChange={e => set("category", e.target.value as (typeof categories)[number])}
                                     className="w-full border border-border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 focus:ring-[#257300] mt-1"
                                 >
                                     {categories.map(c => <option key={c}>{c}</option>)}
