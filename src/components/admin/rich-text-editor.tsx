@@ -6,7 +6,6 @@ import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import TextAlign from "@tiptap/extension-text-align";
 import Highlight from "@tiptap/extension-highlight";
-import { TextStyleKit } from "@tiptap/extension-text-style";
 import { TableKit } from "@tiptap/extension-table";
 import Placeholder from "@tiptap/extension-placeholder";
 import {
@@ -17,6 +16,7 @@ import {
     Bold,
     Code2,
     Eraser,
+    Highlighter,
     ImagePlus,
     Italic,
     Link2,
@@ -31,7 +31,7 @@ import {
     Undo2,
     Unlink2,
 } from "lucide-react";
-import { sanitizeBlogContent } from "@/lib/blog-content";
+import { sanitizeBlogContent, sanitizeBlogHtml } from "@/lib/blog-content";
 
 interface RichTextEditorProps {
     value: string;
@@ -68,10 +68,7 @@ const createEditorExtensions = (placeholder: string) => [
     TextAlign.configure({
         types: ["heading", "paragraph"],
     }),
-    Highlight.configure({
-        multicolor: true,
-    }),
-    TextStyleKit,
+    Highlight,
     TableKit.configure({
         table: {
             resizable: true,
@@ -107,12 +104,6 @@ function normalizeUrl(url: string) {
     return `https://${trimmed}`;
 }
 
-function inputColor(value: unknown, fallback: string) {
-    return typeof value === "string" && /^#[0-9a-f]{6}$/i.test(value)
-        ? value
-        : fallback;
-}
-
 export function RichTextEditor({
     value,
     onChange,
@@ -142,6 +133,12 @@ export function RichTextEditor({
                 class: "rich-text-editor__content",
                 "aria-label": ariaLabel,
             },
+            // Word and Google Docs paste a colour, font family and font size
+            // onto every element. Those inline styles beat the site stylesheet,
+            // so a post pasted from a light-background document turns invisible
+            // in dark mode. Strip the presentation on the way in, which also
+            // makes the editor a true preview of the published post.
+            transformPastedHTML: html => sanitizeBlogHtml(html),
         },
         onUpdate: ({ editor: currentEditor }) => {
             const html = currentEditor.getHTML();
@@ -168,9 +165,6 @@ export function RichTextEditor({
             : editor.isActive("heading", { level: 3 }) ? "h3"
                 : editor.isActive("heading", { level: 4 }) ? "h4"
                     : "paragraph";
-
-    const textStyle = editor.getAttributes("textStyle");
-    const highlight = editor.getAttributes("highlight");
 
     const setLink = () => {
         const previousUrl = editor.getAttributes("link").href as string | undefined;
@@ -222,63 +216,6 @@ export function RichTextEditor({
                         <option value="h3">Heading 3</option>
                         <option value="h4">Heading 4</option>
                     </select>
-                    <select
-                        aria-label="Font family"
-                        title="Font family"
-                        value={(textStyle.fontFamily as string | undefined) ?? ""}
-                        onChange={event => {
-                            const family = event.target.value;
-                            if (family) editor.chain().focus().setFontFamily(family).run();
-                            else editor.chain().focus().unsetFontFamily().run();
-                        }}
-                        className="rich-text-toolbar__select"
-                    >
-                        <option value="">Default font</option>
-                        <option value="Arial">Arial</option>
-                        <option value="Georgia">Georgia</option>
-                        <option value="Times New Roman">Times New Roman</option>
-                        <option value="Verdana">Verdana</option>
-                        <option value="Courier New">Courier New</option>
-                    </select>
-                    <select
-                        aria-label="Font size"
-                        title="Font size"
-                        value={(textStyle.fontSize as string | undefined) ?? ""}
-                        onChange={event => {
-                            const size = event.target.value;
-                            if (size) editor.chain().focus().setFontSize(size).run();
-                            else editor.chain().focus().unsetFontSize().run();
-                        }}
-                        className="rich-text-toolbar__select rich-text-toolbar__select--compact"
-                    >
-                        <option value="">Size</option>
-                        <option value="12px">12</option>
-                        <option value="14px">14</option>
-                        <option value="16px">16</option>
-                        <option value="18px">18</option>
-                        <option value="20px">20</option>
-                        <option value="24px">24</option>
-                        <option value="30px">30</option>
-                        <option value="36px">36</option>
-                    </select>
-                    <select
-                        aria-label="Line spacing"
-                        title="Line spacing"
-                        value={(textStyle.lineHeight as string | undefined) ?? ""}
-                        onChange={event => {
-                            const height = event.target.value;
-                            if (height) editor.chain().focus().setLineHeight(height).run();
-                            else editor.chain().focus().unsetLineHeight().run();
-                        }}
-                        className="rich-text-toolbar__select rich-text-toolbar__select--compact"
-                    >
-                        <option value="">Spacing</option>
-                        <option value="1">1.0</option>
-                        <option value="1.25">1.25</option>
-                        <option value="1.5">1.5</option>
-                        <option value="1.75">1.75</option>
-                        <option value="2">2.0</option>
-                    </select>
                 </div>
 
                 <div className="rich-text-toolbar__group">
@@ -286,24 +223,7 @@ export function RichTextEditor({
                     <ToolbarButton label="Italic" icon={Italic} active={editor.isActive("italic")} onClick={() => editor.chain().focus().toggleItalic().run()} />
                     <ToolbarButton label="Underline" icon={Underline} active={editor.isActive("underline")} onClick={() => editor.chain().focus().toggleUnderline().run()} />
                     <ToolbarButton label="Strikethrough" icon={Strikethrough} active={editor.isActive("strike")} onClick={() => editor.chain().focus().toggleStrike().run()} />
-                    <label className="rich-text-toolbar__color" title="Text color">
-                        <span>A</span>
-                        <input
-                            type="color"
-                            aria-label="Text color"
-                            value={inputColor(textStyle.color, "#1a1a1a")}
-                            onChange={event => editor.chain().focus().setColor(event.target.value).run()}
-                        />
-                    </label>
-                    <label className="rich-text-toolbar__color rich-text-toolbar__color--highlight" title="Highlight color">
-                        <span>A</span>
-                        <input
-                            type="color"
-                            aria-label="Highlight color"
-                            value={inputColor(highlight.color, "#fff2a8")}
-                            onChange={event => editor.chain().focus().setHighlight({ color: event.target.value }).run()}
-                        />
-                    </label>
+                    <ToolbarButton label="Highlight" icon={Highlighter} active={editor.isActive("highlight")} onClick={() => editor.chain().focus().toggleHighlight().run()} />
                 </div>
 
                 <div className="rich-text-toolbar__group">
@@ -344,7 +264,7 @@ export function RichTextEditor({
 
             <EditorContent editor={editor} />
             <div className="rich-text-editor__footer">
-                <span>Formatted paste supported from Word, Google Docs, websites, and other rich-text sources.</span>
+                <span>Paste from Word, Google Docs, or any website. Headings, lists, links and emphasis are kept; the site&rsquo;s own fonts and colours are applied automatically.</span>
                 <span>{editor.getText().length} characters</span>
             </div>
         </div>
