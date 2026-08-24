@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:blog-content": "node --no-warnings --experimental-strip-types scripts/verify-blog-content.mjs"
+    "test:blog-content": "node --no-warnings --experimental-strip-types scripts/verify-blog-content.mjs",
+    "test:registration-form": "node --no-warnings --experimental-strip-types scripts/verify-registration-form.mjs",
+    "test": "npm run test:blog-content && npm run test:registration-form"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.61.1",

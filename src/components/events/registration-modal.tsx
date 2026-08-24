@@ -8,15 +8,23 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { X, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import {
+    choiceSelectionError,
+    isChoiceField,
+    normalizeChoiceValue,
+} from "@/lib/registration-fields";
 
 interface Field {
     id: string;
     label: string;
-    type: "text" | "email" | "phone" | "number" | "textarea" | "select";
+    type: "text" | "email" | "phone" | "number" | "textarea" | "select" | "checkbox";
     required: boolean;
     options?: string[];
     placeholder?: string;
 }
+
+/** Checkbox fields hold an array of selections; every other type holds a string. */
+type FieldValue = string | string[];
 
 interface Props {
     eventId: Id<"events">;
@@ -34,7 +42,7 @@ export function RegistrationModal({ eventId, eventTitle, isOpen, onClose }: Prop
     const regCount = useQuery(api.eventRegistrations.getRegistrationCount, { eventId });
     const submitReg = useMutation(api.eventRegistrations.submit);
 
-    const [values, setValues] = useState<Record<string, string>>({});
+    const [values, setValues] = useState<Record<string, FieldValue>>({});
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [step, setStep] = useState<Step>("form");
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,18 +60,44 @@ export function RegistrationModal({ eventId, eventTitle, isOpen, onClose }: Prop
     const fields: Field[] = form?.fields ?? [];
     const isFull = !!form?.maxCapacity && (regCount?.confirmed ?? 0) >= form.maxCapacity;
 
-    const setValue = (id: string, val: string) => {
+    const setValue = (id: string, val: FieldValue) => {
         setValues((v) => ({ ...v, [id]: val }));
         if (errors[id]) setErrors((e) => { const ne = { ...e }; delete ne[id]; return ne; });
+    };
+
+    const getText = (id: string) => {
+        const val = values[id];
+        return typeof val === "string" ? val : "";
+    };
+
+    const getSelected = (id: string) => {
+        const val = values[id];
+        return Array.isArray(val) ? val : [];
+    };
+
+    /** Toggle one option of a checkbox field, keeping the field's option order. */
+    const toggleOption = (field: Field, option: string) => {
+        const current = getSelected(field.id);
+        const next = current.includes(option)
+            ? current.filter((o) => o !== option)
+            : [...(field.options ?? []).filter((o) => current.includes(o) || o === option)];
+        setValue(field.id, next);
     };
 
     const validate = () => {
         const errs: Record<string, string> = {};
         for (const field of fields) {
-            if (field.required && !values[field.id]?.trim()) {
+            if (isChoiceField(field.type)) {
+                const selected = normalizeChoiceValue(values[field.id], field.options ?? []);
+                const err = choiceSelectionError(selected, field.required, field.label);
+                if (err) errs[field.id] = err;
+                continue;
+            }
+            const text = getText(field.id);
+            if (field.required && !text.trim()) {
                 errs[field.id] = `${field.label} is required`;
             }
-            if (field.type === "email" && values[field.id] && !/\S+@\S+\.\S+/.test(values[field.id])) {
+            if (field.type === "email" && text && !/\S+@\S+\.\S+/.test(text)) {
                 errs[field.id] = "Please enter a valid email address";
             }
         }
@@ -77,9 +111,19 @@ export function RegistrationModal({ eventId, eventTitle, isOpen, onClose }: Prop
 
         setIsSubmitting(true);
         try {
-            const result = await submitReg({ eventId, data: values });
+            const payload: Record<string, FieldValue> = { ...values };
+            for (const field of fields) {
+                if (isChoiceField(field.type)) {
+                    payload[field.id] = normalizeChoiceValue(values[field.id], field.options ?? []);
+                }
+            }
+            const result = await submitReg({ eventId, data: payload });
             if (result.status === "full") { setStep("full"); return; }
             if (result.status === "duplicate") { setStep("duplicate"); return; }
+            if (result.status === "invalid") {
+                setErrors({ _form: `Please complete "${result.field}" before submitting.` });
+                return;
+            }
             if (result.status !== "ok") {
                 setErrors({ _form: "Registration is not available for this event right now." });
                 return;
@@ -167,10 +211,46 @@ export function RegistrationModal({ eventId, eventTitle, isOpen, onClose }: Prop
                                             {field.label}
                                             {field.required && <span className="text-destructive ml-1">*</span>}
                                         </label>
-                                        {field.type === "textarea" ? (
+                                        {isChoiceField(field.type) ? (
+                                            <div
+                                                role="group"
+                                                aria-label={field.label}
+                                                className={cn(
+                                                    "mt-1.5 space-y-1.5 rounded-lg border p-3",
+                                                    errors[field.id] ? "border-destructive" : "border-border"
+                                                )}
+                                            >
+                                                {(field.options ?? []).length === 0 ? (
+                                                    <p className="text-xs text-muted-foreground italic">No options available.</p>
+                                                ) : (
+                                                    (field.options ?? []).map((opt) => {
+                                                        const checked = getSelected(field.id).includes(opt);
+                                                        return (
+                                                            <label
+                                                                key={opt}
+                                                                className="flex items-center gap-2.5 cursor-pointer select-none text-sm text-foreground"
+                                                            >
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={checked}
+                                                                    onChange={() => toggleOption(field, opt)}
+                                                                    className="accent-[#257300] w-4 h-4 flex-shrink-0"
+                                                                />
+                                                                <span>{opt}</span>
+                                                            </label>
+                                                        );
+                                                    })
+                                                )}
+                                                {field.required && (
+                                                    <p className="text-xs text-muted-foreground pt-1">
+                                                        Select at least one — you can choose more than one.
+                                                    </p>
+                                                )}
+                                            </div>
+                                        ) : field.type === "textarea" ? (
                                             <textarea
                                                 rows={3}
-                                                value={values[field.id] ?? ""}
+                                                value={getText(field.id)}
                                                 onChange={(e) => setValue(field.id, e.target.value)}
                                                 placeholder={field.placeholder}
                                                 className={cn(
@@ -180,26 +260,10 @@ export function RegistrationModal({ eventId, eventTitle, isOpen, onClose }: Prop
                                                         : "border-border focus:ring-[#257300]"
                                                 )}
                                             />
-                                        ) : field.type === "select" ? (
-                                            <select
-                                                value={values[field.id] ?? ""}
-                                                onChange={(e) => setValue(field.id, e.target.value)}
-                                                className={cn(
-                                                    "w-full border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-1 mt-1",
-                                                    errors[field.id]
-                                                        ? "border-destructive focus:ring-destructive"
-                                                        : "border-border focus:ring-[#257300]"
-                                                )}
-                                            >
-                                                <option value="">Select an option…</option>
-                                                {(field.options ?? []).map((opt) => (
-                                                    <option key={opt} value={opt}>{opt}</option>
-                                                ))}
-                                            </select>
                                         ) : (
                                             <input
                                                 type={field.type}
-                                                value={values[field.id] ?? ""}
+                                                value={getText(field.id)}
                                                 onChange={(e) => setValue(field.id, e.target.value)}
                                                 placeholder={field.placeholder}
                                                 className={cn(

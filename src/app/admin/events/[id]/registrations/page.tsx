@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useParams } from "next/navigation";
 import { useState, useMemo } from "react";
 import { Download, Copy, X, Search, CheckCircle2, XCircle, Users } from "lucide-react";
+import { formatAnswer } from "@/lib/registration-fields";
 
 function formatDate(ts: number) {
     return new Date(ts).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
@@ -44,7 +45,7 @@ export default function EventRegistrationsPage() {
         if (!search.trim()) return registrations;
         const q = search.toLowerCase();
         return registrations.filter((reg) => {
-            const all = Object.values(reg.data as Record<string, string>).join(" ").toLowerCase();
+            const all = Object.values(reg.data as Record<string, unknown>).map(formatAnswer).join(" ").toLowerCase();
             return all.includes(q);
         });
     }, [registrations, search]);
@@ -56,7 +57,7 @@ export default function EventRegistrationsPage() {
         (regs ?? []).map((reg) => [
             formatDate(reg.submittedAt),
             reg.status,
-            ...fields.map((f) => String((reg.data as Record<string, string>)[f.id] ?? "")),
+            ...fields.map((f) => formatAnswer((reg.data as Record<string, unknown>)[f.id])),
         ]);
 
     const headers = ["Submitted At", "Status", ...fields.map((f) => f.label)];
@@ -189,8 +190,8 @@ export default function EventRegistrationsPage() {
                                                 </span>
                                             </td>
                                             {fields.map((f) => (
-                                                <td key={f.id} className="px-4 py-3 text-sm text-foreground max-w-[200px] truncate">
-                                                    {String((reg.data as Record<string, string>)[f.id] ?? "—")}
+                                                <td key={f.id} className="px-4 py-3 text-sm text-foreground max-w-[200px] truncate" title={formatAnswer((reg.data as Record<string, unknown>)[f.id])}>
+                                                    {formatAnswer((reg.data as Record<string, unknown>)[f.id]) || "—"}
                                                 </td>
                                             ))}
                                             <td className="px-4 py-3">

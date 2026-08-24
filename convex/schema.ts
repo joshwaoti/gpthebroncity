@@ -75,6 +75,7 @@ export default defineSchema({
           v.literal("number"),
           v.literal("textarea"),
           v.literal("select"),
+          v.literal("checkbox"),
         ),
         required: v.boolean(),
         options: v.optional(v.array(v.string())),

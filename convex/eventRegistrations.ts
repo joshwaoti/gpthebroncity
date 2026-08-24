@@ -31,6 +31,7 @@ export const upsertForm = mutation({
                     v.literal("number"),
                     v.literal("textarea"),
                     v.literal("select"),
+                    v.literal("checkbox"),
                 ),
                 required: v.boolean(),
                 options: v.optional(v.array(v.string())),
@@ -105,6 +106,46 @@ export const submit = mutation({
         }
         for (const field of form.fields) {
             const value = data[field.id];
+
+            // Dropdown ("select") and checkbox fields both submit a list of
+            // selected options. Everything else submits a single string.
+            if (field.type === "checkbox" || field.type === "select") {
+                const allowed = field.options ?? [];
+                const allowedSet = new Set(allowed);
+                const raw = Array.isArray(value)
+                    ? value
+                    : typeof value === "string" && value.trim()
+                        ? [value]
+                        : value === undefined || value === null
+                            ? []
+                            : null;
+                if (raw === null) {
+                    throw new Error(`Value for "${field.label}" must be a list of options.`);
+                }
+                const seen = new Set<string>();
+                const selected: string[] = [];
+                for (const item of raw) {
+                    const opt = String(item).trim();
+                    if (!opt || seen.has(opt)) continue;
+                    if (allowedSet.size > 0 && !allowedSet.has(opt)) {
+                        throw new Error(`Invalid selection for "${field.label}".`);
+                    }
+                    seen.add(opt);
+                    selected.push(opt);
+                }
+                if (field.required && selected.length === 0) {
+                    return { status: "invalid" as const, field: field.label };
+                }
+                if (selected.join(", ").length > 2000) {
+                    throw new Error(`Value for "${field.label}" is too long.`);
+                }
+                data[field.id] = selected;
+                continue;
+            }
+
+            if (Array.isArray(value)) {
+                throw new Error(`Value for "${field.label}" must be a single value.`);
+            }
             if (field.required && (value === undefined || value === null || String(value).trim() === "")) {
                 return { status: "invalid" as const, field: field.label };
             }
@@ -127,9 +168,8 @@ export const submit = mutation({
 
         // Extract email from data for the duplicate guard
         const emailField = form.fields.find((f) => f.type === "email");
-        const email: string | undefined = emailField
-            ? (args.data as Record<string, string>)[emailField.id]?.toLowerCase().trim()
-            : undefined;
+        const emailRaw = emailField ? data[emailField.id] : undefined;
+        const email = typeof emailRaw === "string" ? emailRaw.toLowerCase().trim() : undefined;
 
         // Duplicate check
         if (email) {
