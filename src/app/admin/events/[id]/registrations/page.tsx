@@ -4,10 +4,11 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { Id } from "@/../convex/_generated/dataModel";
 import { AdminHeader } from "@/components/admin/admin-header";
+import { ConfirmDialog } from "@/components/admin/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import { useParams } from "next/navigation";
 import { useState, useMemo } from "react";
-import { Download, Copy, X, Search, CheckCircle2, XCircle, Users } from "lucide-react";
+import { Download, Copy, X, Search, CheckCircle2, XCircle, Users, Trash2 } from "lucide-react";
 import { formatAnswer } from "@/lib/registration-fields";
 
 function formatDate(ts: number) {
@@ -34,9 +35,12 @@ export default function EventRegistrationsPage() {
     const form = useQuery(api.eventRegistrations.getForm, { eventId });
     const registrations = useQuery(api.eventRegistrations.getRegistrations, { eventId });
     const cancelReg = useMutation(api.eventRegistrations.cancelRegistration);
+    const deleteReg = useMutation(api.eventRegistrations.deleteRegistration);
 
     const [search, setSearch] = useState("");
     const [copied, setCopied] = useState(false);
+    const [deleteId, setDeleteId] = useState<Id<"eventRegistrations"> | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const fields = form?.fields ?? [];
 
@@ -74,6 +78,20 @@ export default function EventRegistrationsPage() {
     const handleDownload = () => {
         const rows = buildRows(filtered);
         exportCSV(headers, rows, `registrations-${eventId}.csv`);
+    };
+
+    const handleDelete = async () => {
+        if (!deleteId) return;
+        setIsDeleting(true);
+        try {
+            await deleteReg({ registrationId: deleteId });
+            setDeleteId(null);
+        } catch (err) {
+            console.error(err);
+            alert("Failed to delete registration. Please try again.");
+        } finally {
+            setIsDeleting(false);
+        }
     };
 
     if (!event || !registrations) {
@@ -195,15 +213,26 @@ export default function EventRegistrationsPage() {
                                                 </td>
                                             ))}
                                             <td className="px-4 py-3">
-                                                {reg.status === "confirmed" && (
+                                                <div className="flex items-center justify-end gap-1">
+                                                    {reg.status === "confirmed" && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => cancelReg({ registrationId: reg._id })}
+                                                            className="p-1.5 rounded-md text-muted-foreground hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors"
+                                                            title="Cancel registration"
+                                                        >
+                                                            <X className="w-4 h-4" />
+                                                        </button>
+                                                    )}
                                                     <button
-                                                        onClick={() => cancelReg({ registrationId: reg._id })}
-                                                        className="text-muted-foreground hover:text-destructive transition-colors"
-                                                        title="Cancel registration"
+                                                        type="button"
+                                                        onClick={() => setDeleteId(reg._id)}
+                                                        className="p-1.5 rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                                                        title="Delete registration"
                                                     >
-                                                        <X className="w-4 h-4" />
+                                                        <Trash2 className="w-4 h-4" />
                                                     </button>
-                                                )}
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
@@ -213,6 +242,16 @@ export default function EventRegistrationsPage() {
                     </div>
                 )}
             </div>
+
+            <ConfirmDialog
+                isOpen={!!deleteId}
+                onClose={() => setDeleteId(null)}
+                onConfirm={handleDelete}
+                isLoading={isDeleting}
+                title="Delete Registration"
+                description="This will permanently remove this registration from the list. This action cannot be undone."
+                confirmLabel="Delete Registration"
+            />
         </div>
     );
 }
